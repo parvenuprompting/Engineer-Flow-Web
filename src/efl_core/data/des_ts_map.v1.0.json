@@ -1,0 +1,1312 @@
+{
+  "mappings": [
+    {
+      "map_id": "map_hm_001",
+      "des_id": "des_hm_001",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_006", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_020", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_016", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_023", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_002",
+      "des_id": "des_hm_002",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_008", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_015", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_017", "strength": 3, "uniqueness": 2 },
+        { "ts_id": "ts_hm_029", "strength": 2, "uniqueness": 1 }
+      ]
+    },
+    {
+      "map_id": "map_hm_003",
+      "des_id": "des_hm_003",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_006", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_020", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_016", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_017", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_004",
+      "des_id": "des_hm_004",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_020", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_006", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hm_015", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_hm_024", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_005",
+      "des_id": "des_hm_005",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_010", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_015", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_008", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_006",
+      "des_id": "des_hm_006",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_024", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_016", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hm_020", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_025", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_007",
+      "des_id": "des_hm_007",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_001", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_002", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hm_017", "strength": 3, "uniqueness": 2 },
+        { "ts_id": "ts_hm_020", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_008",
+      "des_id": "des_hm_008",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_003", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_004", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hm_027", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_hm_009",
+      "des_id": "des_hm_009",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_024", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_003", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_029", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_010",
+      "des_id": "des_hm_010",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_010", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_015", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_017", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_011",
+      "des_id": "des_hm_011",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_009", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_017", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_029", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_012",
+      "des_id": "des_hm_012",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_024", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_016", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hm_020", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_hm_025", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_013",
+      "des_id": "des_hm_013",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_024", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_023", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_025", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_014",
+      "des_id": "des_hm_014",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_027", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_028", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hm_030", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_015",
+      "des_id": "des_hm_015",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_020", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_017", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_006", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hm_016",
+      "des_id": "des_hm_016",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_038", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_006", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hm_020", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_hm_017",
+      "des_id": "des_hm_017",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_041", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hm_024", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hm_042", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_hm_018",
+      "des_id": "des_hm_018",
+      "subsystem_id": "ss_hydromotor",
+      "ts_links": [
+        { "ts_id": "ts_hm_023", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hm_024", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hm_025", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hp_001",
+      "des_id": "des_hp_001",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_008", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hp_015", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hp_006", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_hp_009", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hp_002",
+      "des_id": "des_hp_002",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_007", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hp_015", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hp_019", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hp_014", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_hp_003",
+      "des_id": "des_hp_003",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_008", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hp_009", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hp_015", "strength": 4, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hp_004",
+      "des_id": "des_hp_004",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_001", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hp_002", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hp_007", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hp_005",
+      "des_id": "des_hp_005",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_001", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hp_003", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hp_007", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_hp_006",
+      "des_id": "des_hp_006",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_008", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hp_015", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hp_009", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hp_007",
+      "des_id": "des_hp_007",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_008", "strength": 5, "uniqueness": 3 },
+        { "ts_id": "ts_hp_009", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hp_015", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hp_008",
+      "des_id": "des_hp_008",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_022", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_hp_015", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_hp_007", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hp_009",
+      "des_id": "des_hp_009",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_023", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hp_024", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hp_002", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_hp_010",
+      "des_id": "des_hp_010",
+      "subsystem_id": "ss_hydraulic_pump",
+      "ts_links": [
+        { "ts_id": "ts_hp_031", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_hp_007", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_hp_015", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_vc_001",
+      "des_id": "des_vc_001",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_006", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_011", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_vc_010", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_vc_033", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_vc_002",
+      "des_id": "des_vc_002",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_043", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_007", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_vc_032", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_vc_037", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_vc_003",
+      "des_id": "des_vc_003",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_009", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_010", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_021", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_vc_004",
+      "des_id": "des_vc_004",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_001", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_007", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_023", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_vc_005",
+      "des_id": "des_vc_005",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_002", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_vc_033", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_036", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_vc_010", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_vc_006",
+      "des_id": "des_vc_006",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_043", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_044", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_037", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_vc_032", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_vc_007",
+      "des_id": "des_vc_007",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_006", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_011", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_033", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_vc_008",
+      "des_id": "des_vc_008",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_043", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_033", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_006", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_vc_009",
+      "des_id": "des_vc_009",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_024", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_025", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_006", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_vc_033", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_vc_010",
+      "des_id": "des_vc_010",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_027", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_028", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_009", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_vc_011",
+      "des_id": "des_vc_011",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_039", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_014", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_vc_023", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_vc_012",
+      "des_id": "des_vc_012",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_032", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_vc_037", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_vc_027", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_vc_013",
+      "des_id": "des_vc_013",
+      "subsystem_id": "ss_valve_control",
+      "ts_links": [
+        { "ts_id": "ts_vc_032", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_vc_033", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_vc_036", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_001",
+      "des_id": "des_dm_001",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_006", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_008", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_016", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_022", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_002",
+      "des_id": "des_dm_002",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_006", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_010", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_022", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_003",
+      "des_id": "des_dm_003",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_036", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_dm_006", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_dm_016", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_017", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_dm_004",
+      "des_id": "des_dm_004",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_001", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_dm_029", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_dm_032", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_005",
+      "des_id": "des_dm_005",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_005", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_dm_017", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_032", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_dm_044", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_dm_006",
+      "des_id": "des_dm_006",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_002", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_017", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_025", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_dm_007",
+      "des_id": "des_dm_007",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_003", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_031", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_dm_033", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_008",
+      "des_id": "des_dm_008",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_006", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_010", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_028", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_dm_042", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_dm_009",
+      "des_id": "des_dm_009",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_010", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_018", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_028", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_dm_010",
+      "des_id": "des_dm_010",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_006", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_008", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_017", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_dm_011",
+      "des_id": "des_dm_011",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_022", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_dm_023", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_dm_027", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_dm_041", "strength": 2, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_dm_012",
+      "des_id": "des_dm_012",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_025", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_026", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_028", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_013",
+      "des_id": "des_dm_013",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_028", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_017", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_036", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_014",
+      "des_id": "des_dm_014",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_027", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_022", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_041", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_015",
+      "des_id": "des_dm_015",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_036", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_dm_037", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_dm_016", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_016",
+      "des_id": "des_dm_016",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_039", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_040", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_041", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_dm_017",
+      "des_id": "des_dm_017",
+      "subsystem_id": "ss_drum_mechanics",
+      "ts_links": [
+        { "ts_id": "ts_dm_031", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_dm_033", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_dm_028", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_001",
+      "des_id": "des_fr_001",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_001", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_fr_004", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_031", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_fr_021", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_002",
+      "des_id": "des_fr_002",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_042", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_fr_043", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_fr_021", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_026", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_003",
+      "des_id": "des_fr_003",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_007", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_015", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_016", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_004",
+      "des_id": "des_fr_004",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_020", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_fr_015", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_fr_016", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_021", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_005",
+      "des_id": "des_fr_005",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_039", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_fr_020", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_fr_041", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_006",
+      "des_id": "des_fr_006",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_020", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_021", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_023", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_007",
+      "des_id": "des_fr_007",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_004", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_fr_001", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_fr_031", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_008",
+      "des_id": "des_fr_008",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_001", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_003", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_004", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_009",
+      "des_id": "des_fr_009",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_003", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_035", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_001", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_010",
+      "des_id": "des_fr_010",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_001", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_020", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_016", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_011",
+      "des_id": "des_fr_011",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_015", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_007", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_016", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_012",
+      "des_id": "des_fr_012",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_015", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_020", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_021", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_013",
+      "des_id": "des_fr_013",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_016", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_020", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_007", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_014",
+      "des_id": "des_fr_014",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_047", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_fr_046", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_fr_021", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_015",
+      "des_id": "des_fr_015",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_041", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_023", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_026", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_fr_016",
+      "des_id": "des_fr_016",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_042", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_fr_043", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_fr_021", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_017",
+      "des_id": "des_fr_017",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_028", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_029", "strength": 4, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_018",
+      "des_id": "des_fr_018",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_021", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_046", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_047", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_019",
+      "des_id": "des_fr_019",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_039", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_fr_020", "strength": 4, "uniqueness": 4 }
+      ]
+    },
+    {
+      "map_id": "map_fr_020",
+      "des_id": "des_fr_020",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_020", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_015", "strength": 4, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_021",
+      "des_id": "des_fr_021",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_026", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_025", "strength": 4, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_fr_022",
+      "des_id": "des_fr_022",
+      "subsystem_id": "ss_filters_restrictions",
+      "ts_links": [
+        { "ts_id": "ts_fr_020", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_fr_016", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_fr_023", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_tc_001",
+      "des_id": "des_tc_001",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_013", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_tc_014", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_tc_015", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_019", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_tc_002",
+      "des_id": "des_tc_002",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_013", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_tc_014", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_036", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_tc_003",
+      "des_id": "des_tc_003",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_034", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_tc_019", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_014", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_tc_004",
+      "des_id": "des_tc_004",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_001", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_tc_029", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_019", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_tc_005",
+      "des_id": "des_tc_005",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_030", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_tc_036", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_040", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_tc_006",
+      "des_id": "des_tc_006",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_014", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_tc_015", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_036", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_tc_007",
+      "des_id": "des_tc_007",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_013", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_tc_022", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_023", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_tc_008",
+      "des_id": "des_tc_008",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_023", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_tc_019", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_tc_026", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_tc_009",
+      "des_id": "des_tc_009",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_019", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_tc_021", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_tc_036", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_tc_010",
+      "des_id": "des_tc_010",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_036", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_tc_037", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_tc_014", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_tc_011",
+      "des_id": "des_tc_011",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_025", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_tc_024", "strength": 4, "uniqueness": 4 }
+      ]
+    },
+    {
+      "map_id": "map_tc_012",
+      "des_id": "des_tc_012",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_033", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_tc_034", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_019", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_tc_013",
+      "des_id": "des_tc_013",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_036", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_tc_037", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_tc_041", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_tc_014",
+      "des_id": "des_tc_014",
+      "subsystem_id": "ss_thermal_chain",
+      "ts_links": [
+        { "ts_id": "ts_tc_036", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_tc_019", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_tc_021", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_001",
+      "des_id": "des_mb_001",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_006", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_007", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_018", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_021", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_002",
+      "des_id": "des_mb_002",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_006", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_008", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_016", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_003",
+      "des_id": "des_mb_003",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_036", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_mb_007", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_039", "strength": 4, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_004",
+      "des_id": "des_mb_004",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_015", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_mb_039", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_mb_018", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_005",
+      "des_id": "des_mb_005",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_029", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_mb_010", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_017", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_006",
+      "des_id": "des_mb_006",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_007", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_018", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_017", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_007",
+      "des_id": "des_mb_007",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_007", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_018", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_021", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_008",
+      "des_id": "des_mb_008",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_006", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_008", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_mb_010", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_009",
+      "des_id": "des_mb_009",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_009", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_mb_031", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_044", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_010",
+      "des_id": "des_mb_010",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_008", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_029", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_031", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_011",
+      "des_id": "des_mb_011",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_025", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_026", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_017", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_012",
+      "des_id": "des_mb_012",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_025", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_026", "strength": 4, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_013",
+      "des_id": "des_mb_013",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_029", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_030", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_044", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_014",
+      "des_id": "des_mb_014",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_029", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_030", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_028", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_015",
+      "des_id": "des_mb_015",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_028", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_029", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_mb_039", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_016",
+      "des_id": "des_mb_016",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_006", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_007", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_021", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_mb_017",
+      "des_id": "des_mb_017",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_015", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_mb_007", "strength": 4, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_mb_018",
+      "des_id": "des_mb_018",
+      "subsystem_id": "ss_mix_blade_mass",
+      "ts_links": [
+        { "ts_id": "ts_mb_032", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_mb_033", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_mb_029", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_ec_001",
+      "des_id": "des_ec_001",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_037", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_ec_039", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_038", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_ec_022", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_002",
+      "des_id": "des_ec_002",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_002", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_003", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_014", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_ec_032", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_003",
+      "des_id": "des_ec_003",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_015", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_016", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_029", "strength": 4, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_004",
+      "des_id": "des_ec_004",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_016", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_014", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_ec_034", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_ec_036", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_ec_005",
+      "des_id": "des_ec_005",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_006", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_ec_018", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_035", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_006",
+      "des_id": "des_ec_006",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_037", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_038", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_022", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_ec_018", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_ec_007",
+      "des_id": "des_ec_007",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_003", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_036", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_011", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_ec_014", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_ec_008",
+      "des_id": "des_ec_008",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_004", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_ec_009", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_018", "strength": 3, "uniqueness": 3 },
+        { "ts_id": "ts_ec_033", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_ec_009",
+      "des_id": "des_ec_009",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_031", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_032", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_033", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_035", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_010",
+      "des_id": "des_ec_010",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_033", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_ec_031", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_032", "strength": 4, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_011",
+      "des_id": "des_ec_011",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_027", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_ec_022", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_018", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_ec_038", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_012",
+      "des_id": "des_ec_012",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_028", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_027", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_018", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_013",
+      "des_id": "des_ec_013",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_029", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_ec_030", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_015", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_ec_016", "strength": 3, "uniqueness": 2 }
+      ]
+    },
+    {
+      "map_id": "map_ec_014",
+      "des_id": "des_ec_014",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_020", "strength": 5, "uniqueness": 5 },
+        { "ts_id": "ts_ec_019", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_024", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_015",
+      "des_id": "des_ec_015",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_002", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_015", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_040", "strength": 4, "uniqueness": 5 },
+        { "ts_id": "ts_ec_041", "strength": 3, "uniqueness": 3 }
+      ]
+    },
+    {
+      "map_id": "map_ec_016",
+      "des_id": "des_ec_016",
+      "subsystem_id": "ss_electrical_control",
+      "ts_links": [
+        { "ts_id": "ts_ec_034", "strength": 5, "uniqueness": 4 },
+        { "ts_id": "ts_ec_036", "strength": 4, "uniqueness": 4 },
+        { "ts_id": "ts_ec_041", "strength": 4, "uniqueness": 3 },
+        { "ts_id": "ts_ec_039", "strength": 3, "uniqueness": 2 }
+      ]
+    }
+  ]
+}

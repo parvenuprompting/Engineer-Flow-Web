@@ -1,0 +1,567 @@
+[
+  {
+    "term": "Aandrukrol versleten → axiale speling.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Aanzuigslang klapt in onder vacuum.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Afstandsbediening werkt niet",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Afstandsbediening werkt soms",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Algemene klacht: lage druk, trage functies.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Alleen vooruit of alleen achteruit mogelijk.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Batterij te zwak voor goed RF-signaal.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Bediening valt weg of komt pas terug na meerdere keren drukken.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Belangrijk massapunt aangetast.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Bereik beperkt of remote valt weg afhankelijk van positie/weer.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Bevestigingsbouten los of uitgerekt.",
+    "subsystem": "Structuur",
+    "subsystem_id": "structuur"
+  },
+  {
+    "term": "Bij lage motortoeren draait trommel te langzaam.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Bij warme motor valt PTO uit of wordt begrensd.",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "Bij zwaar beton of hoge snelheid valt rotatie weg.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Bladen afgesleten/vervormd.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Corrosie in connectorblok.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Draadbreuk in hoofd kabelboom.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Draadbreuk in kabelboom ventielen.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Draagrol zit vast → hoge wrijving.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Dwarsligger verbogen → chassis torsie.",
+    "subsystem": "Structuur",
+    "subsystem_id": "structuur"
+  },
+  {
+    "term": "ECU beperkt vermogen door foutconditie.",
+    "subsystem": "Motor",
+    "subsystem_id": "engine"
+  },
+  {
+    "term": "Elektrische functies vallen soms uit",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Filter waarschuwing",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Flowregelventiel verkeerd afgesteld.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Foutieve drukmeting water.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Geen functies mogelijk door noodstop of interlock.",
+    "subsystem": "Veiligheid",
+    "subsystem_id": "veiligheid"
+  },
+  {
+    "term": "Geen rotatie in geen enkele richting.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Geen toerentalsignaal trommel.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Geen toerentalsignaal van PTO.",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "Geen water uit systeem",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Gootvergrendeling meldt open stand → blokkeert functies.",
+    "subsystem": "Veiligheid",
+    "subsystem_id": "veiligheid"
+  },
+  {
+    "term": "Handbediening dood",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Handbediening is volledig dood.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Handbediening reageert niet, geen leds, geen functies.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Handbediening werkt soms wel/soms niet",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Hoofdlager versleten → geluid en vibratie.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Hoofdzekering opbouw defect.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Hoorbare framebewegingen bij draaien/rijden.",
+    "subsystem": "Structuur",
+    "subsystem_id": "structuur"
+  },
+  {
+    "term": "Hydrauliek oververhit",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Hydrauliekolie wordt te heet, alarmsignalen of prestatieverlies.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Hydrauliekolie wordt te heet.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Hydraulische druk te laag",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Hydromotor intern versleten → laag koppel.",
+    "subsystem": "Motor",
+    "subsystem_id": "engine"
+  },
+  {
+    "term": "Interne lekkage in hydromotor.",
+    "subsystem": "Motor",
+    "subsystem_id": "engine"
+  },
+  {
+    "term": "Interne slijtage pomp → onvoldoende druk.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Koeler verstopt of onvoldoende luchtflow.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Koelventilator slaat niet of te laat aan.",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Koelvloeistofpomp levert te weinig flow.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Kraak/klak in frame/subframe",
+    "subsystem": "Structuur",
+    "subsystem_id": "structuur"
+  },
+  {
+    "term": "Lage waterdruk",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Lekkage in drukleiding.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Lekkage of luchtinzuiging bij slangconnector.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Mengbladen losgeraakt.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Metaal-op-metaal geluid in trommel",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Modus-schakelaar maakt slecht contact.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Motor raakt oververhit onder belasting.",
+    "subsystem": "Motor",
+    "subsystem_id": "engine"
+  },
+  {
+    "term": "Motor warm, PTO valt weg",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "Na klapband trilt mixer",
+    "subsystem": "Structuur",
+    "subsystem_id": "structuur"
+  },
+  {
+    "term": "Niets in de mixer-opbouw werkt elektrisch.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Noodstop achterzijde actief of vast.",
+    "subsystem": "Veiligheid",
+    "subsystem_id": "veiligheid"
+  },
+  {
+    "term": "Noodstop voorzijde actief of vast.",
+    "subsystem": "Veiligheid",
+    "subsystem_id": "veiligheid"
+  },
+  {
+    "term": "Ontvanger verwerkt signalen niet goed.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Opbouw heeft geen voeding",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Overdrukventiel blijft open → geen drukopbouw.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Overdrukventiel sluit volledig → extreem hoge druk.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "PTO aan, maar geen hydraulische druk",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "PTO lijkt actief maar druk blijft laag of nul.",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "PTO schakelt niet in",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "PTO schakelt niet in of valt direct weer uit.",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "PTO slipt onder belasting.",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "PTO-bedieningsventiel blijft hangen.",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "PTO-lampje blijft uit of PTO valt direct uit.",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "PTO-relais schakelt niet of intermitterend.",
+    "subsystem": "PTO",
+    "subsystem_id": "pto"
+  },
+  {
+    "term": "Pomp draait maar er komt geen water.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Radiateur verstopt of uitwendig vervuild.",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Random uitval van ventielen/bediening.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Releacontacten versleten.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Remote reageert niet, geen functies op afstand.",
+    "subsystem": "Elektrisch",
+    "subsystem_id": "electrical"
+  },
+  {
+    "term": "Retourfilter verstopt.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Retourslang deels verstopt.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Scheuren in subframe mixer.",
+    "subsystem": "Structuur",
+    "subsystem_id": "structuur"
+  },
+  {
+    "term": "Schrapend/kloppend geluid per omwenteling.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Signaal of indicatie dat filter verstopt is.",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Sinds klapband vibratie en instabiliteit.",
+    "subsystem": "Structuur",
+    "subsystem_id": "structuur"
+  },
+  {
+    "term": "Spoel achteruitventiel krijgt geen of te lage spanning.",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Spoel vooruitventiel krijgt geen of te lage spanning.",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Sterke vibraties tijdens rotatie.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Tandkrans mist tanden → schokkerige rotatie.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Te laag oliepeil in reservoir.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Thermostaat blijft dicht → beperkte koelflow.",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Trechter-schakelaar in open stand → blokkeert functies.",
+    "subsystem": "Veiligheid",
+    "subsystem_id": "veiligheid"
+  },
+  {
+    "term": "Trommel draait maar in één richting",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Trommel draait niet",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Trommel langzaam bij stationair",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Trommel stopt onder belasting",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Trommel trilt",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Trommel versnelt/vertraagt zonder reden.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Trommelsnelheid instabiel",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Veiligheidsblokkering actief",
+    "subsystem": "Veiligheid",
+    "subsystem_id": "veiligheid"
+  },
+  {
+    "term": "Ventielspool achteruit blijft hangen.",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Ventielspool vooruit blijft hangen.",
+    "subsystem": "Overig",
+    "subsystem_id": "overig"
+  },
+  {
+    "term": "Ventilator koeler draait niet.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Verkeerde drukmeting.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Verkeerde hoeksignalen.",
+    "subsystem": "Trommel",
+    "subsystem_id": "rotation"
+  },
+  {
+    "term": "Verkeerde olietemperatuurmeting.",
+    "subsystem": "Hydrauliek",
+    "subsystem_id": "hydraulics"
+  },
+  {
+    "term": "Verkeerde temperatuurmeting stuurt koelsysteem verkeerd aan.",
+    "subsystem": "Motor",
+    "subsystem_id": "engine"
+  },
+  {
+    "term": "Vocht in E-box → storingen en uitval.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Water komt wel maar met weinig kracht.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Waterafsluiter opent/sluit niet goed.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Waterfilter verstopt.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Waterpomp levert geen druk.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  },
+  {
+    "term": "Watertank lekt.",
+    "subsystem": "Water",
+    "subsystem_id": "water"
+  }
+]

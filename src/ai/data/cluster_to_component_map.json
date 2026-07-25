@@ -1,0 +1,129 @@
+{
+  "cluster_map": [
+    {
+      "cluster": "HANDUNIT_NO_POWER",
+      "components_ranked": [
+        "Opbouw_Feed_Fuse_F65",
+        "Chassis_Ground_G45",
+        "Handunit_Connector_XH3",
+        "Handunit_SpiralCable",
+        "Handunit",
+        "EBox_Controller_PCB"
+      ],
+      "reason": "Volledig spanningsverlies wijst eerst naar zekering, massa, connector of kabel."
+    },
+
+    {
+      "cluster": "HANDUNIT_INTERMITTENT",
+      "components_ranked": [
+        "Handunit_Connector_XH3",
+        "Handunit_SpiralCable",
+        "Chassis_Ground_G45",
+        "Handunit",
+        "EBox_Controller_PCB"
+      ],
+      "reason": "Intermitterende drops zijn bijna altijd connector-, kabel- of massa-gerelateerd."
+    },
+
+    {
+      "cluster": "HANDUNIT_PARTIAL_FUNCTION",
+      "components_ranked": [
+        "Handunit_Keypad",
+        "Handunit",
+        "Handunit_Connector_XH3",
+        "EBox_Controller_PCB"
+      ],
+      "reason": "Als sommige knoppen falen zijn keypad en interne PCB prime suspects."
+    },
+
+    {
+      "cluster": "DRUM_NOT_ROTATING_PTO_ON",
+      "components_ranked": [
+        "Hydraulic_Pump",
+        "Valve_FWD",
+        "Valve_REV",
+        "EBox_Controller_PCB",
+        "Handunit"
+      ],
+      "reason": "PTO draait, dus elektrisch signaal komt aan. Focus op hydrauliek, ventielen en aansturing."
+    },
+
+    {
+      "cluster": "DRUM_ONLY_ONE_DIRECTION",
+      "components_ranked": [
+        "Valve_FWD",
+        "Valve_REV",
+        "Handunit",
+        "EBox_Controller_PCB"
+      ],
+      "reason": "Eén richting uitval is typisch ventiel-spanning of spool-stuck."
+    },
+
+    {
+      "cluster": "DRUM_STOPS_UNDER_LOAD",
+      "components_ranked": [
+        "Hydraulic_Pump",
+        "Pressure_Relief_Valve",
+        "Valveblock",
+        "Chassis_Ground_G45",
+        "EBox_Controller_PCB"
+      ],
+      "reason": "Belastingsgerelateerd falen wijst naar drukverlies of ventiel dat onder load faalt."
+    },
+
+    {
+      "cluster": "DRUM_SLOW_OR_WEAK",
+      "components_ranked": [
+        "Hydraulic_Pump",
+        "Valveblock",
+        "Valve_FWD",
+        "Valve_REV",
+        "Hydraulic_Tank_Return"
+      ],
+      "reason": "Te lage flow of druk: pomp, ventielen of restricties."
+    },
+
+    {
+      "cluster": "PTO_FAULT",
+      "components_ranked": [
+        "PTO_Solenoid",
+        "EBox_Controller_PCB",
+        "Opbouw_Feed_Fuse_F65",
+        "Handunit"
+      ],
+      "reason": "Geen PTO engage: elektrisch signaal naar solenoid, voeding en aansturing checken."
+    },
+
+    {
+      "cluster": "EBOX_NO_POWER",
+      "components_ranked": [
+        "Opbouw_Feed_Fuse_F65",
+        "Chassis_Ground_G45",
+        "EBox_Internal_Fuse",
+        "EBox_Power_In"
+      ],
+      "reason": "E-box zonder voeding: eerste twee is voeding/massa, daarna interne zekering."
+    },
+
+    {
+      "cluster": "EBOX_INTERMITTENT",
+      "components_ranked": [
+        "Chassis_Ground_G45",
+        "EBox_Controller_PCB",
+        "Handunit_Connector_XH3"
+      ],
+      "reason": "Interne resets of klikgedrag wijzen op ground instabiliteit of PCB-fouten."
+    },
+
+    {
+      "cluster": "CONNECTOR_OR_CABLE_FAULT",
+      "components_ranked": [
+        "Handunit_Connector_XH3",
+        "Handunit_SpiralCable",
+        "Chassis_Ground_G45",
+        "Valveblock"
+      ],
+      "reason": "Regen/hobbels/schokken → connector/cable failure is statistisch dominant."
+    }
+  ]
+}

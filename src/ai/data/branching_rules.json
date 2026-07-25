@@ -1,0 +1,50 @@
+
+{
+  "branching_rules": [
+    {
+      "step_id": "STEP_CHECK_FUSE_F65",
+      "if_fail": {
+        "next_step": "STEP_MEASURE_24V_AT_F65"
+      },
+      "if_pass": {
+        "skip_steps": ["STEP_MEASURE_24V_AT_F65"]
+      }
+    },
+    {
+      "step_id": "STEP_MEASURE_24V_AT_F65",
+      "if_fail": {
+        "exclude_components": [
+          "EBox_Controller_PCB",
+          "Handunit",
+          "Handunit_Connector_XH3"
+        ],
+        "end_flow": true
+      }
+    },
+    {
+      "step_id": "STEP_CHECK_CONNECTOR_XH3",
+      "if_fail": {
+        "prioritize_failure_modes": [
+          "FM_CONNECTOR_MOISTURE",
+          "FM_CONNECTOR_PIN_LOOSE"
+        ]
+      },
+      "if_pass": {
+        "reduce_failure_modes": {
+          "FM_CONNECTOR_MOISTURE": 0.40,
+          "FM_CONNECTOR_CORROSION": 0.30
+        }
+      }
+    },
+    {
+      "step_id": "STEP_CHECK_HYDRAULIC_PRESSURE",
+      "if_fail": {
+        "next_step": "STEP_TEST_PTO_SOLENOID",
+        "exclude_components": ["Valve_FWD", "Valve_REV"]
+      },
+      "if_pass": {
+        "next_step": "STEP_TEST_VALVE_FWD"
+      }
+    }
+  ]
+}

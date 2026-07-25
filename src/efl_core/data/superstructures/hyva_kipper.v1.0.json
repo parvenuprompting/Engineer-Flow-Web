@@ -1,0 +1,34 @@
+{
+  "superstructure_id": "hyva_kipper_v1",
+  "name": "Hyva Kipper Systeem",
+  "manufacturer": "Hyva",
+  "version": "1.0.0",
+  "subsystems": [
+    {
+      "id": "hyva_hydraulics",
+      "name": "Hydraulisch Kiepsysteem",
+      "description": "Kiep-cilinders, ventielenblok en oliereservoir"
+    },
+    {
+      "id": "hyva_pto",
+      "name": "PTO & Pomp Aandrijving",
+      "description": "Power Take-Off koppeling en tandwielpomp"
+    }
+  ],
+  "diagnostic_rules": [
+    {
+      "rule_id": "HYVA_RULE_001",
+      "symptom_trigger": "kipper heft niet",
+      "target_subsystem": "hyva_pto",
+      "recommended_action": "Controleer luchtdruk van de PTO schakelcilinder en olieniveau in de Hyva tank.",
+      "confidence_modifier": 0.25
+    },
+    {
+      "rule_id": "HYVA_RULE_002",
+      "symptom_trigger": "schokkerige beweging bij zakken",
+      "target_subsystem": "hyva_hydraulics",
+      "recommended_action": "Ontlucht het hydraulisch circuit en inspecteer de zakklep op vervuiling.",
+      "confidence_modifier": 0.20
+    }
+  ]
+}

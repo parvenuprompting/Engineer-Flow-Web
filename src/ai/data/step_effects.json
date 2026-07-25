@@ -1,0 +1,85 @@
+
+{
+  "step_effects": [
+    {
+      "step_id": "STEP_CHECK_FUSE_F65",
+      "if_pass": {
+        "exclude_failure_modes": ["FM_FUSE_BLOWN", "FM_FUSE_LOOSE"]
+      },
+      "if_fail": {
+        "increase_failure_modes": {
+          "FM_FUSE_BLOWN": 0.50,
+          "FM_FUSE_LOOSE": 0.30
+        }
+      }
+    },
+    {
+      "step_id": "STEP_MEASURE_24V_AT_F65",
+      "if_pass": {
+        "exclude_failure_modes": ["FM_FUSE_BLOWN"],
+        "reduce_failure_modes": {
+          "FM_FUSE_LOOSE": 0.30
+        }
+      },
+      "if_fail": {
+        "increase_failure_modes": {
+          "FM_FUSE_BLOWN": 0.40
+        },
+        "exclude_components_downstream": ["EBox_Controller_PCB", "Handunit"]
+      }
+    },
+    {
+      "step_id": "STEP_CHECK_CONNECTOR_XH3",
+      "if_pass": {
+        "reduce_failure_modes": {
+          "FM_CONNECTOR_MOISTURE": 0.40,
+          "FM_CONNECTOR_CORROSION": 0.20
+        }
+      },
+      "if_fail": {
+        "increase_failure_modes": {
+          "FM_CONNECTOR_MOISTURE": 0.40,
+          "FM_CONNECTOR_PIN_LOOSE": 0.30
+        }
+      }
+    },
+    {
+      "step_id": "STEP_TEST_HANDUNIT_POWER",
+      "if_pass": {
+        "exclude_failure_modes": ["FM_CABLE_BREAK"]
+      },
+      "if_fail": {
+        "increase_failure_modes": {
+          "FM_CABLE_BREAK": 0.50,
+          "FM_CABLE_SHORT_TO_CHASSIS": 0.20
+        }
+      }
+    },
+    {
+      "step_id": "STEP_TEST_EBOX_OUTPUT",
+      "if_pass": {
+        "exclude_failure_modes": [
+          "FM_EBOX_INTERNAL_FAULT",
+          "FM_EBOX_OVERHEAT"
+        ]
+      },
+      "if_fail": {
+        "increase_failure_modes": {
+          "FM_EBOX_INTERNAL_FAULT": 0.40
+        }
+      }
+    },
+    {
+      "step_id": "STEP_CHECK_HYDRAULIC_PRESSURE",
+      "if_pass": {
+        "exclude_failure_modes": ["FM_PUMP_NO_PRESSURE"]
+      },
+      "if_fail": {
+        "increase_failure_modes": {
+          "FM_PUMP_NO_PRESSURE": 0.50
+        },
+        "exclude_components": ["Valve_FWD", "Valve_REV"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "diagnostic_value": [
+    { "component": "Opbouw_Feed_Fuse_F65", "value": 0.95 },
+    { "component": "Chassis_Ground_G45", "value": 0.88 },
+    { "component": "Handunit_Connector_XH3", "value": 0.90 },
+    { "component": "Handunit_SpiralCable", "value": 0.82 },
+    { "component": "Handunit", "value": 0.70 },
+    { "component": "EBox_Controller_PCB", "value": 0.75 },
+    { "component": "Valve_FWD", "value": 0.78 },
+    { "component": "Valve_REV", "value": 0.78 },
+    { "component": "Hydraulic_Pump", "value": 0.80 },
+    { "component": "PTO_Solenoid", "value": 0.72 },
+    { "component": "EBox_Internal_Fuse", "value": 0.85 },
+    { "component": "Pressure_Relief_Valve", "value": 0.65 }
+  ]
+}

@@ -1,0 +1,86 @@
+
+{
+  "components": [
+    {
+      "id": "Battery_24V",
+      "type": "power_source",
+      "location": "Chassis front-left",
+      "feeds": ["Main_Chassis_FuseBlock"],
+      "downstream": ["Opbouw_Feed_Fuse_F65"],
+      "vibration_risk": 0.4,
+      "moisture_risk": 0.2
+    },
+    {
+      "id": "Opbouw_Feed_Fuse_F65",
+      "type": "fuse",
+      "location": "Chassis E-box (front right)",
+      "feeds": ["EBox_Power_In", "Handunit"],
+      "downstream": ["EBox_Controller_PCB"],
+      "vibration_risk": 0.5,
+      "moisture_risk": 0.3
+    },
+    {
+      "id": "Chassis_Ground_G45",
+      "type": "ground",
+      "location": "Chassis front-right (near suspension tower)",
+      "feeds": ["E-Box", "Handunit"],
+      "downstream": ["Entire opbouw electrical circuit"],
+      "vibration_risk": 0.7,
+      "moisture_risk": 0.8
+    },
+    {
+      "id": "EBox_Controller_PCB",
+      "type": "control_module",
+      "location": "Liebherr E-box housing",
+      "feeds": ["Valve_FWD", "Valve_REV", "Handunit"],
+      "downstream": ["Hydraulic_Control"],
+      "vibration_risk": 0.3,
+      "moisture_risk": 0.6
+    },
+    {
+      "id": "Handunit",
+      "type": "input_device",
+      "location": "Operator-held remote",
+      "feeds": ["EBox_Controller_PCB"],
+      "downstream": [],
+      "vibration_risk": 0.8,
+      "moisture_risk": 0.7
+    },
+    {
+      "id": "Handunit_Connector_XH3",
+      "type": "connector",
+      "location": "Between handunit cable and E-box",
+      "feeds": ["Handunit"],
+      "downstream": ["EBox_Controller_PCB"],
+      "vibration_risk": 0.9,
+      "moisture_risk": 0.95
+    },
+    {
+      "id": "Valve_FWD",
+      "type": "valve",
+      "location": "Hydraulic valve block",
+      "feeds": ["Drum_Drive_Motor"],
+      "downstream": ["Drum_Drive_Motor"],
+      "vibration_risk": 0.6,
+      "moisture_risk": 0.4
+    },
+    {
+      "id": "Valve_REV",
+      "type": "valve",
+      "location": "Hydraulic valve block",
+      "feeds": ["Drum_Drive_Motor"],
+      "downstream": ["Drum_Drive_Motor"],
+      "vibration_risk": 0.6,
+      "moisture_risk": 0.4
+    },
+    {
+      "id": "Hydraulic_Pump",
+      "type": "pump",
+      "location": "Mounted on PTO output",
+      "feeds": ["Hydraulic system"],
+      "downstream": ["Valveblock"],
+      "vibration_risk": 0.5,
+      "moisture_risk": 0.2
+    }
+  ]
+}

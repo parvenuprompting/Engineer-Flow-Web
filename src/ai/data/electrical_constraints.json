@@ -1,0 +1,40 @@
+{
+  "electrical_constraints": [
+    {
+      "id": "EC_NO_24V_UPSTREAM",
+      "if": { "measurement": "no_24V_at_fuse" },
+      "then_exclude_components": [
+        "EBox_Controller_PCB",
+        "Handunit",
+        "Handunit_Connector_XH3"
+      ],
+      "reason": "Zonder voeding kunnen downstream componenten nooit functioneren."
+    },
+    {
+      "id": "EC_FUSE_OK",
+      "if": { "measurement": "fuse_ok" },
+      "then_reduce_failure_modes": {
+        "FM_FUSE_BLOWN": 0.25,
+        "FM_FUSE_LOOSE": 0.35
+      },
+      "reason": "Een goede zekering reduceert de waarschijnlijkheid van zekeringproblemen."
+    },
+    {
+      "id": "EC_NO_GROUND",
+      "if": { "measurement": "bad_ground_G45" },
+      "then_increase_failure_modes": {
+        "FM_GROUND_CORROSION": 0.40,
+        "FM_GROUND_LOOSE": 0.30
+      },
+      "reason": "Slechte massa veroorzaakt instabiliteit in alle aansluitende systemen."
+    },
+    {
+      "id": "EC_SHORT_CIRCUIT_SUSPECT",
+      "if": { "observation": "sparking" },
+      "then_increase_failure_modes": {
+        "FM_CABLE_SHORT_TO_CHASSIS": 0.50
+      },
+      "reason": "Vonkvorming of warm worden duidt op kortsluiting."
+    }
+  ]
+}

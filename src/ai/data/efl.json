@@ -1,0 +1,890 @@
+[
+  {
+    "id": "flow_fm_engine_overheat",
+    "failure_object_id": "fm_engine_overheat",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer het koelvloeistofpeil in het expansievat.",
+        "reason": "Uitsluiten van de meest voorkomende oorzaak: een laag koelvloeistofniveau door lekkage of verbruik.",
+        "tool": "Visueel"
+      },
+      {
+        "step_id": 2,
+        "action": "Inspecteer de radiateur op externe vervuiling (modder, bladeren, insecten).",
+        "reason": "Een vervuilde radiateur kan de luchtstroom blokkeren, wat de koelefficiëntie drastisch vermindert.",
+        "tool": "Visueel / Perslucht"
+      },
+      {
+        "step_id": 3,
+        "action": "Controleer of de koelventilator inschakelt bij hoge motortemperatuur.",
+        "reason": "Verifiëren dat de visco-koppeling of elektronische aansturing van de ventilator correct functioneert.",
+        "tool": "Visueel / Gehoor"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_engine_power_derate",
+    "failure_object_id": "fm_engine_power_derate",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Lees de foutcodes van de motor-ECU uit.",
+        "reason": "Vermogensreductie is een actieve ingreep van de ECU, veroorzaakt door een specifieke foutcode (bv. emissiesysteem, sensoren).",
+        "tool": "Diagnosetool (Volvo TechTool)"
+      },
+      {
+        "step_id": 2,
+        "action": "Controleer alle vloeistofniveaus (motorolie, koelvloeistof, AdBlue).",
+        "reason": "Een te laag niveau kan een derate-conditie activeren als veiligheidsmaatregel.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_engine_temp_sensor_fault",
+    "failure_object_id": "fm_engine_temp_sensor_fault",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Vergelijk de temperatuurwaarde van de sensor met de werkelijke motortemperatuur.",
+        "reason": "Vaststellen of de sensor een onlogische waarde (bv. -40°C bij warme motor) doorgeeft aan de ECU.",
+        "tool": "Diagnosetool / Infraroodthermometer"
+      },
+      {
+        "step_id": 2,
+        "action": "Inspecteer de bedrading en connector van de temperatuursensor op schade of corrosie.",
+        "reason": "Een slechte verbinding is een veelvoorkomende oorzaak van sensorstoringen.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_coolant_pump_worn",
+    "failure_object_id": "fm_coolant_pump_worn",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer de poelie van de waterpomp op speling en luister naar abnormaal geluid (gieren, ratelen) bij draaiende motor.",
+        "reason": "Lagerslijtage is vaak de eerste indicatie van een falende pomp.",
+        "tool": "Visueel / Gehoor"
+      },
+      {
+        "step_id": 2,
+        "action": "Controleer op lekkagesporen rondom de waterpomp (weep-hole).",
+        "reason": "Lekkage via het 'weep-hole' duidt op een defecte interne afdichting.",
+        "tool": "Visueel / Zaklamp"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_radiator_blocked",
+    "failure_object_id": "fm_radiator_blocked",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer de radiateur en intercooler visueel op externe blokkades zoals modder, stof of bladeren.",
+        "reason": "Externe vervuiling is de meest voorkomende vorm van blokkade en direct zichtbaar.",
+        "tool": "Visueel"
+      },
+      {
+        "step_id": 2,
+        "action": "Controleer met een infraroodthermometer op grote koude plekken op het oppervlak van de radiateur bij een warme motor.",
+        "reason": "Koude plekken duiden op een interne verstopping van de koelkanalen.",
+        "tool": "Infraroodthermometer"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_cooling_fan_not_engaging",
+    "failure_object_id": "fm_cooling_fan_not_engaging",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Breng de motor op bedrijfstemperatuur en controleer of de ventilator hoorbaar en zichtbaar op hoge snelheid gaat draaien.",
+        "reason": "Dit is de meest directe functionele test om de aansturing en werking te verifiëren.",
+        "tool": "Visueel / Gehoor"
+      },
+      {
+        "step_id": 2,
+        "action": "Lees de aansturing (duty cycle) van de ventilator uit via de diagnosetool en vergelijk dit met het werkelijke toerental.",
+        "reason": "Controleren of de ECU wel het commando geeft om de ventilator te activeren.",
+        "tool": "Diagnosetool (Volvo TechTool)"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_thermostat_stuck_closed",
+    "failure_object_id": "fm_thermostat_stuck_closed",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de temperatuur van de bovenste en onderste radiatorslang bij een warme motor.",
+        "reason": "Als de thermostaat dicht blijft, wordt de onderste slang niet of nauwelijks warm, terwijl de bovenste heet is. Dit duidt op geen circulatie.",
+        "tool": "Infraroodthermometer"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_pto_not_engaging",
+    "failure_object_id": "fm_pto_not_engaging",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de parkeerrem van de truck volledig is ingeschakeld.",
+        "reason": "De PTO wordt vaak vergrendeld als de parkeerrem niet actief is als veiligheidsmaatregel.",
+        "tool": "Visueel"
+      },
+      {
+        "step_id": 2,
+        "action": "Luister naar het schakelgeluid (klik) van het PTO-relais en het luchtventiel wanneer de PTO-knop wordt ingedrukt.",
+        "reason": "Het ontbreken van een klikgeluid wijst op een probleem in de elektrische aansturing (zekering, relais, knop).",
+        "tool": "Gehoor"
+      },
+      {
+        "step_id": 3,
+        "action": "Meet de spanning op de aansturingsdraad van de PTO-solenoïde.",
+        "reason": "Verifiëren of het elektrische signaal daadwerkelijk bij de solenoïde aankomt.",
+        "tool": "Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_pto_slipping",
+    "failure_object_id": "fm_pto_slipping",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer de systeemdruk van de (rem)lucht die de PTO aanstuurt.",
+        "reason": "Onvoldoende luchtdruk kan ervoor zorgen dat de PTO-koppeling niet volledig aangrijpt en gaat slippen.",
+        "tool": "Manometer (op luchtsysteem)"
+      },
+      {
+        "step_id": 2,
+        "action": "Luister naar gesis van lucht rondom het PTO-schakelmechanisme.",
+        "reason": "Een luchtlek kan drukverlies veroorzaken waardoor de PTO slipt.",
+        "tool": "Gehoor"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_pto_valve_stuck",
+    "failure_object_id": "fm_pto_valve_stuck",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Forceer de aansturing van het PTO-ventiel met de diagnosetool en luister of het ventiel schakelt.",
+        "reason": "Dit isoleert het probleem: als het ventiel niet schakelt bij directe aansturing, is het ventiel zelf defect.",
+        "tool": "Diagnosetool"
+      },
+      {
+        "step_id": 2,
+        "action": "Controleer of het ventiel mechanisch vrij kan bewegen en niet vervuild is.",
+        "reason": "Vervuiling in het ventiel kan de plunjer blokkeren.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_pto_relay_failed",
+    "failure_object_id": "fm_pto_relay_failed",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Wissel het PTO-relais met een identiek relais van een ander, werkend systeem (bv. claxon).",
+        "reason": "Dit is de snelste manier om een defect relais uit te sluiten zonder metingen. Als de PTO nu werkt, is het relais defect.",
+        "tool": "Visueel / Hand"
+      },
+      {
+        "step_id": 2,
+        "action": "Meet de spanning op de stuur- en voedingspinnen van de relaissokkel.",
+        "reason": "Hiermee controleer je of het relais überhaupt een signaal krijgt om te schakelen.",
+        "tool": "Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_pto_speed_sensor_no_signal",
+    "failure_object_id": "fm_pto_speed_sensor_no_signal",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer het PTO-toerental in de live data van de ECU terwijl de PTO draait.",
+        "reason": "Verifiëren dat de ECU inderdaad geen signaal ontvangt.",
+        "tool": "Diagnosetool"
+      },
+      {
+        "step_id": 2,
+        "action": "Inspecteer de sensor en de bedrading op fysieke schade en controleer de afstand tussen de sensor en het tandwiel.",
+        "reason": "Schade door trillingen, impact of een foute montageafstand zijn veelvoorkomende oorzaken.",
+        "tool": "Visueel / Voelermaat"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_pump_worn",
+    "failure_object_id": "fm_hydraulic_pump_worn",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de maximale hydraulische druk met de motor op verhoogd toerental (1500 RPM) en een geblokkeerde functie.",
+        "reason": "Een versleten pomp haalt de maximale systeemdruk (bv. 250 bar) niet meer onder belasting.",
+        "tool": "Manometer"
+      },
+      {
+        "step_id": 2,
+        "action": "Controleer de temperatuur van de pompbehuizing na 10 minuten draaien.",
+        "reason": "Een intern lekkende, versleten pomp genereert excessieve hitte door wrijving.",
+        "tool": "Infraroodthermometer"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_pump_cavitation",
+    "failure_object_id": "fm_hydraulic_pump_cavitation",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Luister naar een hoog, gierend of 'knikkerbak'-geluid bij de hydraulische pomp.",
+        "reason": "Cavitatie (het imploderen van luchtbellen in de olie) veroorzaakt een zeer herkenbaar geluid.",
+        "tool": "Gehoor / Stethoscoop"
+      },
+      {
+        "step_id": 2,
+        "action": "Inspecteer de aanzuigleiding van de pomp op knikken, scheuren of losse klemmen.",
+        "reason": "Cavitatie wordt meestal veroorzaakt door een restrictie in de aanzuigleiding of het aanzuigen van valse lucht.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_low_oil_level",
+    "failure_object_id": "fm_hydraulic_low_oil_level",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer het oliepeil in het hydrauliekreservoir met het systeem koud en uitgeschakeld.",
+        "reason": "Dit is de meest basale en voorkomende oorzaak van diverse hydraulische problemen, inclusief cavitatie en oververhitting.",
+        "tool": "Visueel (peilglas/peilstok)"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_suction_line_collapsed",
+    "failure_object_id": "fm_hydraulic_suction_line_collapsed",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer de volledige aanzuigleiding (tussen tank en pomp) visueel op platgedrukte of geknikte secties.",
+        "reason": "Een (deels) ingeklapte aanzuigslang creëert een restrictie die leidt tot cavitatie en verminderde pompprestaties.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_pressure_line_leak",
+    "failure_object_id": "fm_hydraulic_pressure_line_leak",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer alle drukleidingen en koppelingen (van pomp naar ventielen en motor) op zichtbare olielekkage.",
+        "reason": "Een lekkage in de drukleiding leidt direct tot drukverlies en dus verminderde prestaties. De locatie is vaak vochtig of vuil.",
+        "tool": "Visueel / Zaklamp"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_return_line_restriction",
+    "failure_object_id": "fm_hydraulic_return_line_restriction",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer de retourleiding op knikken of externe schade.",
+        "reason": "Een restrictie in de retourleiding veroorzaakt tegendruk in het systeem, wat kan leiden tot oververhitting en trage functies.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_cooler_blocked",
+    "failure_object_id": "fm_hydraulic_cooler_blocked",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer de hydrauliekkoeler op externe vervuiling zoals modder, stof of bladeren die de luchtstroom blokkeren.",
+        "reason": "Een geblokkeerde luchtstroom is de meest voorkomende oorzaak van verminderde koelefficiëntie.",
+        "tool": "Visueel / Perslucht"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_cooler_fan_not_working",
+    "failure_object_id": "fm_hydraulic_cooler_fan_not_working",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de ventilator van de hydrauliekkoeler draait wanneer de olietemperatuur boven de inschakelwaarde komt (ca. 55-60°C).",
+        "reason": "Verifiëren of de ventilator (elektrisch of hydraulisch) correct wordt aangestuurd en functioneert.",
+        "tool": "Visueel / Gehoor"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_filter_blocked",
+    "failure_object_id": "fm_hydraulic_filter_blocked",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer de verzadigingsindicator van het retourfilter (indien aanwezig).",
+        "reason": "De indicator geeft een directe visuele indicatie van een verstopt filter.",
+        "tool": "Visueel"
+      },
+      {
+        "step_id": 2,
+        "action": "Vervang het retourfilter.",
+        "reason": "Een verstopt filter veroorzaakt tegendruk en kan de bypass-klep openen, waardoor ongefilterde olie circuleert. Vervangen is de zekerste test.",
+        "tool": "Filtersleutel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_relief_valve_stuck_open",
+    "failure_object_id": "fm_hydraulic_relief_valve_stuck_open",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de maximale systeemdruk. Een openstaand overdrukventiel zorgt ervoor dat er geen (of zeer weinig) druk kan worden opgebouwd.",
+        "reason": "Als de druk significant lager is dan de specificatie (bv. 30 bar ipv 250 bar), wordt de olie direct naar de tank geleid.",
+        "tool": "Manometer"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_relief_valve_stuck_closed",
+    "failure_object_id": "fm_hydraulic_relief_valve_stuck_closed",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de systeemdruk terwijl een functie wordt geblokkeerd. Wees extreem voorzichtig.",
+        "reason": "Een vastzittend overdrukventiel leidt tot extreem hoge, gevaarlijke drukpieken die componenten kunnen beschadigen.",
+        "tool": "Manometer (met hoog bereik)"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_flow_valve_misadjusted",
+    "failure_object_id": "fm_hydraulic_flow_valve_misadjusted",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer de instelling van het flowregelventiel en vergelijk deze met de specificaties van de fabrikant.",
+        "reason": "Een verkeerd afgesteld ventiel kan leiden tot te trage of te snelle (en schokkerige) bewegingen van de trommel.",
+        "tool": "Inbussleutel / Steeksleutel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_pressure_sensor_fault",
+    "failure_object_id": "fm_hydraulic_pressure_sensor_fault",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Vergelijk de drukwaarde van de sensor (uitgelezen via diagnosetool) met een gekalibreerde, externe manometer.",
+        "reason": "Dit is de enige manier om te valideren of de sensor een correcte waarde doorgeeft aan het besturingssysteem.",
+        "tool": "Diagnosetool / Manometer"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_temp_sensor_fault",
+    "failure_object_id": "fm_hydraulic_temp_sensor_fault",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Vergelijk de temperatuurwaarde van de sensor met de werkelijke olietemperatuur, gemeten met een infraroodthermometer op het reservoir.",
+        "reason": "Hiermee wordt een afwijking van de sensor vastgesteld.",
+        "tool": "Diagnosetool / Infraroodthermometer"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_oil_overheated",
+    "failure_object_id": "fm_hydraulic_oil_overheated",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de hydrauliekkoeler en de ventilator correct functioneren.",
+        "reason": "Oververhitting wordt bijna altijd veroorzaakt door een probleem in het koelsysteem.",
+        "tool": "Visueel"
+      },
+      {
+        "step_id": 2,
+        "action": "Controleer of het overdrukventiel niet continu open staat ('zingend' geluid), wat constant hitte genereert.",
+        "reason": "Een constant bypassende klep is een grote bron van warmteontwikkeling.",
+        "tool": "Gehoor"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_motor_worn",
+    "failure_object_id": "fm_hydraulic_motor_worn",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de lek-olie van de hydromotor. Een hoge hoeveelheid lekolie bij een belaste motor duidt op interne slijtage.",
+        "reason": "Een versleten motor heeft overmatige interne lekkage, wat resulteert in krachtverlies en verminderd rendement.",
+        "tool": "Maatbeker / Stopwatch"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hydraulic_motor_internal_leak",
+    "failure_object_id": "fm_hydraulic_motor_internal_leak",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Voer een lek-olietest uit op de hydromotor terwijl deze onder druk staat.",
+        "reason": "Overmatige lek-olie bevestigt interne lekkage, waardoor de motor zijn koppel verliest en de trommel stopt onder belasting.",
+        "tool": "Maatbeker / Stopwatch"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_drum_gear_ring_missing_teeth",
+    "failure_object_id": "fm_drum_gear_ring_missing_teeth",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer de tandkrans van de trommel visueel op ontbrekende of beschadigde tanden.",
+        "reason": "Visuele inspectie is de snelste manier om mechanische schade aan de tandkrans te bevestigen.",
+        "tool": "Visueel / Zaklamp"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_drum_support_roller_seized",
+    "failure_object_id": "fm_drum_support_roller_seized",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of alle draagrollen soepel en zonder weerstand draaien wanneer de trommel roteert.",
+        "reason": "Een vastzittende rol veroorzaakt extreme wrijving, lawaai en kan de trommelaandrijving blokkeren.",
+        "tool": "Visueel / Gehoor"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_drum_thrust_roller_worn",
+    "failure_object_id": "fm_drum_thrust_roller_worn",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer de aandrukrol op overmatige speling en slijtage.",
+        "reason": "Een versleten aandrukrol leidt tot axiale speling van de trommel, wat schokken en extra belasting veroorzaakt.",
+        "tool": "Visueel / Handmatig"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_drum_main_bearing_worn",
+    "failure_object_id": "fm_drum_main_bearing_worn",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Luister naar een brommend of schurend geluid vanuit het hoofdlager tijdens het draaien.",
+        "reason": "Slijtage in het hoofdlager manifesteert zich bijna altijd als een constant, rotatie-afhankelijk geluid.",
+        "tool": "Gehoor / Stethoscoop"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_drum_blades_loose",
+    "failure_object_id": "fm_drum_blades_loose",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Luister naar een hard, kloppend of schrapend geluid van binnenuit de trommel, vooral bij het veranderen van draairichting.",
+        "reason": "Een los mengblad veroorzaakt een duidelijk hoorbaar, onregelmatig contactgeluid in de trommel.",
+        "tool": "Gehoor"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_drum_blades_worn",
+    "failure_object_id": "fm_drum_blades_worn",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer de staat van de mengbladen via het mangat.",
+        "reason": "Visuele inspectie is de enige manier om de slijtagegraad van de bladen te beoordelen. Versleten bladen beïnvloeden de mengkwaliteit.",
+        "tool": "Visueel / Zaklamp"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_drum_angle_sensor_fault",
+    "failure_object_id": "fm_drum_angle_sensor_fault",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Lees de live data van de hoeksensor uit en vergelijk deze met de werkelijke positie van de trommel.",
+        "reason": "Hiermee wordt geverifieerd of de sensor correcte en stabiele data doorgeeft aan het besturingssysteem.",
+        "tool": "Diagnosetool"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_drum_speed_sensor_no_signal",
+    "failure_object_id": "fm_drum_speed_sensor_no_signal",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer het toerentalsignaal van de trommelsensor in de live data van de ECU.",
+        "reason": "Dit bevestigt dat de ECU geen signaal ontvangt, wat kan wijzen op een defecte sensor of bedrading.",
+        "tool": "Diagnosetool"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_solenoid_fwd_no_signal",
+    "failure_object_id": "fm_solenoid_fwd_no_signal",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de spanning op de connector van het 'vooruit'-ventiel wanneer de functie wordt geactiveerd.",
+        "reason": "Een meting van 0V of een te lage spanning bevestigt dat het probleem in de aansturing (E-box, bedrading) zit, niet in het ventiel zelf.",
+        "tool": "Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_solenoid_rev_no_signal",
+    "failure_object_id": "fm_solenoid_rev_no_signal",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de spanning op de connector van het 'achteruit'-ventiel wanneer de functie wordt geactiveerd.",
+        "reason": "Een meting van 0V of een te lage spanning bevestigt dat het probleem in de aansturing (E-box, bedrading) zit, niet in het ventiel zelf.",
+        "tool": "Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_solenoid_fwd_spool_stuck",
+    "failure_object_id": "fm_solenoid_fwd_spool_stuck",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of er spanning op het 'vooruit'-ventiel staat, maar er geen hydraulische flow is. Luister of de spoel klikt.",
+        "reason": "Als de spoel spanning krijgt en klikt maar er gebeurt niets, is de kans groot dat de interne plunjer (spool) mechanisch vastzit.",
+        "tool": "Multimeter / Gehoor"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_solenoid_rev_spool_stuck",
+    "failure_object_id": "fm_solenoid_rev_spool_stuck",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of er spanning op het 'achteruit'-ventiel staat, maar er geen hydraulische flow is. Luister of de spoel klikt.",
+        "reason": "Als de spoel spanning krijgt en klikt maar er gebeurt niets, is de kans groot dat de interne plunjer (spool) mechanisch vastzit.",
+        "tool": "Multimeter / Gehoor"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_e_box_water_ingress",
+    "failure_object_id": "fm_e_box_water_ingress",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Open de E-box en inspecteer de printplaat (PCB) en connectoren op sporen van vocht, oxidatie of corrosie.",
+        "reason": "Visuele inspectie is de enige manier om waterschade direct vast te stellen, wat vaak leidt tot onvoorspelbare elektronische storingen.",
+        "tool": "Visueel / Zaklamp"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_main_fuse_blown",
+    "failure_object_id": "fm_main_fuse_blown",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer de hoofdzekering van de mixer-opbouw visueel op doorbranden.",
+        "reason": "Dit is de eerste stap bij totaal spanningsverlies. Een doorgebrande zekering wijst op overbelasting of kortsluiting downstream.",
+        "tool": "Visueel / Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_relay_block_contact_worn",
+    "failure_object_id": "fm_relay_block_contact_worn",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Wissel het verdachte relais met een identiek relais van een werkende functie.",
+        "reason": "Als de storing zich verplaatst, is het relais defect. Dit is een snelle en betrouwbare functionele test.",
+        "tool": "Visueel / Handmatig"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_connector_block_corroded",
+    "failure_object_id": "fm_connector_block_corroded",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer het hoofdconnectorblok op de E-box visueel op groene of witte corrosie op de pinnen.",
+        "reason": "Corrosie veroorzaakt een hoge weerstand, wat leidt tot intermitterende storingen en spanningsval.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_harness_main_broken_wire",
+    "failure_object_id": "fm_harness_main_broken_wire",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de continuïteit (weerstand) van de verdachte draad in de hoofdkabelboom van begin tot eind.",
+        "reason": "Een oneindige weerstand (OL) op de multimeter bevestigt een draadbreuk.",
+        "tool": "Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_harness_valves_broken_wire",
+    "failure_object_id": "fm_harness_valves_broken_wire",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Meet de continuïteit (weerstand) van de aansturingsdraden tussen de E-box en de ventielconnectoren.",
+        "reason": "Een oneindige weerstand (OL) op de multimeter bevestigt een draadbreuk, wat verklaart waarom een ventiel geen signaal krijgt.",
+        "tool": "Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_ground_main_corroded",
+    "failure_object_id": "fm_ground_main_corroded",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer het hoofdmassapunt van de opbouw op het chassis op roest, corrosie en losse verbindingen.",
+        "reason": "Een slechte massaverbinding is een veelvoorkomende oorzaak van onverklaarbare, intermitterende elektronische problemen.",
+        "tool": "Visueel / Sleutel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_handunit_no_power",
+    "failure_object_id": "fm_handunit_no_power",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer de hoofdzekering van de mixeropbouw (vaak F65).",
+        "reason": "De meest voorkomende oorzaak van complete uitval is een gebrek aan spanning.",
+        "tool": "Visueel / Multimeter"
+      },
+      {
+        "step_id": 2,
+        "action": "Inspecteer de connector van de handunit (XH3) op vocht of corrosie.",
+        "reason": "Een slechte verbinding onderbreekt de voeding of communicatie.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_handunit_switch_fault",
+    "failure_object_id": "fm_handunit_switch_fault",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Test alle knoppen en schakelaars op de handunit systematisch.",
+        "reason": "Hiermee wordt vastgesteld of het een specifieke knop is of een algemener probleem.",
+        "tool": "Functionele test"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_remote_tx_low_battery",
+    "failure_object_id": "fm_remote_tx_low_battery",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Vervang de batterijen in de afstandsbediening.",
+        "reason": "Een lage batterijspanning is de meest voorkomende oorzaak van een niet-werkende of onbetrouwbare afstandsbediening.",
+        "tool": "Handmatig"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_remote_rx_fault",
+    "failure_object_id": "fm_remote_rx_fault",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de ontvanger voeding krijgt en de antenne correct is aangesloten.",
+        "reason": "Geen voeding of een slechte antenneverbinding zorgt ervoor dat de ontvanger geen signalen kan verwerken.",
+        "tool": "Visueel / Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_e_stop_front_engaged",
+    "failure_object_id": "fm_e_stop_front_engaged",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de noodstopknop aan de voorzijde is ingedrukt. Draai om te ontgrendelen.",
+        "reason": "Een ingedrukte noodstop blokkeert alle functies als veiligheidsmaatregel.",
+        "tool": "Visueel / Handmatig"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_e_stop_rear_engaged",
+    "failure_object_id": "fm_e_stop_rear_engaged",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de noodstopknop aan de achterzijde is ingedrukt. Draai om te ontgrendelen.",
+        "reason": "Een ingedrukte noodstop blokkeert alle functies als veiligheidsmaatregel.",
+        "tool": "Visueel / Handmatig"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_hopper_switch_open",
+    "failure_object_id": "fm_hopper_switch_open",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de trechter correct is gepositioneerd en de veiligheidsschakelaar is geactiveerd.",
+        "reason": "De trechterschakelaar is een interlock die trommelrotatie kan voorkomen als deze niet correct gesloten is.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_chute_lock_switch_open",
+    "failure_object_id": "fm_chute_lock_switch_open",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de losgoot correct vergrendeld is en de veiligheidsschakelaar is geactiveerd.",
+        "reason": "De gootvergrendeling is een interlock die functies kan blokkeren als de goot niet veilig vastzit.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_subframe_cracked",
+    "failure_object_id": "fm_subframe_cracked",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer het subframe van de mixer visueel op scheuren, met name rond lasnaden en montagepunten.",
+        "reason": "Structurele defecten zoals scheuren kunnen leiden tot gevaarlijke instabiliteit en moeten direct worden geïdentificeerd.",
+        "tool": "Visueel / Zaklamp"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_mounting_bolts_loose",
+    "failure_object_id": "fm_mounting_bolts_loose",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer het aanhaalmoment van de montagebouten waarmee de mixer aan het chassis is bevestigd.",
+        "reason": "Losse bouten kunnen leiden tot overmatige trillingen, lawaai en uiteindelijk structurele schade.",
+        "tool": "Momentsleutel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_crossmember_bent",
+    "failure_object_id": "fm_crossmember_bent",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer de dwarsliggers van het chassis onder de mixer op tekenen van buiging of vervorming.",
+        "reason": "Een verbogen dwarsligger kan duiden op overbelasting of een impact, wat de uitlijning van de hele opbouw beïnvloedt.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_water_tank_leak",
+    "failure_object_id": "fm_water_tank_leak",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Vul de watertank en inspecteer de tank en aansluitingen visueel op lekkages.",
+        "reason": "Directe visuele inspectie is de snelste manier om de locatie van een lek vast te stellen.",
+        "tool": "Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_water_pump_no_pressure",
+    "failure_object_id": "fm_water_pump_no_pressure",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of de waterpomp voeding krijgt en luister of de motor draait wanneer geactiveerd.",
+        "reason": "Hiermee wordt een elektrisch probleem (geen stroom) onderscheiden van een mechanisch probleem (pomp draait wel, maar verplaatst geen water).",
+        "tool": "Gehoor / Multimeter"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_water_filter_blocked",
+    "failure_object_id": "fm_water_filter_blocked",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Demonteer en inspecteer het waterfilter op vervuiling.",
+        "reason": "Een verstopt filter is een veelvoorkomende oorzaak van lage waterdruk of geen flow.",
+        "tool": "Handmatig / Visueel"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_water_valve_blocked",
+    "failure_object_id": "fm_water_valve_blocked",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Controleer of het waterafsluitventiel (elektrisch of handmatig) volledig opent.",
+        "reason": "Een deels gesloten of geblokkeerd ventiel beperkt de waterstroom.",
+        "tool": "Visueel / Handmatig"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_water_pressure_sensor_fault",
+    "failure_object_id": "fm_water_pressure_sensor_fault",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Vergelijk de drukwaarde van de sensor met een externe manometer om de nauwkeurigheid te controleren.",
+        "reason": "Een defecte sensor kan onjuiste informatie geven, wat leidt tot verkeerde diagnoses of systeemgedrag.",
+        "tool": "Manometer / Diagnosetool"
+      }
+    ]
+  },
+  {
+    "id": "flow_fm_water_hose_connector_leak",
+    "failure_object_id": "fm_water_hose_connector_leak",
+    "steps": [
+      {
+        "step_id": 1,
+        "action": "Inspecteer alle slangconnectoren van het watersysteem op lekkages of tekenen van luchtinzuiging.",
+        "reason": "Een lekkende connector kan leiden tot drukverlies of het aanzuigen van lucht, wat de prestaties van de pomp vermindert.",
+        "tool": "Visueel"
+      }
+    ]
+  }
+]

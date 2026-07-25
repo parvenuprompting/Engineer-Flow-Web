@@ -1,0 +1,34 @@
+{
+  "superstructure_id": "palfinger_crane_v1",
+  "name": "Palfinger Autolaadkraan",
+  "manufacturer": "Palfinger",
+  "version": "1.0.0",
+  "subsystems": [
+    {
+      "id": "palfinger_remote",
+      "name": "Radio Grafische Afstandsbediening",
+      "description": "Zender, ontvanger en CAN-bus communicatie"
+    },
+    {
+      "id": "palfinger_overload",
+      "name": "PALTRONIC Overlastbeveiliging",
+      "description": "Drukopnemers, lengtesensoren en veiligheidsafsluiters"
+    }
+  ],
+  "diagnostic_rules": [
+    {
+      "rule_id": "PALF_RULE_001",
+      "symptom_trigger": "kraan reageert niet op afstandsbediening",
+      "target_subsystem": "palfinger_remote",
+      "recommended_action": "Controleer batterijvoeding zender en noodstopcircuittest op ontvanger.",
+      "confidence_modifier": 0.30
+    },
+    {
+      "rule_id": "PALF_RULE_002",
+      "symptom_trigger": "kraan stopt onverwacht bij uitschuiven",
+      "target_subsystem": "palfinger_overload",
+      "recommended_action": "Uitlezen PALTRONIC foutgeheugen en druksensoren van de hoofdcilinder controleren.",
+      "confidence_modifier": 0.25
+    }
+  ]
+}

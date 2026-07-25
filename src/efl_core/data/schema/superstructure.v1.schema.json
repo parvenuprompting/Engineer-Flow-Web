@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SuperstructureManifestV1",
+  "type": "object",
+  "required": [
+    "superstructure_id",
+    "name",
+    "manufacturer",
+    "version",
+    "subsystems",
+    "diagnostic_rules"
+  ],
+  "properties": {
+    "superstructure_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "manufacturer": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "subsystems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "diagnostic_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule_id", "symptom_trigger", "target_subsystem", "recommended_action"],
+        "properties": {
+          "rule_id": { "type": "string" },
+          "symptom_trigger": { "type": "string" },
+          "target_subsystem": { "type": "string" },
+          "recommended_action": { "type": "string" },
+          "confidence_modifier": { "type": "number" }
+        }
+      }
+    }
+  }
+}

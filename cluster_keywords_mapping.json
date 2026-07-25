@@ -1,0 +1,222 @@
+{
+  "SC_HANDUNIT_NO_POWER": [
+    "Belangrijk massapunt aangetast.",
+    "Handbediening dood",
+    "Handbediening is volledig dood.",
+    "Handbediening reageert niet, geen leds, geen functies.",
+    "Hoofdzekering opbouw defect.",
+    "Vocht in E-box → storingen en uitval.",
+    "geen leds",
+    "is volledig dood",
+    "lampjes uit",
+    "reageert niet"
+  ],
+  "SC_HANDUNIT_INTERMITTENT": [
+    "Bediening valt weg of komt pas terug na meerdere keren drukken.",
+    "Corrosie in connectorblok.",
+    "Draadbreuk in hoofd kabelboom.",
+    "Handbediening is volledig dood.",
+    "Handbediening werkt soms wel/soms niet",
+    "Modus-schakelaar maakt slecht contact.",
+    "Vocht in E-box → storingen en uitval."
+  ],
+  "SC_REMOTE_NO_SIGNAL": [
+    "Afstandsbediening werkt niet",
+    "Batterij te zwak voor goed RF-signaal.",
+    "Ontvanger verwerkt signalen niet goed.",
+    "Remote reageert niet, geen functies op afstand.",
+    "Vocht in E-box → storingen en uitval."
+  ],
+  "SC_REMOTE_INTERMITTENT": [
+    "Afstandsbediening werkt soms",
+    "Batterij te zwak voor goed RF-signaal.",
+    "Bereik beperkt of remote valt weg afhankelijk van positie/weer.",
+    "Corrosie in connectorblok.",
+    "Ontvanger verwerkt signalen niet goed.",
+    "Vocht in E-box → storingen en uitval."
+  ],
+  "SC_PTO_NOT_ENGAGING": [
+    "ECU beperkt vermogen door foutconditie.",
+    "Motor raakt oververhit onder belasting.",
+    "PTO schakelt niet in",
+    "PTO schakelt niet in of valt direct weer uit.",
+    "PTO slipt onder belasting.",
+    "PTO-bedieningsventiel blijft hangen.",
+    "PTO-lampje blijft uit of PTO valt direct uit.",
+    "PTO-relais schakelt niet of intermitterend."
+  ],
+  "SC_PTO_ENGAGED_NO_PRESSURE": [
+    "Aanzuigslang klapt in onder vacuum.",
+    "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "Hydrauliekolie wordt te heet.",
+    "Interne slijtage pomp → onvoldoende druk.",
+    "PTO aan, maar geen hydraulische druk",
+    "PTO lijkt actief maar druk blijft laag of nul.",
+    "PTO schakelt niet in of valt direct weer uit.",
+    "PTO slipt onder belasting.",
+    "Te laag oliepeil in reservoir."
+  ],
+  "SC_DRUM_NOT_ROTATING": [
+    "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "Geen rotatie in geen enkele richting.",
+    "Hydromotor intern versleten → laag koppel.",
+    "Interne lekkage in hydromotor.",
+    "Interne slijtage pomp → onvoldoende druk.",
+    "Lekkage in drukleiding.",
+    "PTO schakelt niet in of valt direct weer uit.",
+    "PTO slipt onder belasting.",
+    "Spoel achteruitventiel krijgt geen of te lage spanning.",
+    "Spoel vooruitventiel krijgt geen of te lage spanning.",
+    "Tandkrans mist tanden → schokkerige rotatie.",
+    "Trommel draait niet",
+    "Ventielspool achteruit blijft hangen.",
+    "Ventielspool vooruit blijft hangen."
+  ],
+  "SC_DRUM_ONLY_ONE_DIRECTION": [
+    "Alleen vooruit of alleen achteruit mogelijk.",
+    "Hydromotor intern versleten → laag koppel.",
+    "Interne lekkage in hydromotor.",
+    "Spoel achteruitventiel krijgt geen of te lage spanning.",
+    "Spoel vooruitventiel krijgt geen of te lage spanning.",
+    "Trommel draait maar in één richting",
+    "Ventielspool achteruit blijft hangen.",
+    "Ventielspool vooruit blijft hangen."
+  ],
+  "SC_DRUM_STOPS_UNDER_LOAD": [
+    "Bij zwaar beton of hoge snelheid valt rotatie weg.",
+    "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "Hydromotor intern versleten → laag koppel.",
+    "Interne lekkage in hydromotor.",
+    "Interne slijtage pomp → onvoldoende druk.",
+    "Motor raakt oververhit onder belasting.",
+    "Overdrukventiel blijft open → geen drukopbouw.",
+    "Overdrukventiel sluit volledig → extreem hoge druk.",
+    "Trommel stopt onder belasting"
+  ],
+  "SC_DRUM_SLOW_AT_IDLE": [
+    "Bij lage motortoeren draait trommel te langzaam.",
+    "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "Flowregelventiel verkeerd afgesteld.",
+    "Interne slijtage pomp → onvoldoende druk.",
+    "Trommel langzaam bij stationair"
+  ],
+  "SC_DRUM_SPEED_UNSTABLE": [
+    "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "Flowregelventiel verkeerd afgesteld.",
+    "Geen toerentalsignaal trommel.",
+    "Hydromotor intern versleten → laag koppel.",
+    "Interne lekkage in hydromotor.",
+    "Interne slijtage pomp → onvoldoende druk.",
+    "Trommel versnelt/vertraagt zonder reden.",
+    "Trommelsnelheid instabiel"
+  ],
+  "SC_DRUM_VIBRATION": [
+    "Bladen afgesleten/vervormd.",
+    "Draagrol zit vast → hoge wrijving.",
+    "Dwarsligger verbogen → chassis torsie.",
+    "Hoofdlager versleten → geluid en vibratie.",
+    "Mengbladen losgeraakt.",
+    "Scheuren in subframe mixer.",
+    "Sterke vibraties tijdens rotatie.",
+    "Trommel trilt"
+  ],
+  "SC_DRUM_METALLIC_NOISE": [
+    "Bladen afgesleten/vervormd.",
+    "Draagrol zit vast → hoge wrijving.",
+    "Mengbladen losgeraakt.",
+    "Metaal-op-metaal geluid in trommel",
+    "Schrapend/kloppend geluid per omwenteling.",
+    "Tandkrans mist tanden → schokkerige rotatie."
+  ],
+  "SC_HYD_PRESSURE_LOW": [
+    "Algemene klacht: lage druk, trage functies.",
+    "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "Hydrauliekolie wordt te heet.",
+    "Hydraulische druk te laag",
+    "Interne slijtage pomp → onvoldoende druk.",
+    "Overdrukventiel blijft open → geen drukopbouw.",
+    "Overdrukventiel sluit volledig → extreem hoge druk.",
+    "Retourfilter verstopt.",
+    "Te laag oliepeil in reservoir."
+  ],
+  "SC_HYD_OVERHEAT": [
+    "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "Hydrauliek oververhit",
+    "Hydrauliekolie wordt te heet, alarmsignalen of prestatieverlies.",
+    "Hydrauliekolie wordt te heet.",
+    "Interne slijtage pomp → onvoldoende druk.",
+    "Koeler verstopt of onvoldoende luchtflow.",
+    "Te laag oliepeil in reservoir.",
+    "Ventilator koeler draait niet."
+  ],
+  "SC_HYD_FILTER_WARNING": [
+    "Cavitatie door luchtinzuiging of beperkte aanzuig.",
+    "Filter waarschuwing",
+    "Interne slijtage pomp → onvoldoende druk.",
+    "Retourfilter verstopt.",
+    "Signaal of indicatie dat filter verstopt is."
+  ],
+  "SC_ENGINE_OVERHEAT_PTO_DROP": [
+    "Bij warme motor valt PTO uit of wordt begrensd.",
+    "ECU beperkt vermogen door foutconditie.",
+    "Motor raakt oververhit onder belasting.",
+    "Motor warm, PTO valt weg",
+    "PTO schakelt niet in of valt direct weer uit.",
+    "PTO slipt onder belasting.",
+    "Verkeerde temperatuurmeting stuurt koelsysteem verkeerd aan."
+  ],
+  "SC_ELECTRICAL_TOTAL_LOSS": [
+    "Belangrijk massapunt aangetast.",
+    "Hoofdzekering opbouw defect.",
+    "Niets in de mixer-opbouw werkt elektrisch.",
+    "Opbouw heeft geen voeding",
+    "Vocht in E-box → storingen en uitval."
+  ],
+  "SC_ELECTRICAL_INTERMITTENT": [
+    "Belangrijk massapunt aangetast.",
+    "Corrosie in connectorblok.",
+    "Draadbreuk in hoofd kabelboom.",
+    "Elektrische functies vallen soms uit",
+    "Random uitval van ventielen/bediening.",
+    "Vocht in E-box → storingen en uitval."
+  ],
+  "SC_SAFETY_LOCKOUT_ACTIVE": [
+    "Geen functies mogelijk door noodstop of interlock.",
+    "Gootvergrendeling meldt open stand → blokkeert functies.",
+    "Noodstop achterzijde actief of vast.",
+    "Noodstop voorzijde actief of vast.",
+    "Trechter-schakelaar in open stand → blokkeert functies.",
+    "Veiligheidsblokkering actief"
+  ],
+  "SC_WATER_NO_FLOW": [
+    "Geen water uit systeem",
+    "Lekkage of luchtinzuiging bij slangconnector.",
+    "Pomp draait maar er komt geen water.",
+    "Waterafsluiter opent/sluit niet goed.",
+    "Waterfilter verstopt.",
+    "Waterpomp levert geen druk.",
+    "Watertank lekt."
+  ],
+  "SC_WATER_LOW_PRESSURE": [
+    "Foutieve drukmeting water.",
+    "Lage waterdruk",
+    "Water komt wel maar met weinig kracht.",
+    "Waterafsluiter opent/sluit niet goed.",
+    "Waterfilter verstopt.",
+    "Waterpomp levert geen druk."
+  ],
+  "SC_STRUCTURE_NOISE_FLEX": [
+    "Bevestigingsbouten los of uitgerekt.",
+    "Dwarsligger verbogen → chassis torsie.",
+    "Hoorbare framebewegingen bij draaien/rijden.",
+    "Kraak/klak in frame/subframe",
+    "Scheuren in subframe mixer."
+  ],
+  "SC_AFTER_TIRE_BLOWOUT_VIBRATION": [
+    "Bevestigingsbouten los of uitgerekt.",
+    "Dwarsligger verbogen → chassis torsie.",
+    "Na klapband trilt mixer",
+    "Scheuren in subframe mixer.",
+    "Sinds klapband vibratie en instabiliteit."
+  ]
+}

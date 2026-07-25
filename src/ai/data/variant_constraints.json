@@ -1,0 +1,19 @@
+{
+  "variant_constraints": [
+    {
+      "component": "Drum_Speed_Sensor",
+      "exists_in": [],
+      "reason": "De meeste Liebherr-mixers op Volvo FM/FH hebben geen externe speed sensor."
+    },
+    {
+      "component": "Hydraulic_Tank_Return",
+      "exists_in": ["Liebherr_Mixer"],
+      "reason": "Alle mixers bevatten deze, maar sommige opbouwen hebben alternatieve retourlijnen."
+    },
+    {
+      "component": "EBox_Internal_Fuse",
+      "exists_in": ["Liebherr_Mixer"],
+      "reason": "Dit is een opbouwspecifieke zekering die niet bij alle opbouwen aanwezig is."
+    }
+  ]
+}

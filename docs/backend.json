@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "Diagnosis": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Diagnosis",
+      "type": "object",
+      "description": "Represents a saved diagnosis result.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Diagnosis entity."
+        },
+        "diagnosisId": {
+          "type": "string",
+          "description": "A short, human-readable, unique identifier for the diagnosis case (e.g., EF-A1B2C3)."
+        },
+        "title": {
+          "type": "string",
+          "description": "A short, human-readable title for the diagnosis case."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Diagnosis). The ID of the user who created the diagnosis."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the diagnosis was created.",
+          "format": "date-time"
+        },
+        "symptomText": {
+          "type": "string",
+          "description": "The text description of the symptom entered by the engineer."
+        },
+        "flowSteps": {
+          "type": "array",
+          "description": "An array of steps taken during the diagnostic flow.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rootCauses": {
+          "type": "array",
+          "description": "An array of identified root causes.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reliabilityScore": {
+          "type": "number",
+          "description": "A numerical score indicating the reliability of the diagnosis."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the uploaded image, if any.",
+          "format": "uri"
+        },
+        "truckType": {
+          "type": "string",
+          "description": "The type of truck being diagnosed."
+        },
+        "opbouwType": {
+          "type": "string",
+          "description": "The type of truck body (opbouw) being diagnosed."
+        }
+      },
+      "required": [
+        "id",
+        "diagnosisId",
+        "title",
+        "userId",
+        "createdAt",
+        "symptomText",
+        "flowSteps",
+        "rootCauses",
+        "reliabilityScore",
+        "truckType",
+        "opbouwType"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "diagnoses/{userId}/{diagnosisId}",
+        "definition": {
+          "entityName": "Diagnosis",
+          "schema": {
+            "$ref": "#/backend/entities/Diagnosis"
+          },
+          "description": "Stores diagnosis results for a specific user. Path-based ownership ensures only the authenticated user can access these documents.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The ID of the user who owns the diagnosis."
+            },
+            {
+              "name": "diagnosisId",
+              "description": "The unique ID of the diagnosis document."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to store user-created diagnoses securely and efficiently. The primary collection is `diagnoses`, structured as a subcollection under each user's document (`diagnoses/{userId}/{diagnosisId}`). This structure ensures that only the authenticated user can access their own diagnoses, providing path-based ownership. \n\n**Authorization Independence:** This design inherently achieves authorization independence because access control is determined solely by the path `diagnoses/{userId}/{diagnosisId}` and the `request.auth.uid`. No `get()` calls are required to validate ownership, thus preserving atomicity for create, read, update, and delete operations.\n\n**QAPs Support:**\n*   **Secure List Operations:** The path-based ownership (`/diagnoses/{userId}/{diagnosisId}`) allows secure `list` operations because security rules can directly enforce that only the user with the matching `userId` can list diagnoses under that path.\n\nAll documents within the `diagnoses/{userId}` collection share the same security requirements, further simplifying the security rules. This structure supports the integrity of ownership because each diagnosis document is implicitly owned by the user identified by the `userId` in the path."
+  }
+}

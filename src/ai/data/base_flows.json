@@ -1,0 +1,97 @@
+
+{
+  "base_flows": [
+    {
+      "cluster": "HANDUNIT_NO_POWER",
+      "flow": [
+        "STEP_CHECK_FUSE_F65",
+        "STEP_MEASURE_24V_AT_F65",
+        "STEP_CHECK_GROUND_G45",
+        "STEP_CHECK_CONNECTOR_XH3",
+        "STEP_TEST_HANDUNIT_POWER"
+      ]
+    },
+    {
+      "cluster": "HANDUNIT_INTERMITTENT",
+      "flow": [
+        "STEP_CHECK_CONNECTOR_XH3",
+        "STEP_CHECK_GROUND_G45",
+        "STEP_TEST_HANDUNIT_POWER",
+        "STEP_TEST_HANDUNIT_BUTTONS"
+      ]
+    },
+    {
+      "cluster": "HANDUNIT_PARTIAL_FUNCTION",
+      "flow": [
+        "STEP_TEST_HANDUNIT_BUTTONS",
+        "STEP_CHECK_CONNECTOR_XH3",
+        "STEP_TEST_HANDUNIT_POWER"
+      ]
+    },
+    {
+      "cluster": "DRUM_NOT_ROTATING_PTO_ON",
+      "flow": [
+        "STEP_CHECK_HYDRAULIC_PRESSURE",
+        "STEP_TEST_VALVE_FWD",
+        "STEP_TEST_VALVE_REV",
+        "STEP_TEST_EBOX_OUTPUT"
+      ]
+    },
+    {
+      "cluster": "DRUM_ONLY_ONE_DIRECTION",
+      "flow": [
+        "STEP_TEST_VALVE_FWD",
+        "STEP_TEST_VALVE_REV",
+        "STEP_TEST_EBOX_OUTPUT"
+      ]
+    },
+    {
+      "cluster": "DRUM_STOPS_UNDER_LOAD",
+      "flow": [
+        "STEP_CHECK_HYDRAULIC_PRESSURE",
+        "STEP_TEST_VALVE_FWD",
+        "STEP_TEST_VALVE_REV"
+      ]
+    },
+    {
+      "cluster": "DRUM_SLOW_OR_WEAK",
+      "flow": [
+        "STEP_CHECK_HYDRAULIC_PRESSURE",
+        "STEP_TEST_VALVE_FWD",
+        "STEP_TEST_VALVE_REV"
+      ]
+    },
+    {
+      "cluster": "PTO_FAULT",
+      "flow": [
+        "STEP_TEST_PTO_SOLENOID",
+        "STEP_TEST_EBOX_OUTPUT",
+        "STEP_CHECK_FUSE_F65"
+      ]
+    },
+    {
+      "cluster": "EBOX_NO_POWER",
+      "flow": [
+        "STEP_CHECK_FUSE_F65",
+        "STEP_MEASURE_24V_AT_F65",
+        "STEP_CHECK_GROUND_G45"
+      ]
+    },
+    {
+      "cluster": "EBOX_INTERMITTENT",
+      "flow": [
+        "STEP_CHECK_GROUND_G45",
+        "STEP_CHECK_CONNECTOR_XH3",
+        "STEP_TEST_EBOX_OUTPUT"
+      ]
+    },
+    {
+      "cluster": "CONNECTOR_OR_CABLE_FAULT",
+      "flow": [
+        "STEP_CHECK_CONNECTOR_XH3",
+        "STEP_TEST_HANDUNIT_POWER",
+        "STEP_TEST_HANDUNIT_BUTTONS"
+      ]
+    }
+  ]
+}

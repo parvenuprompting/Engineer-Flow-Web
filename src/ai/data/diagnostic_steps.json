@@ -1,0 +1,82 @@
+
+{
+  "diagnostic_steps": [
+    {
+      "id": "STEP_CHECK_FUSE_F65",
+      "action": "Controleer zekering F65 (30A) op doorbranden.",
+      "description": "Visuele inspectie + spanning meten aan beide zijden van de zekering.",
+      "type": "electrical",
+      "target_component": "Opbouw_Feed_Fuse_F65"
+    },
+    {
+      "id": "STEP_MEASURE_24V_AT_F65",
+      "action": "Meet 24V op zekering F65 (input en output).",
+      "description": "Meet spanning op klemmen van F65 om te bepalen of voeding ontbreekt upstream of downstream.",
+      "type": "measure",
+      "target_component": "Opbouw_Feed_Fuse_F65"
+    },
+    {
+      "id": "STEP_CHECK_GROUND_G45",
+      "action": "Controleer massa-aansluiting G45 op corrosie en vastheid.",
+      "description": "Verwijder corrosie en controleer aanhaalmoment van de ringkabelschoen.",
+      "type": "inspect",
+      "target_component": "Chassis_Ground_G45"
+    },
+    {
+      "id": "STEP_CHECK_CONNECTOR_XH3",
+      "action": "Inspecteer connector XH3 op vocht, corrosie en losse pinnen.",
+      "description": "Open connector, controleer pinnen en droog indien nodig.",
+      "type": "inspect",
+      "target_component": "Handunit_Connector_XH3"
+    },
+    {
+      "id": "STEP_TEST_HANDUNIT_POWER",
+      "action": "Test of de handunit spanning ontvangt via spiraalkabel.",
+      "description": "Controleer 24V binnenkomend in de handunit via de voedingspinnen.",
+      "type": "measure",
+      "target_component": "Handunit"
+    },
+    {
+      "id": "STEP_TEST_HANDUNIT_BUTTONS",
+      "action": "Test of alle handunit-knoppen functioneren.",
+      "description": "Controleer of alle knoppen een signaal naar de E-box sturen.",
+      "type": "functional_test",
+      "target_component": "Handunit_Keypad"
+    },
+    {
+      "id": "STEP_TEST_EBOX_OUTPUT",
+      "action": "Controleer of de E-box stuurspanning uitstuurt naar ventielen.",
+      "description": "Meet uitgangsspanning op FWD/REV ventielsturing.",
+      "type": "measure",
+      "target_component": "EBox_Controller_PCB"
+    },
+    {
+      "id": "STEP_TEST_PTO_SOLENOID",
+      "action": "Test of de PTO-solenoid aanstuurt en mechanisch schakelt.",
+      "description": "Controleer klikgeluid en spanning op de solenoidconnector.",
+      "type": "functional_test",
+      "target_component": "PTO_Solenoid"
+    },
+    {
+      "id": "STEP_CHECK_HYDRAULIC_PRESSURE",
+      "action": "Meet hydraulische druk op de pomp-uitgang.",
+      "description": "Gebruik een drukmeter om te controleren of de pomp druk levert.",
+      "type": "hydraulic",
+      "target_component": "Hydraulic_Pump"
+    },
+    {
+      "id": "STEP_TEST_VALVE_FWD",
+      "action": "Test of vooruit-ventiel elektrisch en hydraulisch functioneert.",
+      "description": "Meet spoelspanning en observeer spoolbeweging.",
+      "type": "functional_test",
+      "target_component": "Valve_FWD"
+    },
+    {
+      "id": "STEP_TEST_VALVE_REV",
+      "action": "Test of achteruit-ventiel functioneert.",
+      "description": "Meet spoelspanning en observeer spoolbeweging.",
+      "type": "functional_test",
+      "target_component": "Valve_REV"
+    }
+  ]
+}

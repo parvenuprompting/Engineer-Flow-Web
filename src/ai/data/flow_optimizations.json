@@ -1,0 +1,32 @@
+
+{
+  "flow_optimizations": {
+    "max_steps": 7,
+    "priority_rules": [
+      {
+        "rule": "high_info_gain_first",
+        "weight": 0.45,
+        "description": "Stappen met hoge uitsluitingswaarde gaan voor."
+      },
+      {
+        "rule": "low_difficulty_first",
+        "weight": 0.25,
+        "description": "Makkelijke stappen eerst."
+      },
+      {
+        "rule": "low_risk_first",
+        "weight": 0.15,
+        "description": "Vermijd gevaarlijke/hydraulische stappen als eerste."
+      },
+      {
+        "rule": "cluster_component_prior",
+        "weight": 0.15,
+        "description": "Componenten met hoge diag-value worden iets gepusht."
+      }
+    ],
+    "global_constraints": [
+      "never_duplicate_steps",
+      "never_exceed_max_steps"
+    ]
+  }
+}

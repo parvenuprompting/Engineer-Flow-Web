@@ -1,0 +1,35 @@
+{
+  "logic_rules": [
+    {
+      "if_text_contains": ["regen", "nat", "water"],
+      "then_increase_failure_modes": {
+        "FM_CONNECTOR_MOISTURE": 0.25,
+        "FM_GROUND_CORROSION": 0.15
+      },
+      "reason": "Vocht heeft directe impact op connectoren en massa-punten."
+    },
+    {
+      "if_text_contains": ["soms", "intermitterend", "trilt", "hobbels"],
+      "then_increase_failure_modes": {
+        "FM_CONNECTOR_PIN_LOOSE": 0.20,
+        "FM_CABLE_BREAK": 0.20
+      },
+      "reason": "Intermitterend gedrag wordt meestal veroorzaakt door losse pinnen of kabelbreuken."
+    },
+    {
+      "if_text_contains": ["warm", "heet"],
+      "then_increase_failure_modes": {
+        "FM_EBOX_OVERHEAT": 0.35,
+        "FM_CABLE_SHORT_TO_CHASSIS": 0.10
+      },
+      "reason": "Hitte duidt op overbelasting of thermische shutdown."
+    },
+    {
+      "if_cluster": "HANDUNIT_NO_POWER",
+      "then_reduce_failure_modes": {
+        "FM_HANDUNIT_KEYPAD_FAILURE": 0.50
+      },
+      "reason": "Geen spanning → geen keypad-issue."
+    }
+  ]
+}

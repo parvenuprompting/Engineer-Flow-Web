@@ -1,0 +1,143 @@
+/**
+ * Core Philosophy: This ruleset enforces a strict user-ownership model. All data is scoped to the authenticated user,
+ * ensuring that a user can only access the diagnosis data they have explicitly created. Access to another user's data
+ * is strictly forbidden.
+ *
+ * Data Structure: The data is organized into a top-level `diagnoses` collection. Within this collection,
+ * documents are created with the user's UID as their ID, acting as a parent or namespace. Each user's actual diagnosis
+ * documents are stored in a subcollection under their parent document (e.g., /diagnoses/{userId}/diagnoses/{diagnosisId}).
+ * This path-based ownership is the primary mechanism for securing data.
+ *
+ * Key Security Decisions:
+ * - Strict Ownership: All CRUD (Create, Read, Update, Delete) operations are gated by an ownership check, ensuring users
+ *   can only interact with their own data.
+ * - No User Listing: The rules do not allow for the listing of users or the top-level `diagnoses` parent documents.
+ * - Default Deny: Any access pattern not explicitly allowed is denied by default.
+ *
+ * Denormalization for Authorization: This ruleset relies on path-based ownership. The user's UID ({userId}) is part of the
+ * document path, which allows for fast and secure authorization without needing to read other documents (avoiding `get()` calls).
+ * To ensure data integrity, each diagnosis document must also contain a `userId` field that matches the `userId` from the path.
+ * This field is validated on creation and is immutable on updates.
+ *
+ * Structural Segregation: The use of a dedicated subcollection per user (`/diagnoses/{userId}/diagnoses/{diagnosisId}`)
+ * provides strong structural segregation. This pattern is highly secure and performant for listing a user's own data,
+ * as queries are naturally scoped to a single user's data tree.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for improved readability and reusability.
+
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Validates if the requesting user is the owner of the document
+     * based on the userId in the path.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Validates if the requesting user is the owner of an existing document.
+     * CRITICAL: Used for update and delete to prevent acting on non-existent data.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * Validates the incoming diagnosis document on creation.
+     * Enforces that the internal `userId` field matches the path, linking the
+     * data to its owner.
+     */
+    function isValidDiagnosisCreate(userId) {
+      return request.resource.data.userId == userId;
+    }
+
+    /**
+     * Validates the diagnosis document on update.
+     * Enforces that the `userId` field cannot be changed, preventing re-assignment of ownership.
+     */
+    function isValidDiagnosisUpdate() {
+      return request.resource.data.userId == resource.data.userId;
+    }
+
+    /**
+     * Validates chat session documents on create.
+     * Binds the stored userId to the ownership path.
+     */
+    function isValidChatSessionCreate(userId) {
+      return request.resource.data.userId == userId;
+    }
+
+    /**
+     * Validates chat session documents on update.
+     * Prevents changing ownership after creation.
+     */
+    function isValidChatSessionUpdate() {
+      return request.resource.data.userId == resource.data.userId;
+    }
+
+
+    /**
+     * @description Secures user-specific diagnosis documents.
+     * @path /diagnoses/{userId}/diagnoses/{diagnosisId}
+     * @allow (create) A signed-in user ('user_abc') creating their own diagnosis at `/diagnoses/user_abc/diagnoses/new_diag_123`.
+     * @deny (get) A user ('user_xyz') trying to read a diagnosis at `/diagnoses/user_abc/diagnoses/some_diag_456`.
+     * @principle Restricts access to a user's own data tree using path-based ownership.
+     */
+    match /diagnoses/{userId}/diagnoses/{diagnosisId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidDiagnosisCreate(userId);
+      allow update: if isExistingOwner(userId) && isValidDiagnosisUpdate();
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Prevents direct access to the parent placeholder documents.
+     * @path /diagnoses/{userId}
+     * @allow (none) No direct reads or writes are permitted on this path.
+     * @deny (get) Any user trying to read the document at `/diagnoses/user_abc`.
+     * @principle Secures container documents to ensure interaction only occurs with the intended subcollections.
+     */
+    match /diagnoses/{userId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Secures user-specific saved expert chat sessions.
+     * @path /chat_sessions/{userId}/sessions/{sessionId}
+     */
+    match /chat_sessions/{userId}/sessions/{sessionId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidChatSessionCreate(userId);
+      allow update: if isExistingOwner(userId) && isValidChatSessionUpdate();
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Denies direct access to chat session parent container docs.
+     * @path /chat_sessions/{userId}
+     */
+    match /chat_sessions/{userId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

@@ -1,0 +1,50 @@
+
+{
+  "relations": [
+    {
+      "type": "electrical_feed",
+      "from": "Battery_24V",
+      "to": "Main_Chassis_FuseBlock"
+    },
+    {
+      "type": "electrical_feed",
+      "from": "Opbouw_Feed_Fuse_F65",
+      "to": "EBox_Power_In"
+    },
+    {
+      "type": "electrical_feed",
+      "from": "Opbouw_Feed_Fuse_F65",
+      "to": "Handunit"
+    },
+    {
+      "type": "ground_path",
+      "from": "Chassis_Ground_G45",
+      "to": "E-Box"
+    },
+    {
+      "type": "signal_path",
+      "from": "Handunit",
+      "to": "EBox_Controller_PCB"
+    },
+    {
+      "type": "signal_path",
+      "from": "Handunit_Connector_XH3",
+      "to": "Handunit"
+    },
+    {
+      "type": "hydraulic_flow",
+      "from": "Hydraulic_Pump",
+      "to": "Valve_FWD"
+    },
+    {
+      "type": "hydraulic_flow",
+      "from": "Hydraulic_Pump",
+      "to": "Valve_REV"
+    },
+    {
+      "type": "mechanical_dependency",
+      "from": "Drum_Drive_Motor",
+      "to": "Drum"
+    }
+  ]
+}

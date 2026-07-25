@@ -1,0 +1,93 @@
+
+{
+  "step_requirements": [
+    {
+      "step_id": "STEP_CHECK_FUSE_F65",
+      "tools": ["multimeter", "zekeringtrekker"],
+      "safety": ["accu uitschakelen bij vervanging"],
+      "vehicle_state": "ignition_off",
+      "estimated_time_min": 2,
+      "difficulty": 0.2
+    },
+    {
+      "step_id": "STEP_MEASURE_24V_AT_F65",
+      "tools": ["multimeter"],
+      "safety": ["oppassen voor kortsluiting"],
+      "vehicle_state": "ignition_on",
+      "estimated_time_min": 2,
+      "difficulty": 0.3
+    },
+    {
+      "step_id": "STEP_CHECK_GROUND_G45",
+      "tools": ["ringsleutel 13mm", "schuurpapier"],
+      "safety": ["contact uit", "handschoenen"],
+      "vehicle_state": "off",
+      "estimated_time_min": 4,
+      "difficulty": 0.4
+    },
+    {
+      "step_id": "STEP_CHECK_CONNECTOR_XH3",
+      "tools": ["contactreiniger", "luchtpistool"],
+      "safety": ["ignition_off"],
+      "vehicle_state": "off",
+      "estimated_time_min": 3,
+      "difficulty": 0.3
+    },
+    {
+      "step_id": "STEP_TEST_HANDUNIT_POWER",
+      "tools": ["multimeter"],
+      "safety": [],
+      "vehicle_state": "ignition_on",
+      "estimated_time_min": 2,
+      "difficulty": 0.3
+    },
+    {
+      "step_id": "STEP_TEST_HANDUNIT_BUTTONS",
+      "tools": [],
+      "safety": [],
+      "vehicle_state": "ignition_on",
+      "estimated_time_min": 1,
+      "difficulty": 0.1
+    },
+    {
+      "step_id": "STEP_TEST_EBOX_OUTPUT",
+      "tools": ["multimeter"],
+      "safety": ["oppassen voor hydraulische beweging"],
+      "vehicle_state": "pto_on",
+      "estimated_time_min": 3,
+      "difficulty": 0.5
+    },
+    {
+      "id": "STEP_TEST_PTO_SOLENOID",
+      "tools": ["multimeter"],
+      "safety": ["veiligheidsbril", "geen losse kleding"],
+      "vehicle_state": "ignition_on",
+      "estimated_time_min": 3,
+      "difficulty": 0.4
+    },
+    {
+      "step_id": "STEP_CHECK_HYDRAULIC_PRESSURE",
+      "tools": ["drukmeter"],
+      "safety": ["pas op voor hoge druk", "handschoenen verplicht"],
+      "vehicle_state": "pto_on",
+      "estimated_time_min": 5,
+      "difficulty": 0.7
+    },
+    {
+      "step_id": "STEP_TEST_VALVE_FWD",
+      "tools": ["multimeter"],
+      "safety": ["hydraulische beweging mogelijk"],
+      "vehicle_state": "pto_on",
+      "estimated_time_min": 4,
+      "difficulty": 0.6
+    },
+    {
+      "step_id": "STEP_TEST_VALVE_REV",
+      "tools": ["multimeter"],
+      "safety": ["hydraulische beweging mogelijk"],
+      "vehicle_state": "pto_on",
+      "estimated_time_min": 4,
+      "difficulty": 0.6
+    }
+  ]
+}

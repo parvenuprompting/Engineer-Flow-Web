@@ -1,0 +1,72 @@
+
+{
+  "components": [
+    { "id": "truck_engine", "name": "Truckmotor", "subsystem": "engine", "type": "combustion_engine" },
+    { "id": "engine_ecu", "name": "Motor ECU", "subsystem": "engine", "type": "electronic_control_unit" },
+    { "id": "engine_coolant_pump", "name": "Koelvloeistofpomp", "subsystem": "engine_cooling", "type": "mechanical_pump" },
+    { "id": "engine_radiator", "name": "Radiateur motor", "subsystem": "engine_cooling", "type": "heat_exchanger" },
+    { "id": "engine_cooling_fan", "name": "Koelventilator motor", "subsystem": "engine_cooling", "type": "fan" },
+    { "id": "engine_thermostat", "name": "Thermostaat motor", "subsystem": "engine_cooling", "type": "valve" },
+    { "id": "engine_coolant_temp_sensor", "name": "Koelvloeistoftemperatuursensor", "subsystem": "engine_cooling", "type": "temperature_sensor" },
+
+    { "id": "pto_unit", "name": "PTO-unit", "subsystem": "pto", "type": "mechanical_power_take_off" },
+    { "id": "pto_control_valve", "name": "PTO-bedieningsventiel", "subsystem": "pto", "type": "hydraulic_valve" },
+    { "id": "pto_relay", "name": "PTO-relais", "subsystem": "pto_electrical", "type": "relay" },
+    { "id": "pto_speed_sensor", "name": "PTO-toerentalsensor", "subsystem": "pto", "type": "speed_sensor" },
+
+    { "id": "hydraulic_pump", "name": "Hydraulische pomp", "subsystem": "hydraulics", "type": "hydraulic_pump" },
+    { "id": "hydraulic_reservoir", "name": "Hydrauliekreservoir", "subsystem": "hydraulics", "type": "tank" },
+    { "id": "hydraulic_suction_line", "name": "Aanzuigleiding pomp", "subsystem": "hydraulics", "type": "hose" },
+    { "id": "hydraulic_pressure_line", "name": "Drukleiding", "subsystem": "hydraulics", "type": "hose" },
+    { "id": "hydraulic_return_line", "name": "Retourleiding", "subsystem": "hydraulics", "type": "hose" },
+    { "id": "hydraulic_cooler", "name": "Hydrauliekkoeler", "subsystem": "hydraulics_cooling", "type": "oil_cooler" },
+    { "id": "hydraulic_cooler_fan", "name": "Koelventilator hydrauliek", "subsystem": "hydraulics_cooling", "type": "fan" },
+    { "id": "hydraulic_return_filter", "name": "Retourfilter hydrauliek", "subsystem": "hydraulics_filtration", "type": "filter" },
+    { "id": "hydraulic_pressure_sensor", "name": "Druksensor hydrauliek", "subsystem": "hydraulics_sensing", "type": "pressure_sensor" },
+    { "id": "hydraulic_temp_sensor", "name": "Temperatuursensor hydrauliek", "subsystem": "hydraulics_sensing", "type": "temperature_sensor" },
+    { "id": "hydraulic_relief_valve", "name": "Overdrukventiel hydrauliek", "subsystem": "hydraulics_control", "type": "relief_valve" },
+    { "id": "hydraulic_flow_control_valve", "name": "Flowregelventiel", "subsystem": "hydraulics_control", "type": "flow_control_valve" },
+
+    { "id": "hydraulic_motor", "name": "Hydromotor trommel", "subsystem": "rotation", "type": "hydraulic_motor" },
+    { "id": "drum_shell", "name": "Trommel", "subsystem": "rotation", "type": "drum" },
+    { "id": "drum_gear_ring", "name": "Tandkrans trommel", "subsystem": "rotation", "type": "gear_ring" },
+    { "id": "drum_support_rollers", "name": "Draagrollen trommel", "subsystem": "rotation", "type": "roller" },
+    { "id": "drum_thrust_roller", "name": "Aandrukrol trommel", "subsystem": "rotation", "type": "roller" },
+    { "id": "drum_main_bearing", "name": "Hoofdlager trommel", "subsystem": "rotation", "type": "bearing" },
+    { "id": "drum_internal_blades", "name": "Mengbladen trommel", "subsystem": "rotation", "type": "internal_blades" },
+    { "id": "drum_angle_sensor", "name": "Hoeksensor trommel", "subsystem": "rotation_sensing", "type": "angle_sensor" },
+    { "id": "drum_speed_sensor", "name": "Toerentalsensor trommel", "subsystem": "rotation_sensing", "type": "speed_sensor" },
+
+    { "id": "solenoid_valve_fwd", "name": "Ventiel vooruit", "subsystem": "rotation_control", "type": "solenoid_valve" },
+    { "id": "solenoid_valve_rev", "name": "Ventiel achteruit", "subsystem": "rotation_control", "type": "solenoid_valve" },
+
+    { "id": "e_box_main", "name": "Hoofd E-box opbouw", "subsystem": "electrical_distribution", "type": "junction_box" },
+    { "id": "main_fuse_mixer", "name": "Hoofdzekering mixer", "subsystem": "electrical_protection", "type": "fuse" },
+    { "id": "relay_block", "name": "Releablok opbouw", "subsystem": "electrical_distribution", "type": "relay_block" },
+    { "id": "connector_block", "name": "Connectorblok E-box", "subsystem": "electrical_distribution", "type": "connector_block" },
+    { "id": "harness_main", "name": "Hoofd kabelboom opbouw", "subsystem": "electrical_harness", "type": "wiring_harness" },
+    { "id": "harness_valves", "name": "Kabelboom ventielen", "subsystem": "electrical_harness", "type": "wiring_harness" },
+    { "id": "ground_main", "name": "Hoofdmassapunt opbouw", "subsystem": "electrical_ground", "type": "ground_point" },
+
+    { "id": "handunit_main", "name": "Handbediening bedraad", "subsystem": "controls", "type": "handheld_controller" },
+    { "id": "handunit_mode_switch", "name": "Modus-schakelaar handbediening", "subsystem": "controls", "type": "switch" },
+    { "id": "remote_transmitter", "name": "Afstandsbediening zender", "subsystem": "controls_rf", "type": "rf_transmitter" },
+    { "id": "remote_receiver", "name": "Afstandsbediening ontvanger", "subsystem": "controls_rf", "type": "rf_receiver" },
+
+    { "id": "emergency_stop_front", "name": "Noodstop voorzijde", "subsystem": "safety", "type": "emergency_stop_button" },
+    { "id": "emergency_stop_rear", "name": "Noodstop achterzijde", "subsystem": "safety", "type": "emergency_stop_button" },
+    { "id": "hopper_switch", "name": "Trechter schakelaar", "subsystem": "safety_interlock", "type": "position_switch" },
+    { "id": "chute_lock_switch", "name": "Goot vergrendelingsschakelaar", "subsystem": "safety_interlock", "type": "position_switch" },
+
+    { "id": "subframe_mixer", "name": "Subframe mixer", "subsystem": "structure", "type": "subframe" },
+    { "id": "mounting_brackets", "name": "Montagebeugels mixer", "subsystem": "structure", "type": "bracket" },
+    { "id": "crossmembers", "name": "Dwarsliggers chassis", "subsystem": "structure", "type": "crossmember" },
+
+    { "id": "water_tank", "name": "Watertank", "subsystem": "water_system", "type": "tank" },
+    { "id": "water_pump", "name": "Waterpomp", "subsystem": "water_system", "type": "pump" },
+    { "id": "water_filter", "name": "Waterfilter", "subsystem": "water_system", "type": "filter" },
+    { "id": "water_valve", "name": "Waterafsluiter/ventiel", "subsystem": "water_system", "type": "valve" },
+    { "id": "water_pressure_sensor", "name": "Waterdruksensor", "subsystem": "water_system_sensing", "type": "pressure_sensor" },
+    { "id": "water_hose_connector", "name": "Water slangconnector", "subsystem": "water_system", "type": "connector" }
+  ]
+}

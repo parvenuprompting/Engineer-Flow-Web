@@ -1,0 +1,28 @@
+{
+  "engine_version": "1.0.0",
+  "config_version": "1.0.0",
+  "datasets": {
+    "schema": "2.0.0",
+    "components": "2.0.0",
+    "failure_modes": "2.0.0",
+    "symptom_clusters": "2.0.0",
+    "constraints": "2.0.0",
+    "electrical_constraints": "1.0.0",
+    "hydraulic_constraints": "1.0.0",
+    "variant_constraints": "1.0.0",
+    "logic_rules": "1.0.0",
+    "component_tree": "1.0.0",
+    "component_metadata": "1.0.0",
+    "component_relations": "1.0.0",
+    "diagnostic_steps": "1.0.0",
+    "step_requirements": "1.0.0",
+    "step_effects": "1.0.0",
+    "base_flows": "1.0.0",
+    "efl": "1.0.0",
+    "driver_expressions": "transitional-local",
+    "cluster_keywords": "transitional-local",
+    "master_symptom_set": "1.0.0",
+    "des_ts_map": "1.0.0",
+    "ef_diagnostic_schema": "1.0.0"
+  }
+}

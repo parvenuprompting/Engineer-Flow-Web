@@ -1,0 +1,184 @@
+{
+  "symptom_clusters": [
+    {
+      "id": "SC_HANDUNIT_NO_POWER",
+      "name": "Handbediening dood",
+      "description": "Handbediening reageert niet, geen leds, geen functies.",
+      "related_component_ids": ["handunit_main", "main_fuse_mixer", "ground_main", "e_box_main"],
+      "tags": ["controls", "electrical"]
+    },
+    {
+      "id": "SC_HANDUNIT_INTERMITTENT",
+      "name": "Handbediening werkt soms wel/soms niet",
+      "description": "Bediening valt weg of komt pas terug na meerdere keren drukken.",
+      "related_component_ids": ["handunit_main", "handunit_mode_switch", "connector_block", "harness_main", "e_box_main"],
+      "tags": ["controls", "intermittent"]
+    },
+    {
+      "id": "SC_REMOTE_NO_SIGNAL",
+      "name": "Afstandsbediening werkt niet",
+      "description": "Remote reageert niet, geen functies op afstand.",
+      "related_component_ids": ["remote_transmitter", "remote_receiver", "e_box_main"],
+      "tags": ["controls_rf"]
+    },
+    {
+      "id": "SC_REMOTE_INTERMITTENT",
+      "name": "Afstandsbediening werkt soms",
+      "description": "Bereik beperkt of remote valt weg afhankelijk van positie/weer.",
+      "related_component_ids": ["remote_transmitter", "remote_receiver", "connector_block", "e_box_main"],
+      "tags": ["controls_rf", "intermittent"]
+    },
+
+    {
+      "id": "SC_PTO_NOT_ENGAGING",
+      "name": "PTO schakelt niet in",
+      "description": "PTO-lampje blijft uit of PTO valt direct uit.",
+      "related_component_ids": ["pto_unit", "pto_control_valve", "pto_relay", "truck_engine", "engine_ecu"],
+      "tags": ["pto", "hydraulics"]
+    },
+    {
+      "id": "SC_PTO_ENGAGED_NO_PRESSURE",
+      "name": "PTO aan, maar geen hydraulische druk",
+      "description": "PTO lijkt actief maar druk blijft laag of nul.",
+      "related_component_ids": ["pto_unit", "hydraulic_pump", "hydraulic_reservoir", "hydraulic_suction_line"],
+      "tags": ["pto", "hydraulics"]
+    },
+
+    {
+      "id": "SC_DRUM_NOT_ROTATING",
+      "name": "Trommel draait niet",
+      "description": "Geen rotatie in geen enkele richting.",
+      "related_component_ids": [
+        "pto_unit", "hydraulic_pump", "hydraulic_pressure_line",
+        "solenoid_valve_fwd", "solenoid_valve_rev",
+        "hydraulic_motor", "drum_gear_ring"
+      ],
+      "tags": ["rotation"]
+    },
+    {
+      "id": "SC_DRUM_ONLY_ONE_DIRECTION",
+      "name": "Trommel draait maar in één richting",
+      "description": "Alleen vooruit of alleen achteruit mogelijk.",
+      "related_component_ids": ["solenoid_valve_fwd", "solenoid_valve_rev", "hydraulic_motor"],
+      "tags": ["rotation"]
+    },
+    {
+      "id": "SC_DRUM_STOPS_UNDER_LOAD",
+      "name": "Trommel stopt onder belasting",
+      "description": "Bij zwaar beton of hoge snelheid valt rotatie weg.",
+      "related_component_ids": ["hydraulic_pump", "hydraulic_relief_valve", "hydraulic_motor", "truck_engine"],
+      "tags": ["rotation", "hydraulics"]
+    },
+    {
+      "id": "SC_DRUM_SLOW_AT_IDLE",
+      "name": "Trommel langzaam bij stationair",
+      "description": "Bij lage motortoeren draait trommel te langzaam.",
+      "related_component_ids": ["hydraulic_pump", "hydraulic_flow_control_valve", "hydraulic_low_oil_level"],
+      "tags": ["rotation", "hydraulics"]
+    },
+    {
+      "id": "SC_DRUM_SPEED_UNSTABLE",
+      "name": "Trommelsnelheid instabiel",
+      "description": "Trommel versnelt/vertraagt zonder reden.",
+      "related_component_ids": ["hydraulic_pump", "hydraulic_flow_control_valve", "hydraulic_motor", "drum_speed_sensor"],
+      "tags": ["rotation", "sensing"]
+    },
+    {
+      "id": "SC_DRUM_VIBRATION",
+      "name": "Trommel trilt",
+      "description": "Sterke vibraties tijdens rotatie.",
+      "related_component_ids": ["drum_internal_blades", "drum_support_rollers", "drum_main_bearing", "subframe_mixer", "crossmembers"],
+      "tags": ["rotation", "structure"]
+    },
+    {
+      "id": "SC_DRUM_METALLIC_NOISE",
+      "name": "Metaal-op-metaal geluid in trommel",
+      "description": "Schrapend/kloppend geluid per omwenteling.",
+      "related_component_ids": ["drum_internal_blades", "drum_gear_ring", "drum_support_rollers"],
+      "tags": ["rotation", "noise"]
+    },
+
+    {
+      "id": "SC_HYD_PRESSURE_LOW",
+      "name": "Hydraulische druk te laag",
+      "description": "Algemene klacht: lage druk, trage functies.",
+      "related_component_ids": ["hydraulic_pump", "hydraulic_reservoir", "hydraulic_return_filter", "hydraulic_relief_valve"],
+      "tags": ["hydraulics"]
+    },
+    {
+      "id": "SC_HYD_OVERHEAT",
+      "name": "Hydrauliek oververhit",
+      "description": "Hydrauliekolie wordt te heet, alarmsignalen of prestatieverlies.",
+      "related_component_ids": ["hydraulic_cooler", "hydraulic_cooler_fan", "hydraulic_reservoir", "hydraulic_pump"],
+      "tags": ["hydraulics_cooling"]
+    },
+    {
+      "id": "SC_HYD_FILTER_WARNING",
+      "name": "Filter waarschuwing",
+      "description": "Signaal of indicatie dat filter verstopt is.",
+      "related_component_ids": ["hydraulic_return_filter", "hydraulic_pump"],
+      "tags": ["hydraulics_filtration"]
+    },
+
+    {
+      "id": "SC_ENGINE_OVERHEAT_PTO_DROP",
+      "name": "Motor warm, PTO valt weg",
+      "description": "Bij warme motor valt PTO uit of wordt begrensd.",
+      "related_component_ids": ["truck_engine", "engine_ecu", "engine_coolant_temp_sensor", "pto_unit"],
+      "tags": ["engine", "pto"]
+    },
+
+    {
+      "id": "SC_ELECTRICAL_TOTAL_LOSS",
+      "name": "Opbouw heeft geen voeding",
+      "description": "Niets in de mixer-opbouw werkt elektrisch.",
+      "related_component_ids": ["main_fuse_mixer", "e_box_main", "ground_main"],
+      "tags": ["electrical"]
+    },
+    {
+      "id": "SC_ELECTRICAL_INTERMITTENT",
+      "name": "Elektrische functies vallen soms uit",
+      "description": "Random uitval van ventielen/bediening.",
+      "related_component_ids": ["harness_main", "connector_block", "ground_main", "e_box_main"],
+      "tags": ["electrical", "intermittent"]
+    },
+
+    {
+      "id": "SC_SAFETY_LOCKOUT_ACTIVE",
+      "name": "Veiligheidsblokkering actief",
+      "description": "Geen functies mogelijk door noodstop of interlock.",
+      "related_component_ids": ["emergency_stop_front", "emergency_stop_rear", "hopper_switch", "chute_lock_switch"],
+      "tags": ["safety"]
+    },
+
+    {
+      "id": "SC_WATER_NO_FLOW",
+      "name": "Geen water uit systeem",
+      "description": "Pomp draait maar er komt geen water.",
+      "related_component_ids": ["water_tank", "water_pump", "water_filter", "water_valve", "water_hose_connector"],
+      "tags": ["water_system"]
+    },
+    {
+      "id": "SC_WATER_LOW_PRESSURE",
+      "name": "Lage waterdruk",
+      "description": "Water komt wel maar met weinig kracht.",
+      "related_component_ids": ["water_pump", "water_filter", "water_valve", "water_pressure_sensor"],
+      "tags": ["water_system"]
+    },
+
+    {
+      "id": "SC_STRUCTURE_NOISE_FLEX",
+      "name": "Kraak/klak in frame/subframe",
+      "description": "Hoorbare framebewegingen bij draaien/rijden.",
+      "related_component_ids": ["subframe_mixer", "mounting_brackets", "crossmembers"],
+      "tags": ["structure"]
+    },
+    {
+      "id": "SC_AFTER_TIRE_BLOWOUT_VIBRATION",
+      "name": "Na klapband trilt mixer",
+      "description": "Sinds klapband vibratie en instabiliteit.",
+      "related_component_ids": ["crossmembers", "subframe_mixer", "mounting_brackets"],
+      "tags": ["structure", "event_based"]
+    }
+  ]
+}

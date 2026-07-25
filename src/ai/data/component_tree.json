@@ -1,0 +1,54 @@
+
+{
+  "tree": {
+    "Truck (Volvo FM/FH)": {
+      "Power Distribution": [
+        "Battery_24V",
+        "Main_Chassis_FuseBlock",
+        "Chassis_Ground_G45",
+        "Chassis_Ground_G31"
+      ],
+      "Chassis → Opbouw Feed": [
+        "Opbouw_Feed_Fuse_F65 (30A)",
+        "Opbouw_Relay_R12",
+        "Opbouw_Main_Power_Cable"
+      ]
+    },
+    "Opbouw (Liebherr Mixer)": {
+      "E-Box (Main Control Unit)": [
+        "EBox_Internal_Fuse",
+        "EBox_Power_In",
+        "EBox_Ground",
+        "EBox_Relay_Output",
+        "EBox_Controller_PCB"
+      ],
+      "Handunit System": [
+        "Handunit",
+        "Handunit_Display",
+        "Handunit_Keypad",
+        "Handunit_SpiralCable",
+        "Handunit_Connector_XH3 (to E-box)",
+        "Handunit_Internal_PCB"
+      ],
+      "Hydraulic Control": {
+        "Valveblock": [
+          "Valve_FWD",
+          "Valve_REV",
+          "Pressure_Relief_Valve",
+          "LS_Signal (Load-sensing)"
+        ],
+        "components": [
+          "PTO_Solenoid",
+          "PTO_Pressure_Sensor",
+          "Hydraulic_Pump",
+          "Hydraulic_Tank_Return"
+        ]
+      },
+      "Mechanical Drum System": [
+        "Drum_Drive_Motor",
+        "Drum_Bearing",
+        "Drum_Speed_Sensor (if present)"
+      ]
+    }
+  }
+}

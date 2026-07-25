@@ -1,0 +1,44 @@
+{
+  "hydraulic_constraints": [
+    {
+      "id": "HC_PTO_ON_NO_PRESSURE",
+      "if": {
+        "pto_state": "engaged",
+        "pressure": "0_bar"
+      },
+      "then_exclude_components": [
+        "Valve_FWD",
+        "Valve_REV"
+      ],
+      "reason": "Zonder druk is het ventielenblok niet de oorzaak → focus op pomp/PTO."
+    },
+    {
+      "id": "HC_DRUM_ONLY_ONE_DIRECTION",
+      "if": { "symptom": "DRUM_ONLY_ONE_DIRECTION" },
+      "then_focus_components": [
+        "Valve_FWD",
+        "Valve_REV"
+      ],
+      "reason": "Eén richting kwijt is typisch ventielsysteem → pomp is onwaarschijnlijk."
+    },
+    {
+      "id": "HC_DRUM_STOPS_UNDER_LOAD",
+      "if": { "symptom": "DRUM_STOPS_UNDER_LOAD" },
+      "then_increase_failure_modes": {
+        "FM_PUMP_NO_PRESSURE": 0.30,
+        "FM_VALVE_FWD_STUCK": 0.15,
+        "FM_VALVE_REV_STUCK": 0.15
+      },
+      "reason": "Load-dependent falen wijst op drukproblemen, niet elektrische fouten."
+    },
+    {
+      "id": "HC_DRUM_WEAK",
+      "if": { "symptom": "DRUM_SLOW_OR_WEAK" },
+      "then_reduce_failure_modes": {
+        "FM_HANDUNIT_PCB_FAULT": 0.50,
+        "FM_EBOX_INTERNAL_FAULT": 0.50
+      },
+      "reason": "Elektronische storingen veroorzaken geen drukverlies."
+    }
+  ]
+}

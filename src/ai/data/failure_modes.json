@@ -1,0 +1,81 @@
+{
+  "failure_modes": [
+    { "id": "fm_engine_overheat", "component_id": "truck_engine", "severity": 4, "likelihood": 3, "description": "Motor raakt oververhit onder belasting." },
+    { "id": "fm_engine_power_derate", "component_id": "engine_ecu", "severity": 3, "likelihood": 3, "description": "ECU beperkt vermogen door foutconditie." },
+    { "id": "fm_engine_temp_sensor_fault", "component_id": "engine_coolant_temp_sensor", "severity": 3, "likelihood": 2, "description": "Verkeerde temperatuurmeting stuurt koelsysteem verkeerd aan." },
+
+    { "id": "fm_coolant_pump_worn", "component_id": "engine_coolant_pump", "severity": 4, "likelihood": 2, "description": "Koelvloeistofpomp levert te weinig flow." },
+    { "id": "fm_radiator_blocked", "component_id": "engine_radiator", "severity": 4, "likelihood": 2, "description": "Radiateur verstopt of uitwendig vervuild." },
+    { "id": "fm_cooling_fan_not_engaging", "component_id": "engine_cooling_fan", "severity": 4, "likelihood": 3, "description": "Koelventilator slaat niet of te laat aan." },
+    { "id": "fm_thermostat_stuck_closed", "component_id": "engine_thermostat", "severity": 4, "likelihood": 2, "description": "Thermostaat blijft dicht → beperkte koelflow." },
+
+    { "id": "fm_pto_not_engaging", "component_id": "pto_unit", "severity": 4, "likelihood": 3, "description": "PTO schakelt niet in of valt direct weer uit." },
+    { "id": "fm_pto_slipping", "component_id": "pto_unit", "severity": 3, "likelihood": 2, "description": "PTO slipt onder belasting." },
+    { "id": "fm_pto_valve_stuck", "component_id": "pto_control_valve", "severity": 3, "likelihood": 2, "description": "PTO-bedieningsventiel blijft hangen." },
+    { "id": "fm_pto_relay_failed", "component_id": "pto_relay", "severity": 3, "likelihood": 3, "description": "PTO-relais schakelt niet of intermitterend." },
+    { "id": "fm_pto_speed_sensor_no_signal", "component_id": "pto_speed_sensor", "severity": 2, "likelihood": 2, "description": "Geen toerentalsignaal van PTO." },
+
+    { "id": "fm_hydraulic_pump_worn", "component_id": "hydraulic_pump", "severity": 4, "likelihood": 3, "description": "Interne slijtage pomp → onvoldoende druk." },
+    { "id": "fm_hydraulic_pump_cavitation", "component_id": "hydraulic_pump", "severity": 4, "likelihood": 3, "description": "Cavitatie door luchtinzuiging of beperkte aanzuig." },
+    { "id": "fm_hydraulic_low_oil_level", "component_id": "hydraulic_reservoir", "severity": 3, "likelihood": 3, "description": "Te laag oliepeil in reservoir." },
+    { "id": "fm_hydraulic_suction_line_collapsed", "component_id": "hydraulic_suction_line", "severity": 4, "likelihood": 2, "description": "Aanzuigslang klapt in onder vacuum." },
+    { "id": "fm_hydraulic_pressure_line_leak", "component_id": "hydraulic_pressure_line", "severity": 4, "likelihood": 3, "description": "Lekkage in drukleiding." },
+    { "id": "fm_hydraulic_return_line_restriction", "component_id": "hydraulic_return_line", "severity": 3, "likelihood": 2, "description": "Retourslang deels verstopt." },
+    { "id": "fm_hydraulic_cooler_blocked", "component_id": "hydraulic_cooler", "severity": 3, "likelihood": 2, "description": "Koeler verstopt of onvoldoende luchtflow." },
+    { "id": "fm_hydraulic_cooler_fan_not_working", "component_id": "hydraulic_cooler_fan", "severity": 3, "likelihood": 3, "description": "Ventilator koeler draait niet." },
+    { "id": "fm_hydraulic_filter_blocked", "component_id": "hydraulic_return_filter", "severity": 3, "likelihood": 3, "description": "Retourfilter verstopt." },
+    { "id": "fm_hydraulic_relief_valve_stuck_open", "component_id": "hydraulic_relief_valve", "severity": 4, "likelihood": 2, "description": "Overdrukventiel blijft open → geen drukopbouw." },
+    { "id": "fm_hydraulic_relief_valve_stuck_closed", "component_id": "hydraulic_relief_valve", "severity": 5, "likelihood": 1, "description": "Overdrukventiel sluit volledig → extreem hoge druk." },
+    { "id": "fm_hydraulic_flow_valve_misadjusted", "component_id": "hydraulic_flow_control_valve", "severity": 3, "likelihood": 3, "description": "Flowregelventiel verkeerd afgesteld." },
+    { "id": "fm_hydraulic_pressure_sensor_fault", "component_id": "hydraulic_pressure_sensor", "severity": 2, "likelihood": 2, "description": "Verkeerde drukmeting." },
+    { "id": "fm_hydraulic_temp_sensor_fault", "component_id": "hydraulic_temp_sensor", "severity": 2, "likelihood": 2, "description": "Verkeerde olietemperatuurmeting." },
+    { "id": "fm_hydraulic_oil_overheated", "component_id": "hydraulic_reservoir", "severity": 3, "likelihood": 3, "description": "Hydrauliekolie wordt te heet." },
+
+    { "id": "fm_hydraulic_motor_worn", "component_id": "hydraulic_motor", "severity": 4, "likelihood": 3, "description": "Hydromotor intern versleten → laag koppel." },
+    { "id": "fm_hydraulic_motor_internal_leak", "component_id": "hydraulic_motor", "severity": 3, "likelihood": 3, "description": "Interne lekkage in hydromotor." },
+
+    { "id": "fm_drum_gear_ring_missing_teeth", "component_id": "drum_gear_ring", "severity": 3, "likelihood": 2, "description": "Tandkrans mist tanden → schokkerige rotatie." },
+    { "id": "fm_drum_support_roller_seized", "component_id": "drum_support_rollers", "severity": 3, "likelihood": 3, "description": "Draagrol zit vast → hoge wrijving." },
+    { "id": "fm_drum_thrust_roller_worn", "component_id": "drum_thrust_roller", "severity": 3, "likelihood": 2, "description": "Aandrukrol versleten → axiale speling." },
+    { "id": "fm_drum_main_bearing_worn", "component_id": "drum_main_bearing", "severity": 4, "likelihood": 2, "description": "Hoofdlager versleten → geluid en vibratie." },
+    { "id": "fm_drum_blades_loose", "component_id": "drum_internal_blades", "severity": 3, "likelihood": 3, "description": "Mengbladen losgeraakt." },
+    { "id": "fm_drum_blades_worn", "component_id": "drum_internal_blades", "severity": 2, "likelihood": 3, "description": "Bladen afgesleten/vervormd." },
+
+    { "id": "fm_drum_angle_sensor_fault", "component_id": "drum_angle_sensor", "severity": 2, "likelihood": 2, "description": "Verkeerde hoeksignalen." },
+    { "id": "fm_drum_speed_sensor_no_signal", "component_id": "drum_speed_sensor", "severity": 2, "likelihood": 2, "description": "Geen toerentalsignaal trommel." },
+
+    { "id": "fm_solenoid_fwd_no_signal", "component_id": "solenoid_valve_fwd", "severity": 3, "likelihood": 3, "description": "Spoel vooruitventiel krijgt geen of te lage spanning." },
+    { "id": "fm_solenoid_rev_no_signal", "component_id": "solenoid_valve_rev", "severity": 3, "likelihood": 3, "description": "Spoel achteruitventiel krijgt geen of te lage spanning." },
+    { "id": "fm_solenoid_fwd_spool_stuck", "component_id": "solenoid_valve_fwd", "severity": 3, "likelihood": 2, "description": "Ventielspool vooruit blijft hangen." },
+    { "id": "fm_solenoid_rev_spool_stuck", "component_id": "solenoid_valve_rev", "severity": 3, "likelihood": 2, "description": "Ventielspool achteruit blijft hangen." },
+
+    { "id": "fm_e_box_water_ingress", "component_id": "e_box_main", "severity": 4, "likelihood": 3, "description": "Vocht in E-box → storingen en uitval." },
+    { "id": "fm_main_fuse_blown", "component_id": "main_fuse_mixer", "severity": 4, "likelihood": 3, "description": "Hoofdzekering opbouw defect." },
+    { "id": "fm_relay_block_contact_worn", "component_id": "relay_block", "severity": 3, "likelihood": 2, "description": "Releacontacten versleten." },
+    { "id": "fm_connector_block_corroded", "component_id": "connector_block", "severity": 3, "likelihood": 3, "description": "Corrosie in connectorblok." },
+    { "id": "fm_harness_main_broken_wire", "component_id": "harness_main", "severity": 3, "likelihood": 3, "description": "Draadbreuk in hoofd kabelboom." },
+    { "id": "fm_harness_valves_broken_wire", "component_id": "harness_valves", "severity": 3, "likelihood": 3, "description": "Draadbreuk in kabelboom ventielen." },
+    { "id": "fm_ground_main_corroded", "component_id": "ground_main", "severity": 4, "likelihood": 3, "description": "Belangrijk massapunt aangetast." },
+
+    { "id": "fm_handunit_no_power", "component_id": "handunit_main", "severity": 3, "likelihood": 3, "description": "Handbediening is volledig dood." },
+    { "id": "fm_handunit_switch_fault", "component_id": "handunit_mode_switch", "severity": 2, "likelihood": 3, "description": "Modus-schakelaar maakt slecht contact." },
+    { "id": "fm_remote_tx_low_battery", "component_id": "remote_transmitter", "severity": 2, "likelihood": 3, "description": "Batterij te zwak voor goed RF-signaal." },
+    { "id": "fm_remote_rx_fault", "component_id": "remote_receiver", "severity": 3, "likelihood": 2, "description": "Ontvanger verwerkt signalen niet goed." },
+
+    { "id": "fm_e_stop_front_engaged", "component_id": "emergency_stop_front", "severity": 3, "likelihood": 2, "description": "Noodstop voorzijde actief of vast." },
+    { "id": "fm_e_stop_rear_engaged", "component_id": "emergency_stop_rear", "severity": 3, "likelihood": 2, "description": "Noodstop achterzijde actief of vast." },
+    { "id": "fm_hopper_switch_open", "component_id": "hopper_switch", "severity": 2, "likelihood": 3, "description": "Trechter-schakelaar in open stand → blokkeert functies." },
+    { "id": "fm_chute_lock_switch_open", "component_id": "chute_lock_switch", "severity": 2, "likelihood": 3, "description": "Gootvergrendeling meldt open stand → blokkeert functies." },
+
+    { "id": "fm_subframe_cracked", "component_id": "subframe_mixer", "severity": 4, "likelihood": 2, "description": "Scheuren in subframe mixer." },
+    { "id": "fm_mounting_bolts_loose", "component_id": "mounting_brackets", "severity": 3, "likelihood": 3, "description": "Bevestigingsbouten los of uitgerekt." },
+    { "id": "fm_crossmember_bent", "component_id": "crossmembers", "severity": 3, "likelihood": 2, "description": "Dwarsligger verbogen → chassis torsie." },
+
+    { "id": "fm_water_tank_leak", "component_id": "water_tank", "severity": 2, "likelihood": 3, "description": "Watertank lekt." },
+    { "id": "fm_water_pump_no_pressure", "component_id": "water_pump", "severity": 2, "likelihood": 3, "description": "Waterpomp levert geen druk." },
+    { "id": "fm_water_filter_blocked", "component_id": "water_filter", "severity": 2, "likelihood": 3, "description": "Waterfilter verstopt." },
+    { "id": "fm_water_valve_blocked", "component_id": "water_valve", "severity": 2, "likelihood": 3, "description": "Waterafsluiter opent/sluit niet goed." },
+    { "id": "fm_water_pressure_sensor_fault", "component_id": "water_pressure_sensor", "severity": 2, "likelihood": 2, "description": "Foutieve drukmeting water." },
+    { "id": "fm_water_hose_connector_leak", "component_id": "water_hose_connector", "severity": 1, "likelihood": 3, "description": "Lekkage of luchtinzuiging bij slangconnector." }
+  ]
+}

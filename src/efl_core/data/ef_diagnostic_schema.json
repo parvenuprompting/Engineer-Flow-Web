@@ -1,0 +1,291 @@
+{
+  "ef_diagnostic_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EF_Diagnostic_Case",
+    "type": "object",
+    "required": [
+      "case_id",
+      "timestamp_start",
+      "timestamp_end",
+      "vehicle",
+      "symptoms",
+      "failure_resolution"
+    ],
+    "properties": {
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string"
+          },
+          "timestamp_start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timestamp_end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_minutes": {
+            "type": "integer"
+          },
+          "workshop_id": {
+            "type": "string"
+          },
+          "technician_id": {
+            "type": "string"
+          },
+          "ef_version": {
+            "type": "string"
+          },
+          "data_quality_score": {
+            "type": "string",
+            "enum": ["A", "B", "C"]
+          }
+        },
+        "required": ["case_id", "timestamp_start", "timestamp_end"]
+      },
+      "vehicle": {
+        "type": "object",
+        "properties": {
+          "vehicle_type": {
+            "type": "string"
+          },
+          "oem": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "odo_km_band": {
+            "type": "string"
+          },
+          "usage_profile": {
+            "type": "string"
+          }
+        }
+      },
+      "environment": {
+        "type": "object",
+        "properties": {
+          "ambient_temp": {
+            "type": "string"
+          },
+          "weather": {
+            "type": "string"
+          },
+          "terrain_load": {
+            "type": "string"
+          },
+          "vehicle_load_state": {
+            "type": "string"
+          },
+          "operation_context": {
+            "type": "string"
+          },
+          "prior_events_last_24h": {
+            "type": "string"
+          }
+        }
+      },
+      "symptoms": {
+        "type": "object",
+        "properties": {
+          "symptom_primary": {
+            "type": "string"
+          },
+          "symptom_secondary": {
+            "type": "string"
+          },
+          "symptom_description_freeform": {
+            "type": "string"
+          },
+          "warning_lights": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vehicle_behavior_change": {
+            "type": "string"
+          }
+        },
+        "required": ["symptom_primary"]
+      },
+      "dtc_layer": {
+        "type": "object",
+        "properties": {
+          "dtc_list_raw": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dtc_list_filtered": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dtc_noise_score": {
+            "type": "number"
+          },
+          "dtc_confidence": {
+            "type": "number"
+          },
+          "dtc_misleading_flag": {
+            "type": "boolean"
+          },
+          "dtc_to_failuremap": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "can_layer": {
+        "type": "object",
+        "properties": {
+          "can_snapshot_before": {
+            "type": "object"
+          },
+          "can_snapshot_event": {
+            "type": "object"
+          },
+          "can_snapshot_after": {
+            "type": "object"
+          },
+          "can_signature_id": {
+            "type": "string"
+          },
+          "can_pattern_class": {
+            "type": "string",
+            "enum": ["A", "B", "C"]
+          },
+          "can_root_component_likelihood": {
+            "type": "object"
+          },
+          "can_anomaly_score": {
+            "type": "number"
+          }
+        }
+      },
+      "failure_resolution": {
+        "type": "object",
+        "properties": {
+          "failure_chain_path": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "failure_mode_final": {
+            "type": "string"
+          },
+          "failure_mode_layer": {
+            "type": "integer"
+          },
+          "root_cause_category": {
+            "type": "string"
+          },
+          "root_cause_specific": {
+            "type": "string"
+          },
+          "failure_likelihood_score": {
+            "type": "number"
+          },
+          "confounders_detected": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence_total": {
+            "type": "number"
+          }
+        },
+        "required": ["failure_mode_final", "root_cause_category"]
+      },
+      "repair": {
+        "type": "object",
+        "properties": {
+          "repair_actions_taken": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "components_replaced": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "labor_time_minutes": {
+            "type": "integer"
+          },
+          "parts_cost_band": {
+            "type": "string"
+          },
+          "repair_effectiveness_prelim": {
+            "type": "number"
+          },
+          "repair_category": {
+            "type": "string"
+          }
+        }
+      },
+      "outcome": {
+        "type": "object",
+        "properties": {
+          "post_repair_test_result": {
+            "type": "string"
+          },
+          "return_after_x_days": {
+            "type": "integer"
+          },
+          "symptom_resolved": {
+            "type": "boolean"
+          },
+          "failure_recurrence_flag": {
+            "type": "boolean"
+          },
+          "repair_effectiveness_final": {
+            "type": "number"
+          }
+        }
+      },
+      "privacy": {
+        "type": "object",
+        "properties": {
+          "vehicle_hash": {
+            "type": "string"
+          },
+          "workshop_hash": {
+            "type": "string"
+          },
+          "privacy_audit_pass": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "audit_embedding": {
+    "location": "Root level of the Episode output in full/debug modes, or inside the Technical Metadata block of the DiagnosticReport",
+    "required_fields": [
+      "engine_version",
+      "config_version",
+      "rule_versions",
+      "execution_signature",
+      "episode_fingerprint",
+      "debug_log",
+      "execution_plan",
+      "config_used"
+    ]
+  }
+}

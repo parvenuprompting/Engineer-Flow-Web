@@ -1,0 +1,168 @@
+{
+  "constraints": [
+    {
+      "id": "c_main_fuse_no_24v",
+      "if": { "measurement": "no_24v_at_main_fuse" },
+      "effect": {
+        "exclude_failure_modes": [
+          "fm_handunit_no_power",
+          "fm_solenoid_fwd_no_signal",
+          "fm_solenoid_rev_no_signal",
+          "fm_remote_rx_fault",
+          "fm_remote_tx_low_battery"
+        ]
+      },
+      "description": "Geen 24V op hoofdzekering betekent dat alle downstream-verdelingen sowieso dood zijn."
+    },
+    {
+      "id": "c_ground_main_bad",
+      "if": { "measurement": "ground_voltage_drop_high" },
+      "effect": {
+        "increase_probability": [
+          { "failure_mode_id": "fm_e_box_water_ingress", "delta": 0.1 },
+          { "failure_mode_id": "fm_connector_block_corroded", "delta": 0.1 },
+          { "failure_mode_id": "fm_handunit_no_power", "delta": 0.1 }
+        ]
+      },
+      "description": "Slechte massa verhoogt kans op allerhande spannings- en signaalproblemen."
+    },
+
+    {
+      "id": "c_pto_not_engaged",
+      "if": { "condition": "pto_status_off" },
+      "effect": {
+        "exclude_failure_modes": [
+          "fm_hydraulic_pump_worn",
+          "fm_hydraulic_pump_cavitation",
+          "fm_hydraulic_motor_worn"
+        ]
+      },
+      "description": "Als PTO niet aan staat, ligt oorzaak niet in pomp of motor."
+    },
+    {
+      "id": "c_zero_hydraulic_pressure",
+      "if": { "measurement": "hydraulic_pressure_zero" },
+      "effect": {
+        "exclude_failure_modes": [
+          "fm_solenoid_fwd_spool_stuck",
+          "fm_solenoid_rev_spool_stuck",
+          "fm_hydraulic_motor_internal_leak"
+        ]
+      },
+      "description": "0 bar wijst op probleem vóór de ventielen/motor."
+    },
+    {
+      "id": "c_cavitation_sound",
+      "if": { "observation": "cavitation_noise_at_pump" },
+      "effect": {
+        "increase_probability": [
+          { "failure_mode_id": "fm_hydraulic_pump_cavitation", "delta": 0.3 },
+          { "failure_mode_id": "fm_hydraulic_suction_line_collapsed", "delta": 0.2 },
+          { "failure_mode_id": "fm_hydraulic_low_oil_level", "delta": 0.2 }
+        ]
+      },
+      "description": "Cavitatiegeluid verhoogt kans op aanzuig- of oliepeilproblemen."
+    },
+
+    {
+      "id": "c_hyd_overheat",
+      "if": { "measurement": "hydraulic_oil_temp_high" },
+      "effect": {
+        "increase_probability": [
+          { "failure_mode_id": "fm_hydraulic_cooler_blocked", "delta": 0.25 },
+          { "failure_mode_id": "fm_hydraulic_cooler_fan_not_working", "delta": 0.25 },
+          { "failure_mode_id": "fm_hydraulic_pump_worn", "delta": 0.15 },
+          { "failure_mode_id": "fm_hydraulic_oil_overheated", "delta": 0.20 }
+        ]
+      },
+      "description": "Te hoge olietemperatuur wijst op koelings- of overbelastingsproblemen."
+    },
+
+    {
+      "id": "c_drum_mechanical_blockage",
+      "if": { "condition": "drum_cannot_move_with_high_pressure" },
+      "effect": {
+        "exclude_failure_modes": [
+          "fm_solenoid_fwd_no_signal",
+          "fm_solenoid_rev_no_signal"
+        ],
+        "increase_probability": [
+          { "failure_mode_id": "fm_drum_support_roller_seized", "delta": 0.25 },
+          { "failure_mode_id": "fm_drum_main_bearing_worn", "delta": 0.25 },
+          { "failure_mode_id": "fm_drum_gear_ring_missing_teeth", "delta": 0.15 }
+        ]
+      },
+      "description": "Hoge druk maar geen beweging → mechanische blokkage."
+    },
+    {
+      "id": "c_metallic_noise_internal",
+      "if": { "observation": "metallic_noise_inside_drum" },
+      "effect": {
+        "increase_probability": [
+          { "failure_mode_id": "fm_drum_blades_loose", "delta": 0.3 },
+          { "failure_mode_id": "fm_drum_blades_worn", "delta": 0.2 },
+          { "failure_mode_id": "fm_drum_gear_ring_missing_teeth", "delta": 0.2 }
+        ]
+      },
+      "description": "Metaal-op-metaal geluid in de trommel → bladen of tandkrans verdacht."
+    },
+
+    {
+      "id": "c_safety_lockout",
+      "if": { "condition": "safety_circuit_open" },
+      "effect": {
+        "exclude_failure_modes": [
+          "fm_hydraulic_pump_worn",
+          "fm_hydraulic_motor_worn",
+          "fm_solenoid_fwd_spool_stuck",
+          "fm_solenoid_rev_spool_stuck"
+        ],
+        "increase_probability": [
+          { "failure_mode_id": "fm_e_stop_front_engaged", "delta": 0.2 },
+          { "failure_mode_id": "fm_e_stop_rear_engaged", "delta": 0.2 },
+          { "failure_mode_id": "fm_hopper_switch_open", "delta": 0.2 },
+          { "failure_mode_id": "fm_chute_lock_switch_open", "delta": 0.2 }
+        ]
+      },
+      "description": "Actieve veiligheidsketen betekent dat het ontbreken van beweging geen hydraulische storing is."
+    },
+
+    {
+      "id": "c_rain_environment",
+      "if": { "environment": "rain" },
+      "effect": {
+        "increase_probability": [
+          { "failure_mode_id": "fm_e_box_water_ingress", "delta": 0.3 },
+          { "failure_mode_id": "fm_connector_block_corroded", "delta": 0.2 },
+          { "failure_mode_id": "fm_ground_main_corroded", "delta": 0.2 }
+        ]
+      },
+      "description": "Regen verhoogt kans op vocht- en corrosiegerelateerde storingen."
+    },
+    {
+      "id": "c_freezing_environment",
+      "if": { "environment": "freezing" },
+      "effect": {
+        "increase_probability": [
+          { "failure_mode_id": "fm_hydraulic_pump_worn", "delta": 0.1 },
+          { "failure_mode_id": "fm_hydraulic_pump_cavitation", "delta": 0.1 },
+          { "failure_mode_id": "fm_hydraulic_low_oil_level", "delta": 0.1 }
+        ]
+      },
+      "description": "Koude omstandigheden maken olie dikker → pomp en aanzuig kwetsbaarder."
+    },
+
+    {
+      "id": "c_after_tire_blowout",
+      "if": { "event": "recent_tire_blowout" },
+      "effect": {
+        "increase_probability": [
+          { "failure_mode_id": "fm_crossmember_bent", "delta": 0.25 },
+          { "failure_mode_id": "fm_subframe_cracked", "delta": 0.2 },
+          { "failure_mode_id": "fm_mounting_bolts_loose", "delta": 0.2 }
+        ]
+      },
+      "description": "Een klapband kan structurele schade veroorzaken die nadien vibraties geeft."
+    }
+  ]
+}

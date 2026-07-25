@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "entities": {
+    "component": {
+      "required_fields": ["id", "name", "subsystem", "type"],
+      "optional_fields": ["description", "oem_code", "location"]
+    },
+    "failure_mode": {
+      "required_fields": ["id", "component_id", "severity", "likelihood"],
+      "optional_fields": ["description", "oem_code", "mechanism"]
+    },
+    "symptom_cluster": {
+      "required_fields": ["id", "name"],
+      "optional_fields": ["description", "related_component_ids", "tags"]
+    },
+    "constraint": {
+      "required_fields": ["id", "if", "effect"],
+      "optional_fields": ["description", "weight"]
+    }
+  },
+  "conventions": {
+    "id_style": "snake_case",
+    "probability_scale": "0.0-1.0",
+    "severity_scale": "1-5",
+    "likelihood_scale": "1-5"
+  }
+}
