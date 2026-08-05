@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
-import {
-  addWerkbonRegelRecord,
-  createPolicyEnvelope,
-  getWerkbonRecord,
-} from "../../../_store";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
-import { isLocalStoreEnabled } from "../../../_backend_proxy";
+import { proxyToLucidBackend } from "../../../_backend_proxy";
 
 export const runtime = "nodejs";
 
@@ -23,77 +18,15 @@ export async function POST(
 ) {
   const authResult = await requireEflAuth(req);
   if (authResult instanceof Response) return authResult;
-  const auth = authResult;
-  if (!isLocalStoreEnabled()) {
-    return NextResponse.json(
-      { code: "PERSISTENCE_UNAVAILABLE", detail: "Werkbonregels vereisen een geconfigureerde backend." },
-      { status: 503 },
-    );
-  }
+  void authResult;
   try {
     const { werkbonId } = await context.params;
     const payload = (await req.json()) as WerkbonRegelPayload;
-
-    const werkbon = getWerkbonRecord(werkbonId);
-    if (!werkbon) {
-      return NextResponse.json({ detail: "Werkbon niet gevonden" }, { status: 404 });
-    }
-    if (werkbon.owner_uid !== auth.uid) {
-      return NextResponse.json({ code: "FORBIDDEN", detail: "Geen toegang tot deze werkbon." }, { status: 403 });
-    }
-    if (werkbon.status !== "open") {
-      return NextResponse.json(
-        { detail: "Regels toevoegen kan alleen op open werkbonnen" },
-        { status: 409 }
-      );
-    }
-
-    const omschrijving = payload?.omschrijving?.trim();
-    const uren = Number(payload?.uren ?? 0);
-    const uurtarief = Number(payload?.uurtarief ?? 0);
-    const onderdeelPrijs = Number(payload?.onderdeel_prijs ?? 0);
-
-    if (!omschrijving) {
-      return NextResponse.json({ detail: "omschrijving is verplicht" }, { status: 400 });
-    }
-    if (!Number.isFinite(uren) || uren < 0) {
-      return NextResponse.json({ detail: "uren moet >= 0 zijn" }, { status: 400 });
-    }
-    if (!Number.isFinite(uurtarief) || uurtarief < 0) {
-      return NextResponse.json({ detail: "uurtarief moet >= 0 zijn" }, { status: 400 });
-    }
-    if (!Number.isFinite(onderdeelPrijs) || onderdeelPrijs < 0) {
-      return NextResponse.json({ detail: "onderdeel_prijs moet >= 0 zijn" }, { status: 400 });
-    }
-
-    const updated = addWerkbonRegelRecord(werkbonId, {
-      omschrijving,
-      uren,
-      uurtarief,
-      onderdeel_code: payload?.onderdeel_code ?? null,
-      onderdeel_prijs: onderdeelPrijs,
-    });
-
-    if (!updated) {
-      return NextResponse.json({ detail: "Werkbon niet gevonden" }, { status: 404 });
-    }
-
+    const proxyRes = await proxyToLucidBackend({ path: `/werkbonnen/${werkbonId}/regels`, method: "POST", body: payload });
+    if (proxyRes.handled) return NextResponse.json(proxyRes.data, { status: proxyRes.status ?? 200 });
     return NextResponse.json(
-      createPolicyEnvelope({
-        werkbon_id: updated.werkbon.id,
-        werkbon_regel_id: updated.regel.id,
-        status: updated.werkbon.status,
-        regel: {
-          omschrijving: updated.regel.omschrijving,
-          uren: updated.regel.uren,
-          uurtarief: updated.regel.uurtarief,
-          onderdeel_code: updated.regel.onderdeel_code,
-          onderdeel_prijs: updated.regel.onderdeel_prijs,
-          regel_totaal: updated.regel.regel_totaal,
-        },
-        werkbon_subtotaal: updated.werkbon_subtotaal,
-      }),
-      { status: 200 }
+      { code: "PERSISTENCE_UNAVAILABLE", detail: "Werkbonregels vereisen een geconfigureerde backend." },
+      { status: 503 },
     );
   } catch {
     return NextResponse.json({ detail: "Ongeldige payload" }, { status: 400 });

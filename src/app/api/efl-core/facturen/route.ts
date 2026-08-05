@@ -1,11 +1,5 @@
 import { NextResponse } from "next/server";
-import {
-  createFactuurRecord,
-  createPolicyEnvelope,
-  getFactuurByWerkbon,
-  getWerkbonRecord,
-} from "../_store";
-import { isLocalStoreEnabled, proxyToLucidBackend } from "../_backend_proxy";
+import { proxyToLucidBackend } from "../_backend_proxy";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
@@ -17,7 +11,6 @@ type FactuurCreatePayload = {
 export async function POST(req: Request) {
   const authResult = await requireEflAuth(req);
   if (authResult instanceof Response) return authResult;
-  const auth = authResult;
   try {
     const payload = (await req.json()) as FactuurCreatePayload;
     const werkbonId = payload?.werkbon_id?.trim();
@@ -30,59 +23,14 @@ export async function POST(req: Request) {
       method: "POST",
       body: {
         werkbon_id: werkbonId,
-        garage_party_id: auth.garageId,
       },
     });
     if (proxyRes.handled) {
       return NextResponse.json(proxyRes.data, { status: proxyRes.status ?? 200 });
     }
-    if (!isLocalStoreEnabled()) {
-      return NextResponse.json(
-        { code: "PERSISTENCE_UNAVAILABLE", detail: "Duurzame factuurop-slag vereist een geconfigureerde backend." },
-        { status: 503 },
-      );
-    }
-
-    const werkbon = getWerkbonRecord(werkbonId);
-    if (!werkbon) {
-      return NextResponse.json({ detail: "Werkbon niet gevonden" }, { status: 404 });
-    }
-    if (werkbon.owner_uid !== auth.uid) {
-      return NextResponse.json({ code: "FORBIDDEN", detail: "Geen toegang tot deze werkbon." }, { status: 403 });
-    }
-    if (werkbon.status !== "afgerond") {
-      return NextResponse.json(
-        { detail: "Factuur kan alleen op een afgeronde werkbon worden gemaakt." },
-        { status: 409 }
-      );
-    }
-
-    const existing = getFactuurByWerkbon(werkbonId);
-    if (existing) {
-      return NextResponse.json(
-        { detail: "Er bestaat al een factuur voor deze werkbon." },
-        { status: 409 }
-      );
-    }
-
-    const factuur = createFactuurRecord({ werkbon_id: werkbonId, owner_uid: auth.uid, garage_party_id: auth.garageId });
-    if (!factuur) {
-      return NextResponse.json({ detail: "Werkbon niet gevonden" }, { status: 404 });
-    }
-
     return NextResponse.json(
-      createPolicyEnvelope({
-        factuur_id: factuur.id,
-        werkbon_id: factuur.werkbon_id,
-        status: factuur.status,
-        factuurnummer: factuur.factuurnummer,
-        subtotaal: factuur.subtotaal,
-        btw: factuur.btw,
-        totaal: factuur.totaal,
-        aangemaakt_at: factuur.aangemaakt_at,
-        gefinaliseerd_at: factuur.gefinaliseerd_at,
-      }),
-      { status: 200 }
+      { code: "PERSISTENCE_UNAVAILABLE", detail: "Duurzame factuuropslag vereist een geconfigureerde backend." },
+      { status: 503 },
     );
   } catch {
     return NextResponse.json({ detail: "Ongeldige payload" }, { status: 400 });

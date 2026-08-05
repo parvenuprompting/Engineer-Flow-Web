@@ -342,7 +342,7 @@ def test_membership_scope_blocks_cross_garage_diagnosis_reads() -> None:
         work_order = client.post(
             "/werkbonnen",
             headers=_headers(garage_one_token),
-            json={"voertuig_id": "VTG-001", "root_cause": "Test ownership"},
+            json={"case_id": case_id, "voertuig_id": "VTG-001", "root_cause": "Test ownership"},
         )
         assert work_order.status_code == 200, work_order.text
         work_order_id = work_order.json()["data"]["werkbon_id"]
@@ -420,7 +420,11 @@ def test_viewer_cannot_finalize_invoice() -> None:
         work_order = client.post(
             "/werkbonnen",
             headers=_headers(owner_token),
-            json={"voertuig_id": "VTG-001", "root_cause": "Invoice authorization test"},
+            json={
+                "case_id": client.post("/cases", headers=_headers(owner_token), json={"vehicle_id": "VTG-001"}).json()["case_id"],
+                "voertuig_id": "VTG-001",
+                "root_cause": "Invoice authorization test",
+            },
         )
         assert work_order.status_code == 200, work_order.text
         work_order_id = work_order.json()["data"]["werkbon_id"]

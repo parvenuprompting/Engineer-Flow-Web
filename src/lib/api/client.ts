@@ -290,6 +290,7 @@ export async function deleteDiagnosis(diagnosisId: string): Promise<ApiResponse<
 }
 
 export async function createWerkbon(
+    caseId: string,
     voertuigId: string,
     rootCause: string
 ): Promise<ApiResponse<PolicyEnvelope<WerkbonResponseData>>> {
@@ -298,6 +299,7 @@ export async function createWerkbon(
         method: 'POST',
         retryable: true,
         bodyObj: {
+            case_id: caseId,
             voertuig_id: voertuigId,
             root_cause: rootCause,
             idempotency_key: idempotencyKey,

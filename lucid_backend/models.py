@@ -329,6 +329,7 @@ class Werkbon(Base):
     )
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    case_id: Mapped[str | None] = mapped_column(ForeignKey("efl_cases.id"), index=True, nullable=True)
     voertuig_id: Mapped[str] = mapped_column(ForeignKey("vehicles.id"), index=True)
     garage_party_id: Mapped[str] = mapped_column(ForeignKey("parties.id"), index=True)
     root_cause: Mapped[str] = mapped_column(Text, nullable=False)

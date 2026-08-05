@@ -953,9 +953,22 @@ def create_app() -> FastAPI:
                 status_code=403,
                 trigger_id=None,
             )
+        case = db.get(EflCase, payload.case_id)
+        if not case or case.garage_party_id != garage_id:
+            _record_deny_and_raise(
+                db,
+                manifest_id=manifest.id,
+                endpoint="/werkbonnen",
+                request_payload=manifest_payload,
+                reason_code="CASE_NOT_FOUND_OR_NOT_OWNED",
+                detail="Werkbon moet aan een case van deze garage gekoppeld zijn.",
+                status_code=404,
+                trigger_id=None,
+            )
 
         werkbon = create_werkbon(
             db,
+            case_id=case.id,
             voertuig_id=vehicle.id,
             garage_party_id=garage_id,
             root_cause=payload.root_cause,
@@ -974,6 +987,7 @@ def create_app() -> FastAPI:
             "policy_version": settings.policy_version,
             "data": {
                 "werkbon_id": werkbon.id,
+                "case_id": werkbon.case_id,
                 "voertuig_id": payload.voertuig_id,
                 "root_cause": werkbon.root_cause,
                 "status": werkbon.status,

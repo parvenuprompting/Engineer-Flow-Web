@@ -71,6 +71,7 @@ class EflDiagnosisMetadataIn(BaseModel):
 
 
 class WerkbonCreateIn(BaseModel):
+    case_id: str = Field(min_length=1, max_length=36)
     voertuig_id: str
     root_cause: str = Field(min_length=3)
     idempotency_key: str | None = Field(default=None, max_length=255)

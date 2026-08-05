@@ -173,9 +173,10 @@ def close_claim(db: Session, claim: Claim) -> Claim:
 
 
 def create_werkbon(
-    db: Session, *, voertuig_id: str, garage_party_id: str, root_cause: str, idempotency_key: str | None = None
+    db: Session, *, case_id: str, voertuig_id: str, garage_party_id: str, root_cause: str, idempotency_key: str | None = None
 ) -> Werkbon:
     werkbon = Werkbon(
+        case_id=case_id,
         voertuig_id=voertuig_id,
         garage_party_id=garage_party_id,
         root_cause=root_cause,

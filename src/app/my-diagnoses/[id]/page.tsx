@@ -360,7 +360,8 @@ export default function DiagnosisDetailPage() {
     try {
       setBusy("werkbon-create");
       setWorkflowError(null);
-      const response = await createWerkbon(voertuigId, rootCause);
+      if (!apiDiagnosis) throw new Error("Werkbon vereist een duurzaam opgeslagen diagnose.");
+      const response = await createWerkbon(apiDiagnosis.case_id, voertuigId, rootCause);
       if (!response.data) {
         throw new Error(response.error || "Werkbon aanmaken mislukt.");
       }

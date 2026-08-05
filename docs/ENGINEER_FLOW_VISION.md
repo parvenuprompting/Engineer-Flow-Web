@@ -702,12 +702,12 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 
 ### Werkbon
 
-- [ ] Next fallback voor werkbonnen verwijderen.
-- [ ] Werkbon altijd aan case koppelen.
-- [ ] Werkbonownership afdwingen.
-- [ ] Werkbonstatussen definiëren.
-- [ ] Regels transactioneel opslaan.
-- [ ] Arbeid en onderdelen valideren.
+- [x] Next fallback voor werkbonnen verwijderen.
+- [x] Werkbon altijd aan case koppelen.
+- [x] Werkbonownership afdwingen.
+- [x] Werkbonstatussen definiëren.
+- [x] Regels transactioneel opslaan.
+- [x] Arbeid en onderdelen valideren.
 - [ ] Werkbon afronden idempotent maken.
 - [ ] Wijzigingen auditten.
 - [ ] Werkbon PDF/export toevoegen.
