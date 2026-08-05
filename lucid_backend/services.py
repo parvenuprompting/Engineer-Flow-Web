@@ -37,7 +37,7 @@ from .policy import anonymize_vehicle_ref, has_active_consent
 
 settings = get_settings()
 MONEY_QUANT = Decimal("0.01")
-BTW_RATE = Decimal("0.21")
+BTW_RATE = Decimal(str(settings.btw_rate))
 
 
 def utcnow() -> datetime:

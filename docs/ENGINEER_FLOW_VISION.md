@@ -708,26 +708,26 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [x] Werkbonstatussen definiëren.
 - [x] Regels transactioneel opslaan.
 - [x] Arbeid en onderdelen valideren.
-- [ ] Werkbon afronden idempotent maken.
-- [ ] Wijzigingen auditten.
-- [ ] Werkbon PDF/export toevoegen.
+- [x] Werkbon afronden idempotent maken.
+- [x] Wijzigingen auditten.
+- [x] Werkbon PDF/export toevoegen.
 
 ### Factuur
 
-- [ ] Factuur alleen op afgeronde werkbon.
-- [ ] Factuursequence database-safe maken.
-- [ ] Factuurfinalisatie idempotent maken.
-- [ ] BTW-regels configureerbaar maken.
-- [ ] Grootboekbalans afdwingen.
-- [ ] Factuurdata immutable maken na finalisatie.
-- [ ] Factuur PDF/export toevoegen.
+- [x] Factuur alleen op afgeronde werkbon.
+- [x] Factuursequence database-safe maken.
+- [x] Factuurfinalisatie idempotent maken.
+- [x] BTW-regels configureerbaar maken.
+- [x] Grootboekbalans afdwingen.
+- [x] Factuurdata immutable maken na finalisatie.
+- [x] Factuur PDF/export toevoegen.
 - [ ] Boekhoudintegratie als aparte release ontwerpen.
 
 ### Gate
 
-- [ ] Diagnose → werkbon → factuur is end-to-end persistent.
-- [ ] Dubbele clicks veroorzaken geen dubbele factuur.
-- [ ] Een gefinaliseerde factuur kan niet stil worden gewijzigd.
+- [x] Diagnose → werkbon → factuur is end-to-end persistent.
+- [x] Dubbele clicks veroorzaken geen dubbele factuur.
+- [x] Een gefinaliseerde factuur kan niet stil worden gewijzigd.
 - [ ] Financiële tests zijn door een verantwoordelijke reviewer goedgekeurd.
 
 ---
@@ -743,9 +743,9 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [x] Hash chaining.
 - [x] LUCID mirrorconcept.
 - [ ] Durable audit sink in productie.
-- [ ] Audit events transactioneel aan domeinwrites koppelen.
-- [ ] Replay protection.
-- [ ] Correlation IDs.
+- [x] Audit events transactioneel aan domeinwrites koppelen.
+- [x] Replay protection.
+- [x] Correlation IDs.
 - [ ] Audit retention.
 - [ ] Audit export.
 - [ ] Audit integrity verifier.

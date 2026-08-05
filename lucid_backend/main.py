@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Annotated
+from uuid import uuid4
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response, status
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
@@ -86,6 +87,7 @@ from .services import (
     get_vehicle_dtc_summary,
     get_vehicle_repair_history,
     list_werkbon_regels,
+    _post_totals_balanced,
     open_claim,
     bereken_werkbon_subtotaal,
     run_feedback_aggregation_batch,
@@ -199,6 +201,14 @@ def create_app() -> FastAPI:
         version=settings.app_version,
         description="Conditionele voertuigdata-uitwisseling via LUCID met PostgreSQL + JWT hardening",
     )
+
+    @app.middleware("http")
+    async def correlation_middleware(request: Request, call_next):
+        correlation_id = request.headers.get("x-correlation-id") or str(uuid4())
+        request.state.correlation_id = correlation_id
+        response = await call_next(request)
+        response.headers["x-correlation-id"] = correlation_id
+        return response
 
     @app.on_event("startup")
     def startup() -> None:
@@ -1113,6 +1123,34 @@ def create_app() -> FastAPI:
         db.commit()
         return PolicyEnvelope(**response_payload)
 
+    @app.get("/werkbonnen/{werkbon_id}/export")
+    def werkbon_export(
+        werkbon_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> Response:
+        _assert_garage_write_access(auth)
+        garage_id = require_active_membership(db, auth).garage_party_id
+        werkbon = get_werkbon(db, werkbon_id)
+        if not werkbon or werkbon.garage_party_id != garage_id:
+            raise HTTPException(status_code=404, detail="Werkbon niet gevonden")
+        regels = list_werkbon_regels(db, werkbon.id)
+        payload = {
+            "werkbon_id": werkbon.id,
+            "case_id": werkbon.case_id,
+            "status": werkbon.status,
+            "vehicle_id": werkbon.voertuig_id,
+            "root_cause": werkbon.root_cause,
+            "regels": [{"omschrijving": regel.omschrijving, "uren": float(regel.uren), "uurtarief": float(regel.uurtarief), "onderdeel_prijs": float(regel.onderdeel_prijs)} for regel in regels],
+        }
+        import json
+
+        return Response(
+            content=_diagnosis_pdf("Engineer Flow werkbon", werkbon.id, werkbon.root_cause, werkbon.status, payload),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="werkbon-{werkbon.id}.pdf"'},
+        )
+
     @app.post("/werkbonnen/{werkbon_id}/afronden", response_model=PolicyEnvelope)
     def werkbon_afronden(
         werkbon_id: str,
@@ -1364,15 +1402,23 @@ def create_app() -> FastAPI:
                 trigger_id=None,
             )
         if factuur.status == FactuurStatus.GEFINALISEERD.value:
-            _record_deny_and_raise(
-                db,
+            posten = get_grootboek_posten(db, factuur.id)
+            return PolicyEnvelope(
                 manifest_id=manifest.id,
-                endpoint="/facturen/{id}/finaliseren",
-                request_payload=manifest_payload,
-                reason_code="FACTUUR_ALREADY_FINALIZED",
-                detail="Factuur is al gefinaliseerd.",
-                status_code=409,
-                trigger_id=None,
+                decision_id="idempotent-replay",
+                policy_version=settings.policy_version,
+                data={
+                    "factuur_id": factuur.id,
+                    "status": factuur.status,
+                    "factuurnummer": factuur.factuurnummer,
+                    "subtotaal": float(factuur.subtotaal),
+                    "btw": float(factuur.btw),
+                    "totaal": float(factuur.totaal),
+                    "gefinaliseerd_at": factuur.gefinaliseerd_at,
+                    "grootboek_balans_ok": _post_totals_balanced(posten),
+                    "grootboek_posten": [{"id": post.id, "type": post.type, "rekening": post.rekening, "bedrag": float(post.bedrag), "geboekt_at": post.geboekt_at} for post in posten],
+                    "idempotent_replay": True,
+                },
             )
 
         try:
@@ -1430,6 +1476,34 @@ def create_app() -> FastAPI:
         )
         db.commit()
         return PolicyEnvelope(**response_payload)
+
+    @app.get("/facturen/{factuur_id}/export")
+    def factuur_export(
+        factuur_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> Response:
+        _assert_garage_write_access(auth)
+        garage_id = require_active_membership(db, auth).garage_party_id
+        factuur = get_factuur(db, factuur_id)
+        if not factuur or factuur.garage_party_id != garage_id:
+            raise HTTPException(status_code=404, detail="Factuur niet gevonden")
+        posten = get_grootboek_posten(db, factuur.id)
+        payload = {
+            "factuur_id": factuur.id,
+            "werkbon_id": factuur.werkbon_id,
+            "status": factuur.status,
+            "factuurnummer": factuur.factuurnummer,
+            "subtotaal": float(factuur.subtotaal),
+            "btw": float(factuur.btw),
+            "totaal": float(factuur.totaal),
+            "grootboek_balans_ok": _post_totals_balanced(posten),
+        }
+        return Response(
+            content=_diagnosis_pdf("Engineer Flow factuur", factuur.factuurnummer, "Werkbonfactuur", factuur.status, payload),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="factuur-{factuur.factuurnummer}.pdf"'},
+        )
 
     @app.get("/facturen/{factuur_id}", response_model=PolicyEnvelope)
     def factuur_ophalen(

@@ -73,6 +73,7 @@ class Settings(BaseModel):
 
     trigger1_window_hours: int = Field(default_factory=lambda: int(os.getenv("LUCID_TRIGGER1_WINDOW_HOURS", "24")))
     trigger1_batch_interval_minutes: int = Field(default_factory=lambda: int(os.getenv("LUCID_TRIGGER1_BATCH_INTERVAL_MINUTES", "60")))
+    btw_rate: float = Field(default_factory=lambda: float(os.getenv("LUCID_BTW_RATE", "0.21")))
 
     dev_auth_enabled: bool = Field(default_factory=lambda: os.getenv("LUCID_ENABLE_DEV_AUTH", "false").lower() == "true")
     auto_create_schema: bool = Field(
