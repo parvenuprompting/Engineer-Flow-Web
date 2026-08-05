@@ -17,7 +17,7 @@ import stepEffectsJson from "@/ai/data/step_effects.json";
 import stepRequirementsJson from "@/ai/data/step_requirements.json";
 import symptomClustersJson from "@/ai/data/symptom_clusters.json";
 import variantConstraintsJson from "@/ai/data/variant_constraints.json";
-import clusterKeywordsJson from "../../cluster_keywords_mapping.json";
+import clusterKeywordsJson from "../../data/cluster_keywords_mapping.json";
 import desTsMapJson from "./data/des_ts_map.v1.0.json";
 import efDiagnosticSchemaJson from "./data/ef_diagnostic_schema.json";
 import masterSymptomSetJson from "./data/master_symptom_set.v1.0.json";

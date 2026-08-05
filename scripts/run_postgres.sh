@@ -201,11 +201,11 @@ if [ "$RUN_TESTS" -eq 1 ]; then
     exit 1
   fi
 
-  log "test_lucid.py uitvoeren"
-  LUCID_TEST_BASE_URL="http://127.0.0.1:${APP_PORT}" python test_lucid.py
+  log "tests/test_lucid.py uitvoeren"
+  LUCID_TEST_BASE_URL="http://127.0.0.1:${APP_PORT}" python tests/test_lucid.py
 
-  log "test_werkbon_factuur.py uitvoeren"
-  LUCID_TEST_BASE_URL="http://127.0.0.1:${APP_PORT}" python test_werkbon_factuur.py
+  log "tests/test_werkbon_factuur.py uitvoeren"
+  LUCID_TEST_BASE_URL="http://127.0.0.1:${APP_PORT}" python tests/test_werkbon_factuur.py
 
   cleanup_test_api
   trap - EXIT

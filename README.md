@@ -186,8 +186,21 @@ Canonieke datasets:
 │   └── versions/            # DB migraties
 ├── lucid_engineer_flow.py   # App bootstrap
 ├── run_postgres.sh          # One-command local backend bootstrap
-├── test_lucid.py            # End-to-end integratiescript
-├── tests/test_lucid_backend.py  # Pytest suite
+├── scripts/                  # Shell scripts voor local setup & database
+├── tests/                    # Pytest & E2E integratietests
+├── data/                     # Externe dataset mappings
+├── lucid_backend/
+│   ├── main.py              # FastAPI routes
+│   ├── policy.py            # Trigger/policy enforcement + reason codes
+│   ├── models.py            # SQLAlchemy modellen
+│   ├── services.py          # Domeinservices + seed data
+│   ├── security.py          # JWT decode/validate + dev token minting
+│   ├── audit.py             # Manifest/decision/audit registratie
+│   └── schemas.py           # Request/response modellen
+├── alembic/
+│   ├── env.py
+│   └── versions/            # DB migraties
+├── lucid_engineer_flow.py   # App bootstrap
 ```
 
 ## Quickstart (Aanbevolen)
@@ -221,7 +234,7 @@ Let op:
 ### 3) Backend + DB in 1 command
 
 ```bash
-./run_postgres.sh
+./scripts/run_postgres.sh
 ```
 
 Dit script doet automatisch:
@@ -236,8 +249,8 @@ Dit script doet automatisch:
 Handige flags:
 
 ```bash
-./run_postgres.sh --with-tests   # draait ook test_lucid.py
-./run_postgres.sh --no-api       # alleen setup/migratie/seed
+./scripts/run_postgres.sh --with-tests   # draait ook tests/test_lucid.py
+./scripts/run_postgres.sh --no-api       # alleen setup/migratie/seed
 ```
 
 ### 4) Swagger openen
@@ -299,7 +312,7 @@ Gebruik voor de volledige lokale stack:
 ```bash
 cp env.local.example .env.local
 # Vul FIREBASE_SERVICE_ACCOUNT_JSON in .env.local in.
-./run_local.sh
+./scripts/run_local.sh
 ```
 
 `run_local.sh` start Docker/PostgreSQL, voert de migraties uit, seedt de database, genereert een development-service-token, start FastAPI op poort `8010` en start daarna Next.js op poort `9002`.
@@ -504,13 +517,13 @@ Let op: draai `typecheck` bij voorkeur na `build`, omdat `tsconfig.json` `.next/
 ### End-to-end script
 
 ```bash
-python test_lucid.py
+python tests/test_lucid.py
 ```
 
 Ondersteunt custom base URL:
 
 ```bash
-LUCID_TEST_BASE_URL=http://127.0.0.1:8010 python test_lucid.py
+LUCID_TEST_BASE_URL=http://127.0.0.1:8010 python tests/test_lucid.py
 ```
 
 ### Pytest

@@ -7,7 +7,7 @@ cd "$ROOT_DIR"
 ENV_FILE="${LUCID_ENV_FILE:-.env.lucid}"
 APP_PORT="${LUCID_APP_PORT:-8010}"
 
-./run_postgres.sh --no-api
+./scripts/run_postgres.sh --no-api
 
 set -a
 # shellcheck disable=SC1090
