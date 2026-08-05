@@ -2,13 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import {
-  useFirestore,
-  useDoc,
-  useUser,
-  useMemoFirebase,
-} from "@/firebase";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { useUser } from "@/firebase";
 import {
   Card,
   CardContent,
@@ -53,9 +47,6 @@ import type { LucideIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import {
-  deleteDocumentNonBlocking,
-} from "@/firebase/non-blocking-updates";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import {
@@ -72,6 +63,7 @@ import {
   createFactuur,
   createWerkbon,
   deleteDiagnosis,
+  exportDiagnosis,
   finaliseerFactuur,
   getDiagnosis,
   getFactuur,
@@ -121,6 +113,7 @@ type DiagnosisDocument = {
   imageUrl?: string | null;
   diagnosisId?: string;
   status?: string;
+  caseStatus?: string | null;
   vehicleId?: string;
   serviceFlow?: DiagnosisFlowState;
 };
@@ -159,31 +152,22 @@ export default function DiagnosisDetailPage() {
   const params = useParams();
   const diagnosisId = params?.id as string | undefined;
 
-  const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
 
-  const diagnosisRef = useMemoFirebase(() => {
-    if (!user || !diagnosisId) return null;
-    return doc(firestore, "diagnoses", user.uid, "diagnoses", diagnosisId);
-  }, [firestore, user, diagnosisId]);
-
-  const {
-    data: diagnosisData,
-    isLoading,
-    error,
-  } = useDoc<DiagnosisDocument>(diagnosisRef);
-
   const [apiDiagnosis, setApiDiagnosis] = useState<EflDiagnosisRecord | null>(null);
   const [apiLoading, setApiLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user || !diagnosisId) return;
     let active = true;
     setApiLoading(true);
+    setApiError(null);
     void getDiagnosis(diagnosisId).then((response) => {
       if (!active) return;
       if (response.data) setApiDiagnosis(response.data);
+      else setApiError(response.error || "Kon de diagnose niet laden.");
       setApiLoading(false);
     });
     return () => {
@@ -221,16 +205,34 @@ export default function DiagnosisDetailPage() {
       diagnosisId: apiDiagnosis.diagnosis_id,
       status: metadata.status || (metadata.confirmed_fix_id ? "resolved" : "under_investigation"),
       vehicleId: metadata.vehicle_id,
+      caseStatus: apiDiagnosis.case_status,
       serviceFlow: metadata.service_flow as DiagnosisFlowState | undefined,
     };
   }, [apiDiagnosis]);
 
-  const diagnosis = apiDiagnosisDocument || (diagnosisData as DiagnosisDocument | null);
+  const diagnosis = apiDiagnosisDocument;
   const flow = diagnosis?.serviceFlow ?? {};
 
   const [workflowBusy, setWorkflowBusy] = useState<string | null>(null);
   const [workflowError, setWorkflowError] = useState<string | null>(null);
   const [factuurDetails, setFactuurDetails] = useState<FactuurDetailResponseData | null>(null);
+
+  const handleExport = async () => {
+    if (!apiDiagnosis) return;
+    setWorkflowError(null);
+    const response = await exportDiagnosis(apiDiagnosis.diagnosis_id);
+    if (!response.data) {
+      setWorkflowError(response.error || "Kon DDS-export niet maken.");
+      return;
+    }
+    const blob = new Blob([JSON.stringify(response.data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${apiDiagnosis.diagnosis_id}.dds.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
 
   const [voertuigIdInput, setVoertuigIdInput] = useState("TRUCK-MVP-01");
   const [regelOmschrijving, setRegelOmschrijving] = useState("Uitgevoerde reparatie volgens diagnose");
@@ -289,15 +291,7 @@ export default function DiagnosisDetailPage() {
       setApiDiagnosis(response.data);
       return;
     }
-    if (!diagnosisRef) return;
-    await updateDoc(diagnosisRef, {
-      vehicleId: voertuigIdInput.trim(),
-      serviceFlow: {
-        ...(diagnosis?.serviceFlow ?? {}),
-        ...patch,
-        updatedAt: serverTimestamp(),
-      },
-    });
+    throw new Error("Diagnose is niet beschikbaar vanuit de persistente backend.");
   };
 
   const handleDelete = async () => {
@@ -311,30 +305,17 @@ export default function DiagnosisDetailPage() {
       router.push("/my-diagnoses");
       return;
     }
-    if (!diagnosisRef) return;
-    deleteDocumentNonBlocking(diagnosisRef);
-    toast({
-      title: "Diagnose Verwijderd",
-      description: "De diagnose is succesvol verwijderd.",
-    });
-    router.push("/my-diagnoses");
+    setWorkflowError("Diagnose is niet beschikbaar vanuit de persistente backend.");
   };
 
   const handleMarkRepairConfirmed = async () => {
-    if (!diagnosisRef && !apiDiagnosis) return;
+    if (!apiDiagnosis) return;
     try {
       setBusy("repair-confirm");
       setWorkflowError(null);
-      if (apiDiagnosis) {
-        const response = await updateDiagnosis(apiDiagnosis.diagnosis_id, { status: "resolved" });
-        if (!response.data) throw new Error(response.error || "Kon reparatiestatus niet opslaan.");
-        setApiDiagnosis(response.data);
-      } else {
-        await updateDoc(diagnosisRef!, {
-          status: "resolved",
-          resolvedAt: serverTimestamp(),
-        });
-      }
+      const response = await updateDiagnosis(apiDiagnosis.diagnosis_id, { status: "resolved" });
+      if (!response.data) throw new Error(response.error || "Kon reparatiestatus niet opslaan.");
+      setApiDiagnosis(response.data);
       await saveFlowPatch({ workflowState: "reparatie_bevestigd" });
       toast({
         title: "Reparatie bevestigd",
@@ -571,7 +552,7 @@ export default function DiagnosisDetailPage() {
     );
   };
 
-  if (isLoading || apiLoading || isUserLoading) {
+  if (apiLoading || isUserLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -579,13 +560,16 @@ export default function DiagnosisDetailPage() {
     );
   }
 
-  if (error) {
+  if (apiError) {
     return (
       <div className="container mx-auto p-4 md:p-8">
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Fout</AlertTitle>
-          <AlertDescription>Kon de diagnose niet laden: {error.message}</AlertDescription>
+          <AlertDescription>
+            {apiError}
+            <Button className="ml-3" size="sm" variant="outline" onClick={() => router.refresh()}>Opnieuw proberen</Button>
+          </AlertDescription>
         </Alert>
       </div>
     );
@@ -664,6 +648,9 @@ export default function DiagnosisDetailPage() {
               </CardDescription>
             </div>
             <div className="text-right">
+              <Button size="sm" variant="outline" onClick={handleExport} disabled={!apiDiagnosis}>
+                DDS export
+              </Button>
               <p className="text-sm text-muted-foreground">Betrouwbaarheid</p>
               <p className="text-2xl font-bold text-primary">
                 {Math.round(diagnosis.reliabilityScore || 0)}%
@@ -968,6 +955,7 @@ export default function DiagnosisDetailPage() {
                 <Badge variant="secondary">Truck: {diagnosis.truckType || "N/A"}</Badge>
                 <Badge variant="secondary">Opbouw: {diagnosis.opbouwType || "N/A"}</Badge>
                 <Badge variant="outline">Cluster: {diagnosis.symptomCluster || "N/A"}</Badge>
+                <Badge variant="outline">Case: {diagnosis.caseStatus || "onbekend"}</Badge>
               </div>
               <div>
                 <h4 className="font-medium mb-2">Hoofdoorzaken (Top 3)</h4>

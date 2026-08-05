@@ -202,12 +202,38 @@ export async function confirmFix(caseId: string, failureModeId: string): Promise
     });
 }
 
-export async function listDiagnoses(): Promise<ApiResponse<{ diagnoses: EflDiagnosisRecord[] }>> {
-    return requestJson<{ diagnoses: EflDiagnosisRecord[] }>('/diagnoses', { method: 'GET' });
+export async function listDiagnoses(options: {
+    offset?: number;
+    limit?: number;
+    status?: string;
+    vehicleId?: string;
+    query?: string;
+} = {}): Promise<ApiResponse<{ diagnoses: EflDiagnosisRecord[]; pagination?: { offset: number; limit: number; total: number; has_more: boolean } }>> {
+    const params = new URLSearchParams();
+    if (options.offset !== undefined) params.set('offset', String(options.offset));
+    if (options.limit !== undefined) params.set('limit', String(options.limit));
+    if (options.status) params.set('status', options.status);
+    if (options.vehicleId) params.set('vehicle_id', options.vehicleId);
+    if (options.query) params.set('q', options.query);
+    const suffix = params.toString() ? `?${params.toString()}` : '';
+    const response = await requestJson<{ diagnoses: EflDiagnosisRecord[]; pagination?: { offset: number; limit: number; total: number; has_more: boolean } }>(`/diagnoses${suffix}`, { method: 'GET' });
+    if (!response.data && (response.statusCode ?? 0) >= 500) {
+        return requestJson<{ diagnoses: EflDiagnosisRecord[]; pagination?: { offset: number; limit: number; total: number; has_more: boolean } }>(`/diagnoses${suffix}`, { method: 'GET' });
+    }
+    return response;
 }
 
 export async function getDiagnosis(diagnosisId: string): Promise<ApiResponse<EflDiagnosisRecord>> {
-    return requestJson<EflDiagnosisRecord>(`/diagnoses/${encodeURIComponent(diagnosisId)}`, { method: 'GET' });
+    const path = `/diagnoses/${encodeURIComponent(diagnosisId)}`;
+    const response = await requestJson<EflDiagnosisRecord>(path, { method: 'GET' });
+    if (!response.data && (response.statusCode ?? 0) >= 500) {
+        return requestJson<EflDiagnosisRecord>(path, { method: 'GET' });
+    }
+    return response;
+}
+
+export async function exportDiagnosis(diagnosisId: string): Promise<ApiResponse<Record<string, unknown>>> {
+    return requestJson<Record<string, unknown>>(`/diagnoses/${encodeURIComponent(diagnosisId)}/export`, { method: 'GET' });
 }
 
 export async function updateDiagnosis(

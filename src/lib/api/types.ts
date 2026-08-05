@@ -263,6 +263,7 @@ export interface EflDiagnosisRecord {
     engine_version?: string | null;
     response: DiagnoseResponse;
     metadata: EflDiagnosisMetadata;
+    case_status?: string | null;
 }
 
 export interface ConstraintTraceEntry {

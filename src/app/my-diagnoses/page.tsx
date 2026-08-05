@@ -3,13 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  useFirestore,
-  useCollection,
-  useUser,
-  useMemoFirebase,
-} from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { useUser } from '@/firebase';
 import {
   Card,
   CardContent,
@@ -19,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import { listDiagnoses } from '@/lib/api/client';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   Loader2,
@@ -44,24 +39,16 @@ import {
 
 export default function MyDiagnosesPage() {
   const router = useRouter();
-  const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
   const [apiDiagnoses, setApiDiagnoses] = useState<any[] | null>(null);
   const [apiLoading, setApiLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
 
-  const diagnosesQuery = useMemoFirebase(() => {
-    if (!user) return null;
-    const diagnosesCol = collection(firestore, 'diagnoses', user.uid, 'diagnoses');
-    return query(diagnosesCol, orderBy('createdAt', 'desc'));
-  }, [firestore, user]);
-
-  const {
-    data: diagnoses,
-    isLoading,
-    error,
-  } = useCollection<any>(diagnosesQuery);
-
-  useEffect(() => {
+  const loadDiagnoses = (nextOffset = offset) => {
     if (!user) {
       setApiDiagnoses(null);
       return;
@@ -69,7 +56,8 @@ export default function MyDiagnosesPage() {
 
     let active = true;
     setApiLoading(true);
-    void listDiagnoses().then((response) => {
+    setApiError(null);
+    void listDiagnoses({ offset: nextOffset, limit: 25, query: search || undefined, status: statusFilter || undefined }).then((response) => {
       if (!active) return;
       if (response.data) {
         setApiDiagnoses(response.data.diagnoses.map((item) => ({
@@ -80,16 +68,23 @@ export default function MyDiagnosesPage() {
           createdAt: item.created_at,
           reliabilityScore: item.response.confidence_score || 0,
           status: item.metadata.status || (item.metadata.confirmed_fix_id ? 'resolved' : 'under_investigation'),
-          caseId: item.case_id,
-        })));
-      }
+           caseId: item.case_id,
+           caseStatus: item.case_status,
+         })));
+         setOffset(response.data.pagination?.offset ?? nextOffset);
+         setHasMore(response.data.pagination?.has_more ?? false);
+       } else {
+         setApiError(response.error || 'Kon diagnoses niet laden.');
+       }
       setApiLoading(false);
     });
 
     return () => {
       active = false;
     };
-  }, [user]);
+  };
+
+  useEffect(() => loadDiagnoses(0), [user, search, statusFilter]);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -97,9 +92,9 @@ export default function MyDiagnosesPage() {
     }
   }, [isUserLoading, user, router]);
 
-  const displayedDiagnoses = apiDiagnoses ?? diagnoses;
+  const displayedDiagnoses = apiDiagnoses ?? [];
 
-  if (isLoading || isUserLoading || apiLoading) {
+  if (isUserLoading || apiLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -127,19 +122,29 @@ export default function MyDiagnosesPage() {
           <CardDescription>
             Hier vindt u al uw opgeslagen diagnoses.
           </CardDescription>
+          <div className="flex flex-col gap-2 md:flex-row">
+            <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Zoek op diagnose of symptoom" />
+            <select className="h-10 rounded-md border bg-background px-3 text-sm" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+              <option value="">Alle statussen</option>
+              <option value="under_investigation">In onderzoek</option>
+              <option value="resolved">Opgelost</option>
+            </select>
+          </div>
         </CardHeader>
         <CardContent>
-          {error && (
+          {apiError && (
             <Alert variant="destructive" className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>Fout</AlertTitle>
               <AlertDescription>
-                Kon diagnoses niet laden: {error.message}
+                {apiError}
+                <Button className="ml-3" size="sm" variant="outline" onClick={() => loadDiagnoses()}>Opnieuw proberen</Button>
               </AlertDescription>
             </Alert>
           )}
 
           {displayedDiagnoses && displayedDiagnoses.length > 0 ? (
+            <>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -147,6 +152,7 @@ export default function MyDiagnosesPage() {
                   <TableHead>Titel</TableHead>
                   <TableHead className="text-center">Score</TableHead>
                   <TableHead className="text-center">Status</TableHead>
+                  <TableHead className="text-center">Case</TableHead>
                   <TableHead className="text-right"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -187,6 +193,9 @@ export default function MyDiagnosesPage() {
                         )}
                       </div>
                     </TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="outline">{diag.caseStatus || 'onbekend'}</Badge>
+                    </TableCell>
                     <TableCell className="text-right">
                       <Button
                         variant="outline"
@@ -201,6 +210,11 @@ export default function MyDiagnosesPage() {
                 ))}
               </TableBody>
             </Table>
+            <div className="mt-4 flex justify-between">
+              <Button variant="outline" disabled={offset === 0} onClick={() => loadDiagnoses(Math.max(0, offset - 25))}>Vorige</Button>
+              <Button variant="outline" disabled={!hasMore} onClick={() => loadDiagnoses(offset + 25)}>Volgende</Button>
+            </div>
+            </>
           ) : (
             <div className="text-center py-12">
               <FolderArchive className="mx-auto h-12 w-12 text-muted-foreground" />

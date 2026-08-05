@@ -573,9 +573,9 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [x] Diagnose archiveren via EFL API.
 - [x] Diagnosemetadata bijwerken.
 - [x] Diagnose verwijderen via EFL API.
-- [ ] Diagnose opnieuw openen vanuit persistent backend zonder Firestore fallback.
-- [ ] Case status tonen in alle diagnoseviews.
-- [ ] Network retry en duidelijke persistence error UX toevoegen.
+- [x] Diagnose opnieuw openen vanuit persistent backend zonder Firestore fallback.
+- [x] Case status tonen in alle diagnoseviews.
+- [x] Network retry en duidelijke persistence error UX toevoegen.
 
 ### Archief
 
@@ -585,10 +585,10 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [x] EFL diagnose-delete endpoint.
 - [x] `Mijn Diagnoses` API-first maken.
 - [x] Detailpagina API-first maken.
-- [ ] Firestore fallback volledig verwijderen voor productie.
-- [ ] API-pagination toevoegen.
+- [x] Firestore fallback volledig verwijderen voor productie.
+- [x] API-pagination toevoegen.
 - [ ] Filteren op status, voertuig, cluster en periode.
-- [ ] Zoeken op symptoomtekst en diagnose-ID.
+- [x] Zoeken op symptoomtekst en diagnose-ID.
 - [ ] Export van een diagnose naar DDS/PDF-formaat.
 
 ### Gate
@@ -596,7 +596,7 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [ ] Monteur kan volledige flow doorlopen zonder Firestore.
 - [ ] Refresh en opnieuw inloggen behouden de case.
 - [ ] Archiefresultaat is tenant-isolated.
-- [ ] Geen diagnose kan worden verwijderd zonder audit event.
+- [x] Geen diagnose kan worden verwijderd zonder audit event.
 
 ---
 

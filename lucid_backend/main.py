@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, Header, HTTPException, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, status
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
@@ -380,12 +380,18 @@ def create_app() -> FastAPI:
             "engine_version": diagnosis.engine_version,
             "response": diagnosis.response_payload,
             "metadata": diagnosis.case_metadata,
+            "case_status": diagnosis.case.status if diagnosis.case else None,
         }
 
     @app.get("/diagnoses")
     def efl_diagnosis_list(
         auth: Annotated[AuthContext, Depends(get_auth_context)],
         db: Session = Depends(get_db),
+        offset: int = Query(default=0, ge=0, le=100000),
+        limit: int = Query(default=50, ge=1, le=100),
+        status_filter: str | None = Query(default=None, alias="status"),
+        vehicle_id: str | None = Query(default=None),
+        q: str | None = Query(default=None, min_length=1),
     ) -> dict:
         _assert_garage_write_access(auth)
         garage_id = require_active_membership(db, auth).garage_party_id
@@ -394,10 +400,57 @@ def create_app() -> FastAPI:
             select(EflDiagnosis)
             .where(EflDiagnosis.garage_party_id == garage_id)
             .order_by(EflDiagnosis.created_at.desc())
-            .limit(100)
         )
-        diagnoses = db.execute(stmt).scalars().all()
-        return {"diagnoses": [_serialize_efl_diagnosis(diagnosis) for diagnosis in diagnoses]}
+        candidates = db.execute(stmt).scalars().all()
+        filtered = []
+        query_text = q.lower() if q else None
+        for diagnosis in candidates:
+            metadata = diagnosis.case_metadata or {}
+            response = diagnosis.response_payload or {}
+            cluster = str(response.get("symptom_cluster") or response.get("symptom_cluster_name") or "")
+            effective_status = str(metadata.get("status") or ("resolved" if metadata.get("confirmed_fix_id") else "under_investigation"))
+            if status_filter and effective_status != status_filter:
+                continue
+            if vehicle_id and metadata.get("vehicle_id") != vehicle_id:
+                continue
+            if query_text and query_text not in f"{diagnosis.diagnosis_id} {diagnosis.symptom_text} {cluster}".lower():
+                continue
+            filtered.append(diagnosis)
+        page = filtered[offset : offset + limit]
+        return {
+            "diagnoses": [_serialize_efl_diagnosis(diagnosis) for diagnosis in page],
+            "pagination": {
+                "offset": offset,
+                "limit": limit,
+                "total": len(filtered),
+                "has_more": offset + limit < len(filtered),
+            },
+        }
+
+    @app.get("/diagnoses/{diagnosis_id}/export")
+    def efl_diagnosis_export(
+        diagnosis_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> Response:
+        _assert_garage_write_access(auth)
+        garage_id = require_active_membership(db, auth).garage_party_id
+        diagnosis = db.execute(
+            select(EflDiagnosis).where(
+                EflDiagnosis.diagnosis_id == diagnosis_id,
+                EflDiagnosis.garage_party_id == garage_id,
+            )
+        ).scalar_one_or_none()
+        if not diagnosis:
+            raise HTTPException(status_code=404, detail="Diagnose niet gevonden")
+        dds_case = diagnosis.response_payload.get("dds_case") or diagnosis.response_payload
+        import json
+
+        return Response(
+            content=json.dumps(dds_case, ensure_ascii=True, indent=2, default=str),
+            media_type="application/json",
+            headers={"Content-Disposition": f'attachment; filename="{diagnosis_id}.dds.json"'},
+        )
 
     @app.get("/diagnoses/{diagnosis_id}")
     def efl_diagnosis_detail(
@@ -461,9 +514,30 @@ def create_app() -> FastAPI:
         ).scalar_one_or_none()
         if not diagnosis:
             raise HTTPException(status_code=404, detail="Diagnose niet gevonden")
+        manifest = create_manifest(
+            db,
+            payload={"action": "diagnosis_delete", "diagnosis_id": diagnosis_id},
+            party_id=garage_id,
+            party_type=auth.party_type,
+        )
+        decision = create_decision(
+            db,
+            manifest_id=manifest.id,
+            outcome=PolicyOutcome.ALLOW,
+            reason_code="ALLOW_DIAGNOSIS_DELETED",
+            trigger_id=None,
+        )
         db.delete(diagnosis)
+        create_audit_event(
+            db,
+            manifest_id=manifest.id,
+            decision_id=decision.id,
+            endpoint="/diagnoses/{diagnosis_id}",
+            request_payload={"diagnosis_id": diagnosis_id},
+            response_payload={"deleted": True, "diagnosis_id": diagnosis_id},
+        )
         db.commit()
-        return {"deleted": True, "diagnosis_id": diagnosis_id}
+        return {"deleted": True, "diagnosis_id": diagnosis_id, "audit_manifest_id": manifest.id}
 
     @app.post("/auth/dev-token", response_model=DevTokenOut)
     def auth_dev_token(payload: DevTokenIn) -> DevTokenOut:
@@ -1652,13 +1726,16 @@ def create_app() -> FastAPI:
         auth: Annotated[AuthContext, Depends(get_auth_context)],
         db: Session = Depends(get_db),
     ) -> AuditOut:
-        rate_limiter.hit(auth.party_id, "/manifest/audit/{manifest_id}")
+        audit_party_id = auth.party_id
+        if auth.party_type == PartyType.GARAGE.value:
+            audit_party_id = require_active_membership(db, auth).garage_party_id
+        rate_limiter.hit(audit_party_id, "/manifest/audit/{manifest_id}")
 
         manifest = db.get(ManifestRequest, manifest_id)
         if not manifest:
             raise HTTPException(status_code=404, detail="Manifest niet gevonden")
 
-        if manifest.party_id != auth.party_id:
+        if manifest.party_id != audit_party_id:
             raise HTTPException(status_code=403, detail="Geen toegang tot auditdata van andere partij")
 
         decisions_stmt = (

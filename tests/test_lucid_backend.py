@@ -259,6 +259,10 @@ def test_efl_case_and_diagnosis_persist_once() -> None:
         listed = client.get("/diagnoses", headers=headers)
         assert listed.status_code == 200, listed.text
         assert any(item["diagnosis_id"] == "diag-persist-test" for item in listed.json()["diagnoses"])
+        filtered = client.get("/diagnoses?q=diag-persist-test&limit=1", headers=headers)
+        assert filtered.status_code == 200, filtered.text
+        assert filtered.json()["pagination"]["total"] == 1
+        assert filtered.json()["diagnoses"][0]["case_status"] == "open"
 
         updated = client.patch(
             "/diagnoses/diag-persist-test",
@@ -454,6 +458,35 @@ def test_viewer_cannot_finalize_invoice() -> None:
             headers=_headers(viewer_token),
         )
         assert response.status_code == 403
+
+
+def test_diagnosis_delete_records_audit_event() -> None:
+    with TestClient(app) as client:
+        token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="ignored",
+            scopes=["diagnosis:read_local"],
+        )
+        headers = _headers(token)
+        case = client.post("/cases", headers=headers, json={"vehicle_id": "VTG-001"})
+        assert case.status_code == 200, case.text
+        diagnosis = client.post(
+            "/diagnoses",
+            headers=headers,
+            json={
+                "diagnosis_id": "delete-audit-test",
+                "case_id": case.json()["case_id"],
+                "symptom_text": "Test verwijdering",
+                "response": {},
+            },
+        )
+        assert diagnosis.status_code == 200, diagnosis.text
+        deleted = client.delete("/diagnoses/delete-audit-test", headers=headers)
+        assert deleted.status_code == 200, deleted.text
+        audit = client.get(f"/manifest/audit/{deleted.json()['audit_manifest_id']}", headers=headers)
+        assert audit.status_code == 200, audit.text
+        assert any(event["endpoint"] == "/diagnoses/{diagnosis_id}" for event in audit.json()["events"])
 
 
 if TEST_DB.exists():
