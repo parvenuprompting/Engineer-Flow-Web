@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "validate:knowledge": "python3 scripts/validate_knowledge_dataset.py",
     "validate:safety": "python3 scripts/validate_guided_step_safety.py",
-    "validate:production": "python3 scripts/validate_production_env.py"
+    "validate:production": "python3 scripts/validate_production_env.py",
+    "test:backend": "python3 -m pytest -q",
+    "test:all": "python3 -m pytest -q && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.20.0",

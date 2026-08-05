@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend tests and migrations
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: lucid_engineer_flow
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd="pg_isready -U postgres -d lucid_engineer_flow"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-lucid.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/python -m pip install -r requirements-lucid.txt
+      - name: Run SQLite and security tests
+        run: >-
+          .venv/bin/python -m pytest -q
+          --cov=lucid_backend --cov=lucid_engineer_flow
+          --cov-report=term-missing --cov-report=xml
+          --junitxml=backend-junit.xml
+      - name: Run knowledge and safety validators
+        run: |
+          .venv/bin/python scripts/validate_knowledge_dataset.py
+          .venv/bin/python scripts/validate_guided_step_safety.py
+      - name: Run PostgreSQL migration gate
+        env:
+          PHASE2_POSTGRES_URL: postgresql+psycopg://postgres:postgres@localhost:5432/lucid_engineer_flow
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/lucid_engineer_flow
+        run: |
+          .venv/bin/python -m alembic upgrade head
+          .venv/bin/python -m alembic check
+          .venv/bin/python -m pytest -q tests/test_phase2_postgres.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: |
+            backend-junit.xml
+            coverage.xml
+
+  frontend:
+    name: Frontend typecheck and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run typecheck
+      - name: Run dependency audit
+        run: npm audit --audit-level=critical --json > npm-audit.json
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: npm-audit.json
+
+  production-config:
+    name: Production configuration gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/validate_production_env.py
+        env:
+          LUCID_ENV: staging
+          DATABASE_URL: postgresql+psycopg://ci:ci@example.invalid:5432/lucid
+          LUCID_SERVICE_TOKEN: ci-service-token
+          LUCID_HMAC_SECRET: ci-random-hmac
+          LUCID_EFL_AUDIT_INGEST_SECRET: ci-random-audit
+          LUCID_ALLOWED_HOSTS: staging.example.com
+          LUCID_CORS_ORIGINS: https://staging.example.com
+          LUCID_RATE_LIMIT_BACKEND: postgres
+          LUCID_JWT_PUBLIC_KEYS_JSON: '{"ci-key":"public-key"}'
+
+  deploy:
+    name: Deploy after CI
+    needs: [backend, frontend, production-config]
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+      - run: npx --yes firebase-tools deploy --only apphosting --project "$FIREBASE_PROJECT_ID" --non-interactive
+        env:
+          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}

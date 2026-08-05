@@ -496,5 +496,30 @@ def test_diagnosis_delete_records_audit_event() -> None:
         assert any(event["endpoint"] == "/diagnoses/{diagnosis_id}" for event in audit.json()["events"])
 
 
+def test_security_headers_and_correlation_id_are_present() -> None:
+    with TestClient(app) as client:
+        response = client.get("/", headers={"X-Correlation-ID": "ci-correlation-id"})
+
+    assert response.status_code == 200
+    assert response.headers["x-correlation-id"] == "ci-correlation-id"
+    assert response.headers["x-content-type-options"] == "nosniff"
+    assert response.headers["x-frame-options"] == "DENY"
+    assert response.headers["referrer-policy"] == "no-referrer"
+
+
+def test_oversized_request_is_rejected_before_route_execution() -> None:
+    with TestClient(app) as client:
+        response = client.post("/", content=b"x" * (2 * 1024 * 1024 + 1))
+
+    assert response.status_code == 413
+
+
+def test_untrusted_host_is_rejected() -> None:
+    with TestClient(app) as client:
+        response = client.get("/", headers={"Host": "attacker.example"})
+
+    assert response.status_code == 400
+
+
 if TEST_DB.exists():
     TEST_DB.unlink()

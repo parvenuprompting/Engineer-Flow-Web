@@ -8,6 +8,16 @@ Development may use `LUCID_ENABLE_DEV_AUTH=true`, automatic schema creation and 
 
 Run `scripts/release_gate.sh` in CI or the deployment runner. In staging/production it first validates required configuration, then runs the Python tests, TypeScript typecheck, production build, Alembic head check and whitespace validation. A failed gate blocks release.
 
+CI also produces an `npm audit` JSON artifact. Critical dependency findings block the build; high/moderate findings are retained for dependency review because the current Genkit/OpenTelemetry dependency tree contains advisories without non-breaking upstream fixes.
+
+## Test Layers
+
+- Unit and API regression tests: `npm run test:backend`
+- Dataset and guided-step validators: `npm run validate:knowledge` and `npm run validate:safety`
+- PostgreSQL migration gate: `python3 -m alembic upgrade head` followed by `python3 -m alembic check`
+- Frontend type and production build: `npm run typecheck` and `npm run build`
+- Full local gate: `npm run test:all`
+
 Apply database migrations before starting the new application revision:
 
 ```bash
@@ -25,3 +35,5 @@ Never run `Base.metadata.create_all()` or demo seeding in staging/production.
 5. Verify `/health`, dataset health and the diagnosis-to-work-order smoke path before reopening traffic.
 
 Backups and restore drills are deployment-owner responsibilities and must be recorded per environment.
+
+The GitHub Actions `deploy` job targets Firebase App Hosting after all CI jobs pass. Configure a protected GitHub Environment named `production`, add required reviewers, store `FIREBASE_SERVICE_ACCOUNT` as an environment secret and set `FIREBASE_PROJECT_ID` as an environment variable. The job can run after a push to `main` or manually through `workflow_dispatch`.

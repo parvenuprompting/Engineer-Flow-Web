@@ -6,7 +6,7 @@ if [[ "${LUCID_ENV:-}" == "staging" || "${LUCID_ENV:-}" == "production" ]]; then
 fi
 
 python3 -m pytest -q
-npm run typecheck
 npm run build
+npm run typecheck
 python3 -m alembic heads
 git diff --check
