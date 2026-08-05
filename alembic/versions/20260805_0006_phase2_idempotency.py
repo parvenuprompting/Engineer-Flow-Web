@@ -18,7 +18,14 @@ depends_on = None
 def upgrade() -> None:
     op.execute("CREATE SEQUENCE IF NOT EXISTS factuur_number_seq START WITH 1 INCREMENT BY 1")
     op.execute(
-        "SELECT setval('factuur_number_seq', COALESCE((SELECT MAX(CAST(split_part(factuurnummer, '-', 2) AS BIGINT)) FROM facturen), 0))"
+        """
+        SELECT setval(
+            'factuur_number_seq',
+            COALESCE(MAX(CAST(split_part(factuurnummer, '-', 2) AS BIGINT)), 1),
+            COUNT(*) > 0
+        )
+        FROM facturen
+        """
     )
     op.add_column("efl_cases", sa.Column("idempotency_key", sa.String(length=255), nullable=True))
     op.create_unique_constraint("uq_efl_case_idempotency", "efl_cases", ["garage_party_id", "idempotency_key"])
