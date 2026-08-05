@@ -10,7 +10,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
-from .audit import create_audit_event, create_decision, create_manifest
+from .audit import create_audit_event, create_decision, create_manifest, verify_audit_integrity
 from .config import get_settings, validate_runtime_settings
 from .database import Base, engine, get_db
 from .models import (
@@ -1961,6 +1961,73 @@ def create_app() -> FastAPI:
                 for e in events
             ],
         )
+
+    @app.get("/manifest/audit/{manifest_id}/verify")
+    def verify_manifest_audit(
+        manifest_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        audit_party_id = auth.party_id
+        if auth.party_type == PartyType.GARAGE.value:
+            audit_party_id = require_active_membership(db, auth).garage_party_id
+        manifest = db.get(ManifestRequest, manifest_id)
+        if not manifest:
+            raise HTTPException(status_code=404, detail="Manifest niet gevonden")
+        if manifest.party_id != audit_party_id:
+            raise HTTPException(status_code=403, detail="Geen toegang tot auditdata van andere partij")
+        decisions = db.execute(select(PolicyDecision).where(PolicyDecision.manifest_id == manifest_id)).scalars().all()
+        events = db.execute(select(AuditEvent).where(AuditEvent.manifest_id == manifest_id)).scalars().all()
+        errors = verify_audit_integrity(manifest, decisions, events)
+        return {"manifest_id": manifest_id, "integrity_ok": not errors, "errors": errors, "event_count": len(events)}
+
+    @app.get("/manifest/audit/{manifest_id}/export")
+    def export_manifest_audit(
+        manifest_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        audit_party_id = auth.party_id
+        if auth.party_type == PartyType.GARAGE.value:
+            audit_party_id = require_active_membership(db, auth).garage_party_id
+        manifest = db.get(ManifestRequest, manifest_id)
+        if not manifest:
+            raise HTTPException(status_code=404, detail="Manifest niet gevonden")
+        if manifest.party_id != audit_party_id:
+            raise HTTPException(status_code=403, detail="Geen toegang tot auditdata van andere partij")
+        decisions = db.execute(
+            select(PolicyDecision).where(PolicyDecision.manifest_id == manifest_id).order_by(PolicyDecision.created_at.asc())
+        ).scalars().all()
+        events = db.execute(
+            select(AuditEvent).where(AuditEvent.manifest_id == manifest_id).order_by(AuditEvent.created_at.asc())
+        ).scalars().all()
+        errors = verify_audit_integrity(manifest, decisions, events)
+        return {
+            "schema_version": "audit-export-v1",
+            "manifest_id": manifest.id,
+            "party_id": manifest.party_id,
+            "party_type": manifest.party_type,
+            "created_at": manifest.created_at,
+            "integrity_ok": not errors,
+            "integrity_errors": errors,
+            "manifest_payload": manifest.manifest_payload,
+            "decisions": [
+                {"id": decision.id, "outcome": decision.outcome, "reason_code": decision.reason_code, "created_at": decision.created_at}
+                for decision in decisions
+            ],
+            "events": [
+                {
+                    "id": event.id,
+                    "decision_id": event.decision_id,
+                    "endpoint": event.endpoint,
+                    "request_hash": event.request_hash,
+                    "response_hash": event.response_hash,
+                    "correlation_id": event.correlation_id,
+                    "created_at": event.created_at,
+                }
+                for event in events
+            ],
+        }
 
     @app.post("/feedback/confirm", response_model=FeedbackEventOut)
     def post_feedback_confirm(

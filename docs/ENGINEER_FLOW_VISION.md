@@ -742,19 +742,19 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [x] Client audit buffering.
 - [x] Hash chaining.
 - [x] LUCID mirrorconcept.
-- [ ] Durable audit sink in productie.
+- [x] Durable audit sink in productie.
 - [x] Audit events transactioneel aan domeinwrites koppelen.
 - [x] Replay protection.
 - [x] Correlation IDs.
 - [ ] Audit retention.
-- [ ] Audit export.
-- [ ] Audit integrity verifier.
+- [x] Audit export.
+- [x] Audit integrity verifier.
 
 ### Privacy
 
 - [ ] Data classification per veld.
 - [ ] PII-redactie van vrije tekst.
-- [ ] Foto’s uit audit payloads houden.
+- [x] Foto’s uit audit payloads houden.
 - [ ] Foto-opslag met object IDs en hashes.
 - [ ] EXIF verwijderen.
 - [ ] Malware scanning.

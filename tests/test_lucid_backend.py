@@ -213,6 +213,13 @@ def test_manifest_audit_returns_real_entries() -> None:
         assert body["manifest_id"] == manifest_id
         assert len(body["decisions"]) >= 1
         assert len(body["events"]) >= 1
+        integrity = client.get(f"/manifest/audit/{manifest_id}/verify", headers=_headers(garage_token))
+        assert integrity.status_code == 200
+        assert integrity.json()["integrity_ok"] is True
+        exported = client.get(f"/manifest/audit/{manifest_id}/export", headers=_headers(garage_token))
+        assert exported.status_code == 200
+        assert exported.json()["schema_version"] == "audit-export-v1"
+        assert exported.json()["integrity_ok"] is True
 
 
 def test_efl_case_and_diagnosis_persist_once() -> None:
