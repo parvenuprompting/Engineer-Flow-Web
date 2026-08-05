@@ -23,6 +23,12 @@ De repo bevat daarnaast nog de oudere LUCID/FastAPI-backend en enkele AI-hulppad
 
 > **Ontwikkelstatus:** de kernflow en server-authenticatie zijn actief in ontwikkeling. Cases en diagnoses ondersteunen duurzame PostgreSQL-opslag via de FastAPI-backend; zonder backendconfiguratie blijft alleen de development-opslag beschikbaar.
 
+## Visual Impression
+
+![Diagnose Dashboard](docs/images/diagnose_dashboard.png)
+
+![Veelvoorkomende Storingen](docs/images/veelvoorkomende_storingen.png)
+
 ## Inhoud
 - [Engineer Flow Vision & Roadmap](#engineer-flow-vision--roadmap)
 - [Wat Dit Project Doet](#wat-dit-project-doet)
