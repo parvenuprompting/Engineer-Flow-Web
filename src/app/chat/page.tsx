@@ -763,7 +763,7 @@ export default function ChatPage() {
                     >
                       {message.role === "model" && (
                         <Avatar className="h-8 w-8 border-2 border-primary bg-background p-1">
-                          <AvatarImage src="https://i.imgur.com/WlSEJ5L.png" alt="Engineer Flow Logo" />
+                          <AvatarImage src="/icon.png" alt="Engineer Flow Logo" />
                           <AvatarFallback>
                             <BrainCircuit className="text-primary" />
                           </AvatarFallback>
@@ -791,7 +791,7 @@ export default function ChatPage() {
                   {isPending && (
                     <div className="flex items-start gap-3">
                       <Avatar className="h-8 w-8 border-2 border-primary bg-background p-1">
-                        <AvatarImage src="https://i.imgur.com/WlSEJ5L.png" alt="Engineer Flow Logo" />
+                        <AvatarImage src="/icon.png" alt="Engineer Flow Logo" />
                         <AvatarFallback>
                           <BrainCircuit className="text-primary" />
                         </AvatarFallback>

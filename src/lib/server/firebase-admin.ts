@@ -30,6 +30,10 @@ function getFirebaseAdminApp() {
     });
   }
 
+  if (!process.env.GOOGLE_APPLICATION_CREDENTIALS?.trim()) {
+    throw new Error("Firebase Admin credentials are not configured");
+  }
+
   return initializeApp({ credential: applicationDefault() });
 }
 
@@ -78,7 +82,13 @@ export async function requireEflAuth(request: Request): Promise<EflAuthContext |
       email: decoded.email ?? null,
       garageId: garageClaim,
     };
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("Firebase Admin credentials")) {
+      return new Response(JSON.stringify({ code: "AUTH_CONFIGURATION_ERROR", detail: "Firebase Admin credentials zijn niet geconfigureerd." }), {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     return new Response(JSON.stringify({ code: "UNAUTHENTICATED", detail: "Ongeldig of verlopen authenticatietoken." }), {
       status: 401,
       headers: { "Content-Type": "application/json" },

@@ -1035,7 +1035,7 @@ export function DiagnosticResult({
                       >
                         {message.role === "model" && (
                           <Avatar className="h-8 w-8 border-2 border-primary bg-background p-1">
-                            <Image src="https://i.imgur.com/WlSEJ5L.png" alt="Engineer Flow Logo" width={32} height={32} />
+                            <Image src="/icon.png" alt="Engineer Flow Logo" width={32} height={32} />
                             <AvatarFallback>
                               <BrainCircuit className="text-primary" />
                             </AvatarFallback>
@@ -1062,7 +1062,7 @@ export function DiagnosticResult({
                 {isPending && (
                   <div className="flex items-start gap-3">
                     <Avatar className="h-8 w-8 border-2 border-primary bg-background p-1">
-                      <Image src="https://i.imgur.com/WlSEJ5L.png" alt="Engineer Flow Logo" width={32} height={32} />
+                      <Image src="/icon.png" alt="Engineer Flow Logo" width={32} height={32} />
                       <AvatarFallback>
                         <BrainCircuit className="text-primary" />
                       </AvatarFallback>

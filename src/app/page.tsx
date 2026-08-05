@@ -148,7 +148,6 @@ const commonFailures = [
 function FeedbackDialog() {
     const { user } = useUser();
     const firestore = useFirestore();
-    
     const diagnosesQuery = useMemoFirebase(() => {
         if (!user) return null;
         const diagnosesCol = collection(firestore, 'diagnoses', user.uid, 'diagnoses');
@@ -320,7 +319,7 @@ export default function Home() {
         <div className="container mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button onClick={handleResetApp} className="cursor-pointer" title="Reset Applicatie">
-              <Image src="https://i.imgur.com/WlSEJ5L.png" alt="Engineer Flow Logo" width={40} height={40} className="h-10 w-10" />
+              <Image src="/icon.png" alt="Engineer Flow Logo" width={40} height={40} className="h-10 w-10" />
             </button>
             <h1 className="text-2xl font-bold font-headline">ENGINEER FLOW</h1>
           </div>
@@ -643,5 +642,3 @@ export default function Home() {
     </div>
   );
 }
-
-    

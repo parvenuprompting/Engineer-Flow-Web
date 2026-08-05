@@ -20,7 +20,7 @@ export function LoadingScreen() {
   return (
     <div
       className="fixed inset-0 z-50 bg-cover bg-center"
-      style={{ backgroundImage: "url('https://i.imgur.com/EmYFnWM.png')" }}
+      style={{ backgroundImage: "url('/background.png')" }}
     >
       <div className="fixed inset-0 z-10 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm text-foreground">
         <div className="flex flex-col items-center gap-6 text-center">
@@ -29,7 +29,7 @@ export function LoadingScreen() {
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
             <div className="p-4 bg-primary/10 rounded-lg border-2 border-primary/20">
-              <Image src="https://i.imgur.com/WlSEJ5L.png" alt="Engineer Flow Logo" width={48} height={48} className="h-12 w-12" />
+              <Image src="/icon.png" alt="Engineer Flow Logo" width={48} height={48} className="h-12 w-12" />
             </div>
           </div>
           <div className="space-y-2">

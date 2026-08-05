@@ -221,12 +221,14 @@ export async function syncPendingAuditEvents(fetchImpl: typeof fetch = fetch): P
 
   try {
     const headers = new Headers({ "Content-Type": "application/json" });
-    if (getApps().length > 0) {
-      const user = getAuth(getApp()).currentUser;
-      if (user) {
-        headers.set("Authorization", `Bearer ${await user.getIdToken()}`);
-      }
+    if (getApps().length === 0) {
+      return { state: "buffered_offline" };
     }
+    const user = getAuth(getApp()).currentUser;
+    if (!user) {
+      return { state: "buffered_offline" };
+    }
+    headers.set("Authorization", `Bearer ${await user.getIdToken()}`);
 
     const response = await fetchImpl("/api/efl-core/audit/sync", {
       method: "POST",
