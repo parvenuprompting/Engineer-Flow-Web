@@ -1,8 +1,9 @@
 export const firebaseConfig = {
-  "projectId": "studio-3494486933-8acdc",
-  "appId": "1:358425433658:web:7e19b0d2fbf54ac7a38703",
-  "apiKey": "AIzaSyCuf-y7gv9zkuFSVHfzoxBPZKa4Hh2cw0M",
-  "authDomain": "studio-3494486933-8acdc.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "358425433658"
+  apiKey: "AIzaSyAKD3oswnoCAQ6wSOHTdXc9daZok1GFHYY",
+  authDomain: "engineer-flow.firebaseapp.com",
+  projectId: "engineer-flow",
+  storageBucket: "engineer-flow.firebasestorage.app",
+  messagingSenderId: "770794246162",
+  appId: "1:770794246162:web:a3c7e86a666c105f1b08cb",
+  measurementId: "G-YW73EJWZF6"
 };
