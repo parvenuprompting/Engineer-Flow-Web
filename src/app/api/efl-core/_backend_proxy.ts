@@ -19,6 +19,8 @@ export interface ProxyResult<T = unknown> {
   error?: string;
 }
 
+const BACKEND_TIMEOUT_MS = Number(process.env.LUCID_BACKEND_TIMEOUT_MS ?? "10000");
+
 export function getLucidBackendUrl(): string | null {
   const url = process.env.LUCID_BACKEND_URL?.trim();
   return url && url.length > 0 ? url.replace(/\/+$/, "") : null;
@@ -49,6 +51,7 @@ export async function proxyToLucidBackend<T = unknown>(options: ProxyOptions): P
       method: options.method ?? "POST",
       headers,
       body: options.body ? JSON.stringify(options.body) : undefined,
+      signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS),
     });
 
     const responseData = await response.json();

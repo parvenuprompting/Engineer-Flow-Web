@@ -53,6 +53,7 @@ class Settings(BaseModel):
     app_name: str = "LUCID Engineer Flow"
     app_version: str = "0.2.0"
     policy_version: str = "LUCID-v0.2"
+    environment: str = Field(default_factory=lambda: os.getenv("LUCID_ENV", "development"))
 
     database_url: str = Field(
         default_factory=lambda: os.getenv(
@@ -91,6 +92,14 @@ class Settings(BaseModel):
     efl_audit_ingest_secret: str = Field(
         default_factory=lambda: os.getenv("LUCID_EFL_AUDIT_INGEST_SECRET", "efl-local-sync-secret")
     )
+    allowed_hosts: list[str] = Field(
+        default_factory=lambda: [host.strip() for host in os.getenv("LUCID_ALLOWED_HOSTS", "localhost,127.0.0.1,testserver").split(",") if host.strip()]
+    )
+    cors_origins: list[str] = Field(
+        default_factory=lambda: [origin.strip() for origin in os.getenv("LUCID_CORS_ORIGINS", "http://localhost:9002,http://127.0.0.1:9002").split(",") if origin.strip()]
+    )
+    max_request_body_bytes: int = Field(default_factory=lambda: int(os.getenv("LUCID_MAX_REQUEST_BODY_BYTES", str(2 * 1024 * 1024))))
+    rate_limit_backend: str = Field(default_factory=lambda: os.getenv("LUCID_RATE_LIMIT_BACKEND", "memory"))
 
     jwt_public_keys: dict[str, str] = Field(default_factory=dict)
     jwt_private_keys: dict[str, str] = Field(default_factory=dict)
@@ -117,6 +126,26 @@ def get_settings() -> Settings:
         settings.jwt_private_keys = {}
 
     return settings
+
+
+def validate_runtime_settings(settings: Settings) -> None:
+    if settings.environment not in {"development", "test", "staging", "production"}:
+        raise RuntimeError("LUCID_ENV must be development, test, staging or production")
+    if settings.environment in {"staging", "production"}:
+        if settings.dev_auth_enabled or settings.auto_create_schema:
+            raise RuntimeError("Dev auth and automatic schema creation are disabled outside development")
+        if not settings.jwt_public_keys:
+            raise RuntimeError("LUCID_JWT_PUBLIC_KEYS_JSON is required outside development")
+        if settings.hmac_secret == "lucid-dev-hmac-secret":
+            raise RuntimeError("LUCID_HMAC_SECRET must be randomized outside development")
+        if settings.efl_audit_ingest_secret == "efl-local-sync-secret":
+            raise RuntimeError("LUCID_EFL_AUDIT_INGEST_SECRET must be randomized outside development")
+        if settings.database_url.startswith("sqlite"):
+            raise RuntimeError("PostgreSQL is required outside development")
+        if not settings.allowed_hosts or not settings.cors_origins:
+            raise RuntimeError("Allowed hosts and CORS origins must be explicitly configured")
+        if settings.rate_limit_backend not in {"redis", "postgres"}:
+            raise RuntimeError("Distributed rate limiting backend is required outside development")
 
 
 def to_jsonable(payload: Any) -> Any:

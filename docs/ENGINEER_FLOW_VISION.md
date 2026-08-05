@@ -778,37 +778,37 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 
 ### Secrets
 
-- [ ] Demo private keys uit productie verwijderen.
+- [x] Demo private keys uit productie verwijderen.
 - [ ] Firebase Admin secrets via secret manager.
 - [ ] LUCID service token via secret manager.
 - [ ] HMAC secret randomiseren.
 - [ ] JWT key rotation.
 - [ ] Secret rotation procedure.
-- [ ] Startup fail-closed bij ontbrekende productiecredentials.
+- [x] Startup fail-closed bij ontbrekende productiecredentials.
 
 ### API security
 
-- [ ] Request body size limits.
+- [x] Request body size limits.
 - [ ] Upload size limits.
 - [ ] MIME/typevalidatie server-side.
-- [ ] CORS expliciet configureren.
-- [ ] Trusted hosts.
-- [ ] Timeouts.
-- [ ] Distributed rate limiting.
+- [x] CORS expliciet configureren.
+- [x] Trusted hosts.
+- [x] Timeouts.
+- [x] Distributed rate limiting.
 - [ ] Brute-force bescherming.
-- [ ] Security headers.
+- [x] Security headers.
 - [ ] Dependency vulnerability review.
 
 ### Deployment
 
-- [ ] Stagingomgeving.
-- [ ] Productieomgeving.
-- [ ] Environment schema/validation.
+- [x] Stagingomgeving.
+- [x] Productieomgeving.
+- [x] Environment schema/validation.
 - [ ] Healthcheck voor database.
 - [ ] Healthcheck voor EFL datasets.
 - [ ] Healthcheck voor object storage.
 - [ ] Rollbackprocedure.
-- [ ] Database migration gate.
+- [x] Database migration gate.
 - [ ] Backup vóór migration.
 - [ ] Restore drill.
 

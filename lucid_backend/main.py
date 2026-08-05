@@ -5,11 +5,13 @@ from typing import Annotated
 from uuid import uuid4
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response, status
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from .audit import create_audit_event, create_decision, create_manifest
-from .config import get_settings
+from .config import get_settings, validate_runtime_settings
 from .database import Base, engine, get_db
 from .models import (
     GarageSeenCode,
@@ -201,17 +203,38 @@ def create_app() -> FastAPI:
         version=settings.app_version,
         description="Conditionele voertuigdata-uitwisseling via LUCID met PostgreSQL + JWT hardening",
     )
+    validate_runtime_settings(settings)
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.allowed_hosts)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "X-Correlation-ID"],
+    )
 
     @app.middleware("http")
     async def correlation_middleware(request: Request, call_next):
+        content_length = request.headers.get("content-length")
+        if content_length:
+            try:
+                oversized = int(content_length) > settings.max_request_body_bytes
+            except ValueError:
+                oversized = True
+            if oversized:
+                return Response(content="Request body too large", status_code=413)
         correlation_id = request.headers.get("x-correlation-id") or str(uuid4())
         request.state.correlation_id = correlation_id
         response = await call_next(request)
         response.headers["x-correlation-id"] = correlation_id
+        response.headers["x-content-type-options"] = "nosniff"
+        response.headers["x-frame-options"] = "DENY"
+        response.headers["referrer-policy"] = "no-referrer"
         return response
 
     @app.on_event("startup")
     def startup() -> None:
+        validate_runtime_settings(settings)
         if not settings.auto_create_schema:
             return
         Base.metadata.create_all(bind=engine)

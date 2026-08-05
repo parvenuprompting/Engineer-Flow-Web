@@ -11,7 +11,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "validate:knowledge": "python3 scripts/validate_knowledge_dataset.py",
-    "validate:safety": "python3 scripts/validate_guided_step_safety.py"
+    "validate:safety": "python3 scripts/validate_guided_step_safety.py",
+    "validate:production": "python3 scripts/validate_production_env.py"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.20.0",
