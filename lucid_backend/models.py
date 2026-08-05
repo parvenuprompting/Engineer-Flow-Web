@@ -82,9 +82,10 @@ class Party(Base):
 
 class User(Base):
     __tablename__ = "users"
+    __table_args__ = (UniqueConstraint("firebase_uid", name="uq_users_firebase_uid"),)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
-    firebase_uid: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    firebase_uid: Mapped[str] = mapped_column(String(255), index=True)
     email: Mapped[str | None] = mapped_column(String(320), nullable=True, index=True)
     display_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
@@ -356,13 +357,14 @@ class Factuur(Base):
     __tablename__ = "facturen"
     __table_args__ = (
         UniqueConstraint("werkbon_id", name="uq_facturen_werkbon"),
+        UniqueConstraint("factuurnummer", name="uq_facturen_factuurnummer"),
     )
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
     werkbon_id: Mapped[str] = mapped_column(ForeignKey("werkbonnen.id"), index=True)
     garage_party_id: Mapped[str] = mapped_column(ForeignKey("parties.id"), index=True)
     status: Mapped[str] = mapped_column(String(24), default=FactuurStatus.CONCEPT.value, nullable=False)
-    factuurnummer: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
+    factuurnummer: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
     subtotaal: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False, default=0)
     btw: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False, default=0)
     totaal: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False, default=0)
