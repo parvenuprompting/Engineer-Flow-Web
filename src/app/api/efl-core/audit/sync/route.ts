@@ -83,7 +83,10 @@ export async function POST(req: Request) {
     const unauthorizedEvent = events.find((event) => {
       if (!event.case_id) return false;
       const caseRecord = getCaseRecord(event.case_id);
-      return !caseRecord || caseRecord.owner_uid !== auth.uid;
+      if (caseRecord) return caseRecord.owner_uid !== auth.uid;
+      // Durable FastAPI-backed cases are not present in the Next.js local Map.
+      // Their ownership is enforced by the authenticated backend path.
+      return !process.env.LUCID_BACKEND_URL?.trim();
     });
     if (unauthorizedEvent) {
       return NextResponse.json(

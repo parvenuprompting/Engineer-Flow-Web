@@ -16,16 +16,25 @@ function getFirebaseAdminApp() {
   const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.trim();
   if (serviceAccountJson) {
     const serviceAccount = JSON.parse(serviceAccountJson) as {
-      projectId: string;
-      clientEmail: string;
-      privateKey: string;
+      projectId?: string;
+      project_id?: string;
+      clientEmail?: string;
+      client_email?: string;
+      privateKey?: string;
+      private_key?: string;
     };
+    const projectId = serviceAccount.projectId ?? serviceAccount.project_id;
+    const clientEmail = serviceAccount.clientEmail ?? serviceAccount.client_email;
+    const privateKey = serviceAccount.privateKey ?? serviceAccount.private_key;
+    if (!projectId || !clientEmail || !privateKey) {
+      throw new Error("Firebase Admin service-account JSON mist projectId/clientEmail/privateKey");
+    }
 
     return initializeApp({
       credential: cert({
-        projectId: serviceAccount.projectId,
-        clientEmail: serviceAccount.clientEmail,
-        privateKey: serviceAccount.privateKey.replace(/\\n/g, "\n"),
+        projectId,
+        clientEmail,
+        privateKey: privateKey.replace(/\\n/g, "\n"),
       }),
     });
   }

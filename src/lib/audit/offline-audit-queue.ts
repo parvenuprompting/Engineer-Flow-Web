@@ -214,8 +214,23 @@ export async function syncPendingAuditEvents(fetchImpl: typeof fetch = fetch): P
     return { state: "synced" };
   }
 
-  const events = await getPendingAuditEvents();
-  if (events.length === 0) {
+  const pendingEvents = await getPendingAuditEvents();
+  const validEvents: ClientAuditEvent[] = [];
+  const invalidEventIds: string[] = [];
+  for (const event of pendingEvents) {
+    const isValid = Boolean(
+      event.event_id &&
+      event.event_type &&
+      event.created_at &&
+      event.execution_signature &&
+      event.payload &&
+      event.payload_hash === (await sha256(stableSerialize(event.payload)))
+    );
+    if (isValid) validEvents.push(event);
+    else invalidEventIds.push(event.event_id);
+  }
+  if (invalidEventIds.length > 0) await deleteEvents(invalidEventIds);
+  if (validEvents.length === 0) {
     return { state: "synced" };
   }
 
@@ -233,7 +248,7 @@ export async function syncPendingAuditEvents(fetchImpl: typeof fetch = fetch): P
     const response = await fetchImpl("/api/efl-core/audit/sync", {
       method: "POST",
       headers,
-      body: JSON.stringify({ events }),
+      body: JSON.stringify({ events: validEvents }),
     });
 
     if (!response.ok) {
