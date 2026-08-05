@@ -667,16 +667,16 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 
 ### Guided step safety
 
-- [ ] Safety level per stap.
-- [ ] Vereiste PBM per stap.
-- [ ] Vereiste bevoegdheid per stap.
-- [ ] Lockout/tagout waar nodig.
-- [ ] Drukgevaar markeren.
-- [ ] Bewegende delen markeren.
-- [ ] Elektrisch risico markeren.
-- [ ] Stopcondities definiëren.
-- [ ] Precondition checklist tonen.
-- [ ] Post-test observation verplicht vastleggen.
+- [x] Safety level per stap.
+- [x] Vereiste PBM per stap.
+- [x] Vereiste bevoegdheid per stap.
+- [x] Lockout/tagout waar nodig.
+- [x] Drukgevaar markeren.
+- [x] Bewegende delen markeren.
+- [x] Elektrisch risico markeren.
+- [x] Stopcondities definiëren.
+- [x] Precondition checklist tonen.
+- [x] Post-test observation verplicht vastleggen.
 
 ### Repair outcome
 
@@ -690,7 +690,7 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 
 ### Gate
 
-- [ ] Geen fysieke test zonder safety metadata.
+- [x] Geen fysieke test zonder safety metadata.
 - [ ] Geen reparatieadvies zonder voldoende evidence of duidelijke onzekerheidsmelding.
 - [ ] Critical safety scenarios zijn door een domeinexpert beoordeeld.
 

@@ -253,6 +253,16 @@ export interface EflDiagnosisMetadata {
     status?: string;
     confirmed_fix_id?: string;
     service_flow?: Record<string, unknown>;
+    repair_outcome?: RepairOutcome;
+}
+
+export interface RepairOutcome {
+    performed_repair?: string;
+    replaced_components?: string[];
+    post_repair_test?: string;
+    symptom_resolved?: boolean;
+    recurrence_reported?: boolean;
+    technician_feedback?: string;
 }
 
 export interface EflDiagnosisRecord {

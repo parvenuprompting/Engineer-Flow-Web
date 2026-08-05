@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "validate:knowledge": "python3 scripts/validate_knowledge_dataset.py"
+    "validate:knowledge": "python3 scripts/validate_knowledge_dataset.py",
+    "validate:safety": "python3 scripts/validate_guided_step_safety.py"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.20.0",

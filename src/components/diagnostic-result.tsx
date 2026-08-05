@@ -69,11 +69,13 @@ import { cn } from "@/lib/utils";
 // Import data for enrichment
 import diagnosticStepsData from '@/ai/data/diagnostic_steps.json';
 import stepRequirementsData from '@/ai/data/step_requirements.json';
+import stepSafetyData from '@/ai/data/step_safety.json';
 import componentsData from '@/ai/data/components.json';
 
 // Create maps for quick lookups
 const stepsMap = new Map(diagnosticStepsData.diagnostic_steps.map(s => [s.action, s]));
 const requirementsMap = new Map(stepRequirementsData.step_requirements.map(r => [r.step_id, r]));
+const safetyMap = new Map(stepSafetyData.step_safety.map(s => [s.step_id, s]));
 const componentMap = new Map(componentsData.components.map(c => [c.id, c]));
 
 type StepStatus = 'pending' | 'found' | 'not-found' | 'uncertain';
@@ -86,6 +88,7 @@ type EnrichedStep = {
   tool?: string;
   duration?: number;
   difficulty?: number;
+  safety?: (typeof stepSafetyData.step_safety)[number];
 };
 
 
@@ -237,13 +240,20 @@ export function DiagnosticResult({
   const initialSteps = useMemo(() => {
     // Prioritize guided_flow from backend
     if (guided_flow && guided_flow.length > 0) {
-      return guided_flow.map((step, index) => ({
-        id: index,
-        text: step.action,
-        reason: step.reason,
-        status: 'pending' as StepStatus,
-        tool: 'Zie backend', // Optional: could be enriched if data matches
-      }));
+      return guided_flow.map((step, index) => {
+        const stepInfo = diagnosticStepsData.diagnostic_steps.find((candidate) => candidate.id === step.step_id) || stepsMap.get(step.action);
+        const requirements = stepInfo ? requirementsMap.get(stepInfo.id) : undefined;
+        return {
+          id: index,
+          text: step.action,
+          reason: step.reason,
+          status: 'pending' as StepStatus,
+          tool: requirements?.tools.join(', ') || 'Zie backend',
+          duration: requirements?.estimated_time_min || undefined,
+          difficulty: requirements?.difficulty || undefined,
+          safety: stepInfo ? safetyMap.get(stepInfo.id) : undefined,
+        };
+      });
     }
 
     if (!recommended_actions || recommended_actions.length === 0) {
@@ -260,11 +270,13 @@ export function DiagnosticResult({
         tool: requirements?.tools.join(', ') || 'N/A',
         duration: requirements?.estimated_time_min || undefined,
         difficulty: requirements?.difficulty || undefined,
+        safety: stepInfo ? safetyMap.get(stepInfo.id) : undefined,
       };
     });
   }, [recommended_actions, guided_flow]);
 
   const [steps, setSteps] = useState<EnrichedStep[]>(initialSteps);
+  const [observations, setObservations] = useState<Record<number, string>>({});
   const [allStepsCompleted, setAllStepsCompleted] = useState(false);
 
   const [isPending, startTransition] = useTransition();
@@ -325,13 +337,14 @@ export function DiagnosticResult({
   // Update steps only when recommended_actions changes
   useEffect(() => {
     setSteps(initialSteps);
+    setObservations({});
     setAllStepsCompleted(false);
   }, [recommended_actions?.length]);
 
   useEffect(() => {
-    const allCompleted = steps.length > 0 && steps.every((step) => step.status !== 'pending');
+    const allCompleted = steps.length > 0 && steps.every((step) => step.status !== 'pending' && observations[step.id]?.trim());
     setAllStepsCompleted(allCompleted);
-  }, [steps]);
+  }, [steps, observations]);
 
   const handleStepStatusChange = (id: number, status: StepStatus) => {
     setSteps((prevSteps) =>
@@ -339,6 +352,10 @@ export function DiagnosticResult({
         step.id === id ? { ...step, status: step.status === status ? 'pending' : status } : step
       )
     );
+  };
+
+  const handleObservationChange = (id: number, value: string) => {
+    setObservations((previous) => ({ ...previous, [id]: value }));
   };
 
   const generateDiagnosisId = () => {
@@ -409,7 +426,9 @@ export function DiagnosticResult({
     if (!diagnosisId) setDiagnosisId(newDiagnosisId);
 
     // Create the summary object
-    const completedSteps = steps.filter(s => s.status !== 'pending').map(s => s.text);
+    const completedSteps = steps
+      .filter(s => s.status !== 'pending')
+      .map(s => `${s.text}: ${observations[s.id]?.trim() || "Geen observatie"}`);
     const summary = {
       symptom: initialSymptom,
       probableCause: rootCauseDescription,
@@ -945,6 +964,27 @@ export function DiagnosticResult({
                             <Badge variant="secondary" className={`h-4 px-1.5 ${difficultyMap(step.difficulty).color} text-white`}>{difficultyMap(step.difficulty).text}</Badge>
                           </span>
                         }
+                      </div>
+                    )}
+                    {step.safety && (
+                      <div className="ml-9 mt-3 rounded-md border border-red-500/30 bg-red-500/5 p-3 text-xs">
+                        <div className="flex flex-wrap gap-2 font-semibold text-red-700 dark:text-red-300">
+                          <span>Veiligheidsniveau: {step.safety.level}</span>
+                          {step.safety.pressure_hazard && <span>Drukgevaar</span>}
+                          {step.safety.moving_parts && <span>Bewegende delen</span>}
+                          {step.safety.electrical_risk && <span>Elektrisch risico</span>}
+                        </div>
+                        <p className="mt-1">Bevoegdheid: {step.safety.authority_required}</p>
+                        <p>PBM: {step.safety.required_ppe.join(', ') || 'geen specifiek PBM'}</p>
+                        <p>Voorwaarden: {step.safety.preconditions.join('; ')}</p>
+                        <p className="font-semibold">Stopcondities: {step.safety.stop_conditions.join('; ')}</p>
+                        <Textarea
+                          className="mt-2 min-h-16 bg-background"
+                          value={observations[step.id] || ''}
+                          onChange={(event) => handleObservationChange(step.id, event.target.value)}
+                          placeholder="Leg de objectieve post-test observatie vast..."
+                          aria-label={`Post-test observatie voor ${step.text}`}
+                        />
                       </div>
                     )}
                   </div>

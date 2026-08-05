@@ -23,6 +23,7 @@ const DATASET_FILES = [
   "src/ai/data/diagnostic_steps.json",
   "src/ai/data/step_requirements.json",
   "src/ai/data/step_effects.json",
+  "src/ai/data/step_safety.json",
   "data/cluster_keywords_mapping.json",
 ];
 
