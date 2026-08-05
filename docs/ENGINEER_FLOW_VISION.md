@@ -606,24 +606,24 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 
 ### Kennisbankstructuur
 
-- [ ] Kennisobject-schema definiëren.
+- [x] Kennisobject-schema definiëren.
 - [ ] Synoniemen en werkplaatsjargon modelleren.
 - [ ] Negatie en temporaliteit modelleren.
 - [ ] Measurements met unit en meetconditie modelleren.
 - [ ] Failure modes koppelen aan positieve en negatieve evidence.
 - [ ] Tests koppelen aan pass/fail-effects.
-- [ ] Repair actions scheiden van diagnostic actions.
-- [ ] Safety metadata verplicht maken.
-- [ ] Provenance en reviewstatus toevoegen.
+- [x] Repair actions scheiden van diagnostic actions.
+- [x] Safety metadata verplicht maken.
+- [x] Provenance en reviewstatus toevoegen.
 
 ### Validatie
 
-- [ ] JSON-schema-validator uitbreiden.
-- [ ] Referentiele integriteit controleren.
+- [x] JSON-schema-validator uitbreiden.
+- [x] Referentiele integriteit controleren.
 - [ ] Duplicate symptom detector bouwen.
 - [ ] Tegenstrijdige constraint detector bouwen.
 - [ ] Flow terminal-state validator bouwen.
-- [ ] Ontbrekende safety metadata blokkeren.
+- [x] Ontbrekende safety metadata blokkeren.
 - [ ] Dataset release script bouwen.
 
 ### Engine

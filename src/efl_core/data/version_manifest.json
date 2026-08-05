@@ -23,6 +23,7 @@
     "cluster_keywords": "transitional-local",
     "master_symptom_set": "1.0.0",
     "des_ts_map": "1.0.0",
-    "ef_diagnostic_schema": "1.0.0"
+    "ef_diagnostic_schema": "1.0.0",
+    "knowledge_objects": "1.0.0"
   }
 }

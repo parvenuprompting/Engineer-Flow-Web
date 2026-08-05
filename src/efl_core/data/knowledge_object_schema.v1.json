@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineer-flow.local/schema/knowledge-object.v1.json",
+  "title": "Engineer Flow Knowledge Object",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "subsystem_id",
+    "description_nl",
+    "synonyms",
+    "workshop_jargon",
+    "negative_formulations",
+    "context_signals",
+    "positive_evidence",
+    "negative_evidence",
+    "measurements",
+    "diagnostic_tests",
+    "repair_actions",
+    "safety",
+    "provenance",
+    "review_status",
+    "dataset_version"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_]*$" },
+    "type": {
+      "type": "string",
+      "enum": ["symptom", "observation", "measurement", "failure_mode", "diagnostic_test", "repair_action", "outcome"]
+    },
+    "subsystem_id": { "type": "string", "minLength": 1 },
+    "component_ids": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "description_nl": { "type": "string", "minLength": 3 },
+    "synonyms": { "type": "array", "items": { "type": "string" } },
+    "workshop_jargon": { "type": "array", "items": { "type": "string" } },
+    "negative_formulations": { "type": "array", "items": { "type": "string" } },
+    "context_signals": { "type": "array", "items": { "type": "string" } },
+    "positive_evidence": { "type": "array", "items": { "type": "string" } },
+    "negative_evidence": { "type": "array", "items": { "type": "string" } },
+    "measurements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "unit", "condition"],
+        "properties": {
+          "id": { "type": "string" },
+          "unit": { "type": "string" },
+          "condition": { "type": "string" },
+          "range": { "type": "string" }
+        }
+      }
+    },
+    "diagnostic_tests": { "type": "array", "items": { "type": "string" } },
+    "repair_actions": { "type": "array", "items": { "type": "string" } },
+    "safety": {
+      "type": "object",
+      "required": ["level", "required_ppe", "stop_conditions"],
+      "properties": {
+        "level": { "type": "string", "enum": ["none", "low", "medium", "high", "critical"] },
+        "required_ppe": { "type": "array", "items": { "type": "string" } },
+        "authority_required": { "type": "string" },
+        "lockout_tagout": { "type": "boolean" },
+        "stop_conditions": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+    "expected_observation": { "type": "string" },
+    "pass_effect": { "type": "array", "items": { "type": "string" } },
+    "fail_effect": { "type": "array", "items": { "type": "string" } },
+    "provenance": {
+      "type": "object",
+      "required": ["source", "reviewer"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "source_reference": { "type": "string" },
+        "reviewer": { "type": "string", "minLength": 1 }
+      }
+    },
+    "review_status": { "type": "string", "enum": ["draft", "technical_review", "approved", "retired"] },
+    "dataset_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+  },
+  "additionalProperties": false
+}
