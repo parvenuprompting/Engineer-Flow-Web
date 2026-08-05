@@ -104,19 +104,15 @@ jobs:
           LUCID_JWT_PUBLIC_KEYS_JSON: '{"ci-key":"public-key"}'
 
   deploy:
-    name: Deploy after CI
+    name: App Hosting deployment handoff
     needs: [backend, frontend, production-config]
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-      - run: npx --yes firebase-tools deploy --only apphosting --project "$FIREBASE_PROJECT_ID" --non-interactive
-        env:
-          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+      - name: Confirm release handoff
+        run: |
+          echo "CI gates passed for $GITHUB_SHA."
+          echo "Firebase App Hosting deploys from its connected GitHub repository."
+          echo "Check Firebase Console > App Hosting for the rollout status."

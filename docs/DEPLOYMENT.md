@@ -36,4 +36,4 @@ Never run `Base.metadata.create_all()` or demo seeding in staging/production.
 
 Backups and restore drills are deployment-owner responsibilities and must be recorded per environment.
 
-The GitHub Actions `deploy` job targets Firebase App Hosting after all CI jobs pass. Configure a protected GitHub Environment named `production`, add required reviewers, store `FIREBASE_SERVICE_ACCOUNT` as an environment secret and set `FIREBASE_PROJECT_ID` as an environment variable. The job can run after a push to `main` or manually through `workflow_dispatch`.
+The GitHub Actions `deploy` job is a protected release handoff after all CI jobs pass. Firebase App Hosting deploys from its connected GitHub repository, so deployment status is visible in Firebase Console under `App Hosting`. Configure a protected GitHub Environment named `production` and add required reviewers if production approval is desired. No Firebase service-account secret or project-ID variable is required by this repository workflow.
