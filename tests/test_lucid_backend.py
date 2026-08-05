@@ -263,6 +263,9 @@ def test_efl_case_and_diagnosis_persist_once() -> None:
         assert filtered.status_code == 200, filtered.text
         assert filtered.json()["pagination"]["total"] == 1
         assert filtered.json()["diagnoses"][0]["case_status"] == "open"
+        pdf = client.get("/diagnoses/diag-persist-test/export?format=pdf", headers=headers)
+        assert pdf.status_code == 200, pdf.text
+        assert pdf.content.startswith(b"%PDF-")
 
         updated = client.patch(
             "/diagnoses/diag-persist-test",

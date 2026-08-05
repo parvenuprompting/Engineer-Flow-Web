@@ -64,6 +64,7 @@ import {
   createWerkbon,
   deleteDiagnosis,
   exportDiagnosis,
+  exportDiagnosisPdf,
   finaliseerFactuur,
   getDiagnosis,
   getFactuur,
@@ -230,6 +231,21 @@ export default function DiagnosisDetailPage() {
     const anchor = document.createElement("a");
     anchor.href = url;
     anchor.download = `${apiDiagnosis.diagnosis_id}.dds.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handlePdfExport = async () => {
+    if (!apiDiagnosis) return;
+    const response = await exportDiagnosisPdf(apiDiagnosis.diagnosis_id);
+    if (!response.data) {
+      setWorkflowError(response.error || "Kon PDF-export niet maken.");
+      return;
+    }
+    const url = URL.createObjectURL(response.data);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${apiDiagnosis.diagnosis_id}.pdf`;
     anchor.click();
     URL.revokeObjectURL(url);
   };
@@ -650,6 +666,9 @@ export default function DiagnosisDetailPage() {
             <div className="text-right">
               <Button size="sm" variant="outline" onClick={handleExport} disabled={!apiDiagnosis}>
                 DDS export
+              </Button>
+              <Button size="sm" variant="outline" onClick={handlePdfExport} disabled={!apiDiagnosis}>
+                PDF export
               </Button>
               <p className="text-sm text-muted-foreground">Betrouwbaarheid</p>
               <p className="text-2xl font-bold text-primary">

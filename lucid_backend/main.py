@@ -97,6 +97,52 @@ from .services import (
 settings = get_settings()
 
 
+def _pdf_escape(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+
+
+def _diagnosis_pdf(title: str, diagnosis_id: str, symptom_text: str, case_status: str | None, dds_case: object) -> bytes:
+    lines = [
+        title,
+        f"Diagnosis ID: {diagnosis_id}",
+        f"Symptom: {symptom_text}",
+        f"Case status: {case_status or 'unknown'}",
+        "",
+        "DDS payload:",
+        str(dds_case),
+    ]
+    commands = ["BT", "/F1 10 Tf", "50 760 Td"]
+    for index, line in enumerate(lines):
+        if index:
+            commands.append("0 -16 Td")
+        commands.append(f"({_pdf_escape(line[:180])}) Tj")
+    commands.append("ET")
+    stream = "\n".join(commands).encode("ascii", errors="replace")
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+        b"<< /Length " + str(len(stream)).encode("ascii") + b" >>\nstream\n" + stream + b"\nendstream",
+    ]
+    output = bytearray(b"%PDF-1.4\n")
+    offsets = [0]
+    for number, obj in enumerate(objects, start=1):
+        offsets.append(len(output))
+        output.extend(f"{number} 0 obj\n".encode("ascii"))
+        output.extend(obj)
+        output.extend(b"\nendobj\n")
+    xref_offset = len(output)
+    output.extend(f"xref\n0 {len(objects) + 1}\n".encode("ascii"))
+    output.extend(b"0000000000 65535 f \n")
+    for offset in offsets[1:]:
+        output.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
+    output.extend(
+        f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref_offset}\n%%EOF\n".encode("ascii")
+    )
+    return bytes(output)
+
+
 def _assert_party_scope(auth: AuthContext) -> None:
     if auth.party_type == PartyType.GARAGE.value and "diagnosis:read_local" not in auth.scopes:
         raise HTTPException(status_code=403, detail="Missing required scope: diagnosis:read_local")
@@ -392,6 +438,9 @@ def create_app() -> FastAPI:
         status_filter: str | None = Query(default=None, alias="status"),
         vehicle_id: str | None = Query(default=None),
         q: str | None = Query(default=None, min_length=1),
+        cluster_filter: str | None = Query(default=None, alias="cluster", min_length=1),
+        from_date: datetime | None = Query(default=None),
+        to_date: datetime | None = Query(default=None),
     ) -> dict:
         _assert_garage_write_access(auth)
         garage_id = require_active_membership(db, auth).garage_party_id
@@ -408,6 +457,12 @@ def create_app() -> FastAPI:
             metadata = diagnosis.case_metadata or {}
             response = diagnosis.response_payload or {}
             cluster = str(response.get("symptom_cluster") or response.get("symptom_cluster_name") or "")
+            if cluster and cluster_filter and cluster_filter.lower() not in cluster.lower():
+                continue
+            if from_date and diagnosis.created_at < from_date:
+                continue
+            if to_date and diagnosis.created_at >= to_date:
+                continue
             effective_status = str(metadata.get("status") or ("resolved" if metadata.get("confirmed_fix_id") else "under_investigation"))
             if status_filter and effective_status != status_filter:
                 continue
@@ -432,6 +487,7 @@ def create_app() -> FastAPI:
         diagnosis_id: str,
         auth: Annotated[AuthContext, Depends(get_auth_context)],
         db: Session = Depends(get_db),
+        export_format: str = Query(default="dds", alias="format"),
     ) -> Response:
         _assert_garage_write_access(auth)
         garage_id = require_active_membership(db, auth).garage_party_id
@@ -445,6 +501,21 @@ def create_app() -> FastAPI:
             raise HTTPException(status_code=404, detail="Diagnose niet gevonden")
         dds_case = diagnosis.response_payload.get("dds_case") or diagnosis.response_payload
         import json
+
+        if export_format.lower() == "pdf":
+            return Response(
+                content=_diagnosis_pdf(
+                    diagnosis.case_metadata.get("title") or "Engineer Flow diagnose",
+                    diagnosis_id,
+                    diagnosis.symptom_text,
+                    diagnosis.case.status if diagnosis.case else None,
+                    dds_case,
+                ),
+                media_type="application/pdf",
+                headers={"Content-Disposition": f'attachment; filename="{diagnosis_id}.pdf"'},
+            )
+        if export_format.lower() != "dds":
+            raise HTTPException(status_code=400, detail="format moet dds of pdf zijn")
 
         return Response(
             content=json.dumps(dds_case, ensure_ascii=True, indent=2, default=str),

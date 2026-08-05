@@ -587,9 +587,9 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [x] Detailpagina API-first maken.
 - [x] Firestore fallback volledig verwijderen voor productie.
 - [x] API-pagination toevoegen.
-- [ ] Filteren op status, voertuig, cluster en periode.
+- [x] Filteren op status, voertuig, cluster en periode.
 - [x] Zoeken op symptoomtekst en diagnose-ID.
-- [ ] Export van een diagnose naar DDS/PDF-formaat.
+- [x] Export van een diagnose naar DDS/PDF-formaat.
 
 ### Gate
 

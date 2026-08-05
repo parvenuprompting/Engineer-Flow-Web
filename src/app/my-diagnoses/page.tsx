@@ -45,6 +45,9 @@ export default function MyDiagnosesPage() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [clusterFilter, setClusterFilter] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
 
@@ -57,7 +60,7 @@ export default function MyDiagnosesPage() {
     let active = true;
     setApiLoading(true);
     setApiError(null);
-    void listDiagnoses({ offset: nextOffset, limit: 25, query: search || undefined, status: statusFilter || undefined }).then((response) => {
+    void listDiagnoses({ offset: nextOffset, limit: 25, query: search || undefined, status: statusFilter || undefined, cluster: clusterFilter || undefined, fromDate: fromDate ? `${fromDate}T00:00:00Z` : undefined, toDate: toDate ? `${toDate}T23:59:59Z` : undefined }).then((response) => {
       if (!active) return;
       if (response.data) {
         setApiDiagnoses(response.data.diagnoses.map((item) => ({
@@ -84,7 +87,7 @@ export default function MyDiagnosesPage() {
     };
   };
 
-  useEffect(() => loadDiagnoses(0), [user, search, statusFilter]);
+  useEffect(() => loadDiagnoses(0), [user, search, statusFilter, clusterFilter, fromDate, toDate]);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -124,11 +127,14 @@ export default function MyDiagnosesPage() {
           </CardDescription>
           <div className="flex flex-col gap-2 md:flex-row">
             <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Zoek op diagnose of symptoom" />
+            <Input value={clusterFilter} onChange={(event) => setClusterFilter(event.target.value)} placeholder="Cluster" />
             <select className="h-10 rounded-md border bg-background px-3 text-sm" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
               <option value="">Alle statussen</option>
               <option value="under_investigation">In onderzoek</option>
               <option value="resolved">Opgelost</option>
             </select>
+            <Input type="date" value={fromDate} onChange={(event) => setFromDate(event.target.value)} aria-label="Vanaf datum" />
+            <Input type="date" value={toDate} onChange={(event) => setToDate(event.target.value)} aria-label="Tot datum" />
           </div>
         </CardHeader>
         <CardContent>

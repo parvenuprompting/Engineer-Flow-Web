@@ -26,6 +26,11 @@ import { getAuth } from 'firebase/auth';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_EFL_CORE_URL?.trim() || '/api/efl-core';
 
+function createIdempotencyKey(): string {
+    if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID();
+    return `efl-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
 function buildUrl(path: string): string {
     const normalizedPath = path.startsWith('/') ? path : `/${path}`;
     if (API_BASE_URL.startsWith('http://') || API_BASE_URL.startsWith('https://')) {
@@ -52,13 +57,15 @@ async function parseErrorMessage(response: Response): Promise<string> {
 
 async function requestJson<T>(
     path: string,
-    options: RequestInit & { bodyObj?: unknown } = {}
+    options: RequestInit & { bodyObj?: unknown; retryable?: boolean } = {}
 ): Promise<ApiResponse<T>> {
-    try {
-        const { bodyObj, headers, ...rest } = options;
-        const requestHeaders = new Headers(headers);
-        requestHeaders.set('Content-Type', 'application/json');
-
+    const { bodyObj, headers, retryable = false, ...rest } = options;
+    const requestHeaders = new Headers(headers);
+    requestHeaders.set('Content-Type', 'application/json');
+    if (retryable && !requestHeaders.has('Idempotency-Key')) requestHeaders.set('Idempotency-Key', createIdempotencyKey());
+    const attempts = retryable ? 2 : 1;
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      try {
         if (typeof window !== 'undefined' && getApps().length > 0) {
             const user = getAuth(getApp()).currentUser;
             if (user) {
@@ -74,21 +81,24 @@ async function requestJson<T>(
 
         if (!response.ok) {
             const errorMessage = await parseErrorMessage(response);
+            if (retryable && attempt + 1 < attempts && response.status >= 500) continue;
             return { data: null, error: errorMessage, statusCode: response.status };
         }
 
         const data = (await response.json()) as T;
         return { data, error: null, statusCode: response.status };
-    } catch (error) {
+      } catch (error) {
+        if (retryable && attempt + 1 < attempts) continue;
         return {
-            data: null,
-            error:
-                error instanceof Error
-                    ? `Verbinding met EFL-CORE verbroken: ${error.message}`
-                    : 'Verbinding met EFL-CORE verbroken. Controleer of de backend server aan staat.',
-            statusCode: 500,
+          data: null,
+          error: error instanceof Error
+            ? `Verbinding met EFL-CORE verbroken: ${error.message}`
+            : 'Verbinding met EFL-CORE verbroken. Controleer of de backend server aan staat.',
+          statusCode: 500,
         };
+      }
     }
+    return { data: null, error: 'Verbinding met EFL-CORE verbroken.', statusCode: 500 };
 }
 
 /**
@@ -122,6 +132,7 @@ export async function diagnose(
 
     const response = await requestJson<DiagnoseResponse>('/diagnose', {
         method: 'POST',
+        retryable: true,
         bodyObj: requestPayload,
     });
 
@@ -185,9 +196,11 @@ export async function healthCheck(): Promise<boolean> {
  */
 export async function createCase(vehicleId: string): Promise<ApiResponse<CaseResponse>> {
     console.log('Creating Case for Vehicle:', vehicleId);
+    const idempotencyKey = createIdempotencyKey();
     return requestJson<CaseResponse>('/cases', {
         method: 'POST',
-        bodyObj: { vehicle_id: vehicleId },
+        retryable: true,
+        bodyObj: { vehicle_id: vehicleId, idempotency_key: idempotencyKey },
     });
 }
 
@@ -198,6 +211,7 @@ export async function confirmFix(caseId: string, failureModeId: string): Promise
     console.log(`Confirming Fix: Case ${caseId}, FailureMode ${failureModeId}`);
     return requestJson<{ success: boolean }>(`/cases/${caseId}/confirm`, {
         method: 'POST',
+        retryable: true,
         bodyObj: { failure_mode_id: failureModeId },
     });
 }
@@ -208,6 +222,9 @@ export async function listDiagnoses(options: {
     status?: string;
     vehicleId?: string;
     query?: string;
+    cluster?: string;
+    fromDate?: string;
+    toDate?: string;
 } = {}): Promise<ApiResponse<{ diagnoses: EflDiagnosisRecord[]; pagination?: { offset: number; limit: number; total: number; has_more: boolean } }>> {
     const params = new URLSearchParams();
     if (options.offset !== undefined) params.set('offset', String(options.offset));
@@ -215,6 +232,9 @@ export async function listDiagnoses(options: {
     if (options.status) params.set('status', options.status);
     if (options.vehicleId) params.set('vehicle_id', options.vehicleId);
     if (options.query) params.set('q', options.query);
+    if (options.cluster) params.set('cluster', options.cluster);
+    if (options.fromDate) params.set('from_date', options.fromDate);
+    if (options.toDate) params.set('to_date', options.toDate);
     const suffix = params.toString() ? `?${params.toString()}` : '';
     const response = await requestJson<{ diagnoses: EflDiagnosisRecord[]; pagination?: { offset: number; limit: number; total: number; has_more: boolean } }>(`/diagnoses${suffix}`, { method: 'GET' });
     if (!response.data && (response.statusCode ?? 0) >= 500) {
@@ -236,12 +256,28 @@ export async function exportDiagnosis(diagnosisId: string): Promise<ApiResponse<
     return requestJson<Record<string, unknown>>(`/diagnoses/${encodeURIComponent(diagnosisId)}/export`, { method: 'GET' });
 }
 
+export async function exportDiagnosisPdf(diagnosisId: string): Promise<ApiResponse<Blob>> {
+    try {
+        const headers = new Headers();
+        if (typeof window !== 'undefined' && getApps().length > 0) {
+            const user = getAuth(getApp()).currentUser;
+            if (user) headers.set('Authorization', `Bearer ${await user.getIdToken()}`);
+        }
+        const response = await fetch(buildUrl(`/diagnoses/${encodeURIComponent(diagnosisId)}/export?format=pdf`), { headers });
+        if (!response.ok) return { data: null, error: await parseErrorMessage(response), statusCode: response.status };
+        return { data: await response.blob(), error: null, statusCode: response.status };
+    } catch (error) {
+        return { data: null, error: error instanceof Error ? error.message : 'PDF-export mislukt.', statusCode: 500 };
+    }
+}
+
 export async function updateDiagnosis(
     diagnosisId: string,
     metadata: EflDiagnosisMetadata
 ): Promise<ApiResponse<EflDiagnosisRecord>> {
     return requestJson<EflDiagnosisRecord>(`/diagnoses/${encodeURIComponent(diagnosisId)}`, {
         method: 'PATCH',
+        retryable: true,
         bodyObj: metadata,
     });
 }
@@ -249,6 +285,7 @@ export async function updateDiagnosis(
 export async function deleteDiagnosis(diagnosisId: string): Promise<ApiResponse<{ deleted: boolean }>> {
     return requestJson<{ deleted: boolean }>(`/diagnoses/${encodeURIComponent(diagnosisId)}`, {
         method: 'DELETE',
+        retryable: true,
     });
 }
 
@@ -256,11 +293,14 @@ export async function createWerkbon(
     voertuigId: string,
     rootCause: string
 ): Promise<ApiResponse<PolicyEnvelope<WerkbonResponseData>>> {
+    const idempotencyKey = createIdempotencyKey();
     return requestJson<PolicyEnvelope<WerkbonResponseData>>('/werkbonnen', {
         method: 'POST',
+        retryable: true,
         bodyObj: {
             voertuig_id: voertuigId,
             root_cause: rootCause,
+            idempotency_key: idempotencyKey,
         },
     });
 }
@@ -277,6 +317,7 @@ export async function addWerkbonRegel(
 ): Promise<ApiResponse<PolicyEnvelope<WerkbonRegelResponseData>>> {
     return requestJson<PolicyEnvelope<WerkbonRegelResponseData>>(`/werkbonnen/${werkbonId}/regels`, {
         method: 'POST',
+        retryable: true,
         bodyObj: {
             omschrijving: regel.omschrijving,
             uren: regel.uren,
@@ -292,6 +333,7 @@ export async function afrondenWerkbon(
 ): Promise<ApiResponse<PolicyEnvelope<WerkbonAfrondenResponseData>>> {
     return requestJson<PolicyEnvelope<WerkbonAfrondenResponseData>>(`/werkbonnen/${werkbonId}/afronden`, {
         method: 'POST',
+        retryable: true,
         bodyObj: {},
     });
 }
@@ -299,10 +341,13 @@ export async function afrondenWerkbon(
 export async function createFactuur(
     werkbonId: string
 ): Promise<ApiResponse<PolicyEnvelope<FactuurResponseData>>> {
+    const idempotencyKey = createIdempotencyKey();
     return requestJson<PolicyEnvelope<FactuurResponseData>>('/facturen', {
         method: 'POST',
+        retryable: true,
         bodyObj: {
             werkbon_id: werkbonId,
+            idempotency_key: idempotencyKey,
         },
     });
 }
@@ -312,6 +357,7 @@ export async function finaliseerFactuur(
 ): Promise<ApiResponse<PolicyEnvelope<FactuurFinalizeResponseData>>> {
     return requestJson<PolicyEnvelope<FactuurFinalizeResponseData>>(`/facturen/${factuurId}/finaliseren`, {
         method: 'POST',
+        retryable: true,
         bodyObj: {},
     });
 }
