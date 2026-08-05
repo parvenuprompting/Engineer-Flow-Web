@@ -4,6 +4,7 @@ import { runDeterministicDiagnosis } from "@/efl_core/engine";
 import { generateOfflineCaseTitles, generateOfflineExpertChatResponse } from "@/efl_core/offline_assist";
 import type { DiagnoseInput, ExpertChatInput, ExpertChatOutput, CaseTitleInput } from "@/ai/flows/types";
 import type { DiagnoseResponse } from "@/lib/api/types";
+import { isFeatureEnabled } from "@/lib/features";
 
 
 export async function getDiagnosis(
@@ -56,6 +57,10 @@ export async function getCaseTitle(
 export async function runCanAnalysis(
   formData: FormData
 ): Promise<{ data: any | null; error: string | null }> {
+    if (!isFeatureEnabled("canAnalysis")) {
+        return { data: null, error: "CAN-analyse is momenteel niet beschikbaar in de productieversie." };
+    }
+
     const logFile = formData.get("logFile") as File;
     const vehicleId = formData.get("vehicleId") as string;
 

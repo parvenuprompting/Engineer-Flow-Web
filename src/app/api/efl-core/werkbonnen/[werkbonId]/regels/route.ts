@@ -4,6 +4,7 @@ import {
   createPolicyEnvelope,
   getWerkbonRecord,
 } from "../../../_store";
+import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
 
@@ -19,6 +20,9 @@ export async function POST(
   req: Request,
   context: { params: Promise<{ werkbonId: string }> }
 ) {
+  const authResult = await requireEflAuth(req);
+  if (authResult instanceof Response) return authResult;
+  const auth = authResult;
   try {
     const { werkbonId } = await context.params;
     const payload = (await req.json()) as WerkbonRegelPayload;
@@ -26,6 +30,9 @@ export async function POST(
     const werkbon = getWerkbonRecord(werkbonId);
     if (!werkbon) {
       return NextResponse.json({ detail: "Werkbon niet gevonden" }, { status: 404 });
+    }
+    if (werkbon.owner_uid !== auth.uid) {
+      return NextResponse.json({ code: "FORBIDDEN", detail: "Geen toegang tot deze werkbon." }, { status: 403 });
     }
     if (werkbon.status !== "open") {
       return NextResponse.json(

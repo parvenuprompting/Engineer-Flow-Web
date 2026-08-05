@@ -5,6 +5,8 @@ import { join } from "node:path";
 export type CaseRecord = {
   case_id: string;
   vehicle_id: string;
+  owner_uid: string;
+  garage_id: string;
   status: "open" | "closed";
   created_at: string;
   confirmations: Array<{
@@ -31,6 +33,7 @@ export type WerkbonRegelRecord = {
 export type WerkbonRecord = {
   id: string;
   voertuig_id: string;
+  owner_uid: string;
   garage_party_id: string;
   root_cause: string;
   status: WerkbonStatus;
@@ -51,6 +54,7 @@ export type GrootboekPostRecord = {
 export type FactuurRecord = {
   id: string;
   werkbon_id: string;
+  owner_uid: string;
   garage_party_id: string;
   status: FactuurStatus;
   factuurnummer: string;
@@ -449,10 +453,12 @@ function ensureLucidAuditForwardStatusLoaded(): void {
   globalThis.__eflLucidAuditForwardStatusLoaded = true;
 }
 
-export function createCaseRecord(vehicleId: string): CaseRecord {
+export function createCaseRecord(vehicleId: string, ownerUid: string, garageId: string): CaseRecord {
   const record: CaseRecord = {
     case_id: generateId("CASE"),
     vehicle_id: vehicleId,
+    owner_uid: ownerUid,
+    garage_id: garageId,
     status: "open",
     created_at: nowIso(),
     confirmations: [],
@@ -694,13 +700,15 @@ export function getAuditStoreHealth(): {
 
 export function createWerkbonRecord(input: {
   voertuig_id: string;
-  garage_party_id?: string;
+  owner_uid: string;
+  garage_party_id: string;
   root_cause: string;
 }): WerkbonRecord {
   const record: WerkbonRecord = {
     id: generateId("WB"),
     voertuig_id: input.voertuig_id,
-    garage_party_id: input.garage_party_id ?? "garage-001",
+    owner_uid: input.owner_uid,
+    garage_party_id: input.garage_party_id,
     root_cause: input.root_cause,
     status: "open",
     aangemaakt_at: nowIso(),
@@ -778,7 +786,8 @@ export function getFactuurByWerkbon(werkbonId: string): FactuurRecord | null {
 
 export function createFactuurRecord(input: {
   werkbon_id: string;
-  garage_party_id?: string;
+  owner_uid: string;
+  garage_party_id: string;
 }): FactuurRecord | null {
   const werkbon = getWerkbonRecord(input.werkbon_id);
   if (!werkbon) return null;
@@ -790,6 +799,7 @@ export function createFactuurRecord(input: {
   const record: FactuurRecord = {
     id: generateId("FCT"),
     werkbon_id: werkbon.id,
+    owner_uid: input.owner_uid,
     garage_party_id: input.garage_party_id ?? werkbon.garage_party_id,
     status: "concept",
     factuurnummer: nextFactuurnummer(),

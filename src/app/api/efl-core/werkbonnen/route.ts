@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createPolicyEnvelope, createWerkbonRecord } from "../_store";
 import { proxyToLucidBackend } from "../_backend_proxy";
+import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
 
@@ -10,6 +11,9 @@ type WerkbonCreatePayload = {
 };
 
 export async function POST(req: Request) {
+  const authResult = await requireEflAuth(req);
+  if (authResult instanceof Response) return authResult;
+  const auth = authResult;
   try {
     const payload = (await req.json()) as WerkbonCreatePayload;
     const voertuigId = payload?.voertuig_id?.trim();
@@ -28,7 +32,7 @@ export async function POST(req: Request) {
       body: {
         voertuig_id: voertuigId,
         root_cause: rootCause,
-        garage_party_id: "garage-001",
+        garage_party_id: auth.garageId,
       },
     });
     if (proxyRes.handled) {
@@ -38,7 +42,8 @@ export async function POST(req: Request) {
     const werkbon = createWerkbonRecord({
       voertuig_id: voertuigId,
       root_cause: rootCause,
-      garage_party_id: "garage-001",
+      owner_uid: auth.uid,
+      garage_party_id: auth.garageId,
     });
 
     return NextResponse.json(

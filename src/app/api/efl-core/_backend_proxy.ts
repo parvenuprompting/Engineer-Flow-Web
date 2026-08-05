@@ -19,41 +19,9 @@ export interface ProxyResult<T = unknown> {
   error?: string;
 }
 
-let cachedDevToken: string | null = null;
-let tokenExpiresAt = 0;
-
 export function getLucidBackendUrl(): string | null {
   const url = process.env.LUCID_BACKEND_URL?.trim();
   return url && url.length > 0 ? url.replace(/\/+$/, "") : null;
-}
-
-async function getDevToken(backendUrl: string, partyId = "garage-001", partyType = "garage", scopes = ["diagnosis:read_local"]): Promise<string | null> {
-  const now = Date.now();
-  if (cachedDevToken && tokenExpiresAt > now + 60000) {
-    return cachedDevToken;
-  }
-
-  try {
-    const res = await fetch(`${backendUrl}/auth/dev-token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        party_id: partyId,
-        party_type: partyType,
-        scopes,
-      }),
-    });
-    if (!res.ok) return null;
-    const data = (await res.json()) as { access_token?: string };
-    if (data.access_token) {
-      cachedDevToken = data.access_token;
-      tokenExpiresAt = now + 3600 * 1000; // 1 hour
-      return cachedDevToken;
-    }
-  } catch {
-    // Ignore fetch error, will fallback
-  }
-  return null;
 }
 
 export async function proxyToLucidBackend<T = unknown>(options: ProxyOptions): Promise<ProxyResult<T>> {
@@ -63,19 +31,15 @@ export async function proxyToLucidBackend<T = unknown>(options: ProxyOptions): P
   }
 
   try {
-    const token = await getDevToken(
-      backendUrl,
-      options.party_id ?? "garage-001",
-      options.party_type ?? "garage",
-      options.scopes ?? ["diagnosis:read_local", "claim:read_history"]
-    );
+    const serviceToken = process.env.LUCID_SERVICE_TOKEN?.trim();
+    if (!serviceToken) {
+      return { handled: false, error: "LUCID_SERVICE_TOKEN is niet geconfigureerd" };
+    }
 
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
+    headers["Authorization"] = `Bearer ${serviceToken}`;
 
     const response = await fetch(`${backendUrl}${options.path}`, {
       method: options.method ?? "POST",

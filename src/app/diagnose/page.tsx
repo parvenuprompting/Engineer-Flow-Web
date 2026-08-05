@@ -16,6 +16,7 @@ import { diagnose, createCase } from '@/lib/api/client';
 import { syncPendingAuditEvents } from '@/lib/audit/offline-audit-queue';
 import { useToast } from '@/hooks/use-toast';
 import { LoadingScreen } from '@/components/loading-screen';
+import { useUser } from '@/firebase';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,13 @@ function DiagnosePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.replace('/login');
+    }
+  }, [isUserLoading, user, router]);
 
   const [initialSymptom, setInitialSymptom] = useState('');
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);

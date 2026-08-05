@@ -19,6 +19,8 @@ import type {
     WerkbonResponseData,
 } from './types';
 import { createClientAuditEvent, queueClientAuditEvent, syncPendingAuditEvents } from '@/lib/audit/offline-audit-queue';
+import { getApp, getApps } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_EFL_CORE_URL?.trim() || '/api/efl-core';
 
@@ -52,12 +54,19 @@ async function requestJson<T>(
 ): Promise<ApiResponse<T>> {
     try {
         const { bodyObj, headers, ...rest } = options;
+        const requestHeaders = new Headers(headers);
+        requestHeaders.set('Content-Type', 'application/json');
+
+        if (typeof window !== 'undefined' && getApps().length > 0) {
+            const user = getAuth(getApp()).currentUser;
+            if (user) {
+                requestHeaders.set('Authorization', `Bearer ${await user.getIdToken()}`);
+            }
+        }
+
         const response = await fetch(buildUrl(path), {
             ...rest,
-            headers: {
-                'Content-Type': 'application/json',
-                ...(headers ?? {}),
-            },
+            headers: requestHeaders,
             body: bodyObj !== undefined ? JSON.stringify(bodyObj) : options.body,
         });
 

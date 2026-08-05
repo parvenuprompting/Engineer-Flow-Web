@@ -6,6 +6,7 @@ import {
   getWerkbonRecord,
 } from "../_store";
 import { proxyToLucidBackend } from "../_backend_proxy";
+import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
 
@@ -14,6 +15,9 @@ type FactuurCreatePayload = {
 };
 
 export async function POST(req: Request) {
+  const authResult = await requireEflAuth(req);
+  if (authResult instanceof Response) return authResult;
+  const auth = authResult;
   try {
     const payload = (await req.json()) as FactuurCreatePayload;
     const werkbonId = payload?.werkbon_id?.trim();
@@ -26,7 +30,7 @@ export async function POST(req: Request) {
       method: "POST",
       body: {
         werkbon_id: werkbonId,
-        garage_party_id: "garage-001",
+        garage_party_id: auth.garageId,
       },
     });
     if (proxyRes.handled) {
@@ -36,6 +40,9 @@ export async function POST(req: Request) {
     const werkbon = getWerkbonRecord(werkbonId);
     if (!werkbon) {
       return NextResponse.json({ detail: "Werkbon niet gevonden" }, { status: 404 });
+    }
+    if (werkbon.owner_uid !== auth.uid) {
+      return NextResponse.json({ code: "FORBIDDEN", detail: "Geen toegang tot deze werkbon." }, { status: 403 });
     }
     if (werkbon.status !== "afgerond") {
       return NextResponse.json(
@@ -52,7 +59,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const factuur = createFactuurRecord({ werkbon_id: werkbonId, garage_party_id: "garage-001" });
+    const factuur = createFactuurRecord({ werkbon_id: werkbonId, owner_uid: auth.uid, garage_party_id: auth.garageId });
     if (!factuur) {
       return NextResponse.json({ detail: "Werkbon niet gevonden" }, { status: 404 });
     }

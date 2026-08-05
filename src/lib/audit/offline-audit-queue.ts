@@ -1,6 +1,8 @@
 "use client";
 
 import type { AuditSyncResponse, ClientAuditEvent } from "@/lib/api/types";
+import { getApp, getApps } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
 const DB_NAME = "engine-flow-audit";
 const DB_VERSION = 1;
@@ -218,11 +220,17 @@ export async function syncPendingAuditEvents(fetchImpl: typeof fetch = fetch): P
   }
 
   try {
+    const headers = new Headers({ "Content-Type": "application/json" });
+    if (getApps().length > 0) {
+      const user = getAuth(getApp()).currentUser;
+      if (user) {
+        headers.set("Authorization", `Bearer ${await user.getIdToken()}`);
+      }
+    }
+
     const response = await fetchImpl("/api/efl-core/audit/sync", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({ events }),
     });
 
@@ -259,4 +267,3 @@ export function registerAutoSyncListener(): () => void {
     window.removeEventListener("online", handleOnline);
   };
 }
-

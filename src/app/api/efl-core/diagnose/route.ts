@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { runDeterministicDiagnosis } from "@/efl_core/engine";
 import { getEflHealthSnapshot } from "@/efl_core/health";
 import { createCaseRecord, getAuditStoreHealth, getCaseRecord, storeDiagnosisAuditRecord } from "../_store";
+import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -28,6 +29,9 @@ type DiagnoseRequest = {
 };
 
 export async function POST(req: Request) {
+  const authResult = await requireEflAuth(req);
+  if (authResult instanceof Response) return authResult;
+  const auth = authResult;
   try {
     const auditStoreHealth = getAuditStoreHealth();
     const healthSnapshot = getEflHealthSnapshot(auditStoreHealth.audit_store_ok);
@@ -61,7 +65,10 @@ export async function POST(req: Request) {
     const requestedCaseId = payload?.case_id || payload?.caseId;
     const vehicleId = payload?.vehicle_id || payload?.vehicleId || "vehicle-unknown";
     const existingCase = requestedCaseId ? getCaseRecord(requestedCaseId) : null;
-    const resolvedCaseId = existingCase?.case_id ?? createCaseRecord(vehicleId).case_id;
+    if (existingCase && existingCase.owner_uid !== auth.uid) {
+      return NextResponse.json({ code: "FORBIDDEN", detail: "Geen toegang tot deze case." }, { status: 403 });
+    }
+    const resolvedCaseId = existingCase?.case_id ?? createCaseRecord(vehicleId, auth.uid, auth.garageId).case_id;
 
     const result = await runDeterministicDiagnosis({
       symptomDescription: symptomText.trim(),

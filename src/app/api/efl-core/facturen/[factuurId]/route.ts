@@ -5,6 +5,7 @@ import {
   getWerkbonRecord,
   isFactuurBalanced,
 } from "../../_store";
+import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
 
@@ -12,10 +13,16 @@ export async function GET(
   _req: Request,
   context: { params: Promise<{ factuurId: string }> }
 ) {
+  const authResult = await requireEflAuth(_req);
+  if (authResult instanceof Response) return authResult;
+  const auth = authResult;
   const { factuurId } = await context.params;
   const factuur = getFactuurRecord(factuurId);
   if (!factuur) {
     return NextResponse.json({ detail: "Factuur niet gevonden" }, { status: 404 });
+  }
+  if (factuur.owner_uid !== auth.uid) {
+    return NextResponse.json({ code: "FORBIDDEN", detail: "Geen toegang tot deze factuur." }, { status: 403 });
   }
 
   const werkbon = getWerkbonRecord(factuur.werkbon_id);

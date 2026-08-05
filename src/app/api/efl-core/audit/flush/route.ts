@@ -6,6 +6,7 @@ import {
   storeLucidAuditForwardStatuses,
 } from "../../_store";
 import { forwardAuditEventsToLucidBackend } from "../_durable_sink";
+import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,6 +16,8 @@ type FlushRequestBody = {
 };
 
 export async function POST(req: Request) {
+  const authResult = await requireEflAuth(req);
+  if (authResult instanceof Response) return authResult;
   try {
     const auditStoreHealth = getAuditStoreHealth();
     const healthSnapshot = getEflHealthSnapshot(auditStoreHealth.audit_store_ok);

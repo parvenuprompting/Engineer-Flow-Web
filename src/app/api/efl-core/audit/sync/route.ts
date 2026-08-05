@@ -4,11 +4,13 @@ import type { AuditSyncPayload, ClientAuditEvent } from "@/lib/api/types";
 import { getEflHealthSnapshot } from "@/efl_core/health";
 import {
   getAuditStoreHealth,
+  getCaseRecord,
   listPendingLucidAuditMirrorEvents,
   storeClientAuditSyncRecords,
   storeLucidAuditForwardStatuses,
 } from "../../_store";
 import { forwardAuditEventsToLucidBackend } from "../_durable_sink";
+import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -56,6 +58,9 @@ function isClientAuditEvent(value: unknown): value is ClientAuditEvent {
 }
 
 export async function POST(req: Request) {
+  const authResult = await requireEflAuth(req);
+  if (authResult instanceof Response) return authResult;
+  const auth = authResult;
   try {
     const auditStoreHealth = getAuditStoreHealth();
     const healthSnapshot = getEflHealthSnapshot(auditStoreHealth.audit_store_ok);
@@ -74,6 +79,18 @@ export async function POST(req: Request) {
     const rawEvents = Array.isArray(payload?.events) ? payload.events.filter((event) => isClientAuditEvent(event)) : [];
 
     const events = rawEvents.filter((event) => event.payload_hash === hashPayload(event.payload));
+
+    const unauthorizedEvent = events.find((event) => {
+      if (!event.case_id) return false;
+      const caseRecord = getCaseRecord(event.case_id);
+      return !caseRecord || caseRecord.owner_uid !== auth.uid;
+    });
+    if (unauthorizedEvent) {
+      return NextResponse.json(
+        { code: "FORBIDDEN", detail: "Audit event hoort niet bij de huidige gebruiker." },
+        { status: 403 }
+      );
+    }
 
     if (events.length === 0) {
       return NextResponse.json(

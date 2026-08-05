@@ -19,6 +19,7 @@
 
 # production
 /build
+.efl_store/
 
 # misc
 .DS_Store

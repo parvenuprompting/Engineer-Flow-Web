@@ -220,6 +220,25 @@ Handige flags:
 
 - `http://127.0.0.1:8010/docs`
 
+## Server-side authenticatie voor EFL API
+
+De actieve Next.js EFL-routes vereisen een Firebase ID-token. De browser voegt dit token automatisch toe voor ingelogde gebruikers.
+Voor server-side tokenvalidatie gebruikt de app Application Default Credentials of `FIREBASE_SERVICE_ACCOUNT_JSON`.
+
+Voor lokale ontwikkeling met een service-accountbestand:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/absolute/path/firebase-service-account.json
+```
+
+Of configureer een JSON-string in de serveromgeving:
+
+```bash
+FIREBASE_SERVICE_ACCOUNT_JSON='{"projectId":"...","clientEmail":"...","privateKey":"..."}'
+```
+
+Een optionele Firebase custom claim `garage_id` wordt gebruikt voor garage-isolatie. Zonder deze claim wordt de Firebase `uid` als tijdelijke eigenaarsscope gebruikt. Voor een multi-user garageomgeving moet `garage_id` verplicht worden gemaakt en aan een server-side membershipmodel worden gekoppeld.
+
 ## Handmatige Setup
 
 Gebruik dit als je ook de oudere/aanvullende FastAPI-backend lokaal wilt draaien.

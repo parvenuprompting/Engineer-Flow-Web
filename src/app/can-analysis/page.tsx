@@ -27,6 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { runCanAnalysis } from "@/app/actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { publicFeatures } from "@/lib/features";
 
 const formSchema = z.object({
   logFile: z
@@ -48,6 +49,21 @@ export default function CanAnalysisPage() {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+
+  if (!publicFeatures.canAnalysis) {
+    return (
+      <div className="container mx-auto flex min-h-[60vh] max-w-2xl items-center justify-center p-4 md:p-8">
+        <Alert>
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>CAN-analyse nog niet beschikbaar</AlertTitle>
+          <AlertDescription>
+            Deze functie wordt opnieuw geactiveerd zodra de echte CAN-analyse-engine en de bijbehorende gegevensbeveiliging
+            klaar zijn. Gebruik voorlopig de Diagnose Tool voor symptoomanalyse.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
