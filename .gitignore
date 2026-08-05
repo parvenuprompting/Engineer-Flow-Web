@@ -40,10 +40,12 @@ next-env.d.ts
 
 .genkit/*
 .env*
+!.env.local.example
 .venv/
 __pycache__/
 *.pyc
 lucid_local.db
+.tmp_lucid_test.db
 
 # firebase
 firebase-debug.log

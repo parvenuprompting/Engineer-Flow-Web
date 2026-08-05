@@ -139,6 +139,22 @@ set -a
 . "./$ENV_FILE"
 set +a
 
+log "Development service-token genereren"
+SERVICE_TOKEN="$(python - <<'PY'
+from lucid_backend.security import issue_dev_token
+
+print(issue_dev_token(
+    subject="next-efl-dev-adapter",
+    party_type="garage",
+    party_id="garage-001",
+    scopes=["diagnosis:read_local", "consent:write"],
+    expires_in_minutes=1440,
+))
+PY
+)"
+upsert_env "$ENV_FILE" "LUCID_SERVICE_TOKEN" "$SERVICE_TOKEN"
+export LUCID_SERVICE_TOKEN="$SERVICE_TOKEN"
+
 log "Alembic migraties uitvoeren"
 python -m alembic upgrade head
 

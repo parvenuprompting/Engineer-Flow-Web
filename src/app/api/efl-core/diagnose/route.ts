@@ -3,6 +3,7 @@ import { runDeterministicDiagnosis } from "@/efl_core/engine";
 import { getEflHealthSnapshot } from "@/efl_core/health";
 import { createCaseRecord, getAuditStoreHealth, getCaseRecord, storeDiagnosisAuditRecord } from "../_store";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
+import { getLucidBackendUrl, proxyToLucidBackend } from "../_backend_proxy";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -90,6 +91,30 @@ export async function POST(req: Request) {
       dds_case: result.dds_case,
       audit_trail: result.audit_trail,
     });
+
+    const persistence = await proxyToLucidBackend({
+      path: "/diagnoses",
+      method: "POST",
+      body: {
+        diagnosis_id: result.diagnosis_id,
+        case_id: result.case_id,
+        symptom_text: symptomText.trim(),
+        response: result,
+        idempotency_key: result.audit_trail?.execution_signature ?? result.diagnosis_id,
+      },
+    });
+    if (persistence.handled && (persistence.status ?? 500) >= 400) {
+      return NextResponse.json(
+        { code: "DIAGNOSIS_PERSISTENCE_FAILED", detail: "Diagnose berekend maar niet duurzaam opgeslagen.", persistence: persistence.data },
+        { status: 503 }
+      );
+    }
+    if (getLucidBackendUrl() && !persistence.handled) {
+      return NextResponse.json(
+        { code: "PERSISTENCE_UNAVAILABLE", detail: "De diagnose is berekend maar niet duurzaam opgeslagen." },
+        { status: 503 }
+      );
+    }
 
     return NextResponse.json(
       {

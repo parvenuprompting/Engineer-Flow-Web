@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, Header, HTTPException, status
@@ -19,6 +19,8 @@ from .models import (
     PolicyDecision,
     AuditEvent,
     Claim,
+    EflCase,
+    EflDiagnosis,
     FactuurStatus,
     WerkbonStatus,
 )
@@ -39,6 +41,9 @@ from .schemas import (
     DevTokenIn,
     DevTokenOut,
     DiagnosisEventIn,
+    EflCaseConfirmIn,
+    EflCaseCreateIn,
+    EflDiagnosisPersistIn,
     EflAuditSyncIn,
     FactuurCreateIn,
     FeedbackEventIn,
@@ -168,6 +173,118 @@ def create_app() -> FastAPI:
             "policy_version": settings.policy_version,
             "app_version": settings.app_version,
             "trigger1_batch_interval_minutes": settings.trigger1_batch_interval_minutes,
+        }
+
+    @app.post("/cases")
+    def efl_case_create(
+        payload: EflCaseCreateIn,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        _assert_garage_write_access(auth)
+        rate_limiter.hit(auth.party_id, "/cases")
+        get_or_create_party(db, party_id=auth.party_id, party_type=auth.party_type)
+
+        case = EflCase(
+            garage_party_id=auth.party_id,
+            owner_subject=auth.sub,
+            vehicle_ref=payload.vehicle_id,
+            status="open",
+        )
+        db.add(case)
+        db.commit()
+        db.refresh(case)
+        return {
+            "case_id": case.id,
+            "status": case.status,
+            "vehicle_id": case.vehicle_ref,
+            "garage_id": case.garage_party_id,
+            "created_at": case.created_at,
+        }
+
+    @app.post("/cases/{case_id}/confirm")
+    def efl_case_confirm(
+        case_id: str,
+        payload: EflCaseConfirmIn,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        _assert_garage_write_access(auth)
+        rate_limiter.hit(auth.party_id, "/cases/{case_id}/confirm")
+        case = db.get(EflCase, case_id)
+        if not case:
+            raise HTTPException(status_code=404, detail="Case niet gevonden")
+        if case.garage_party_id != auth.party_id:
+            raise HTTPException(status_code=403, detail="Case behoort niet tot deze garage")
+
+        case.confirmed_failure_mode_id = payload.failure_mode_id
+        case.confirmed_at = datetime.now(timezone.utc)
+        case.status = "confirmed"
+        case.updated_at = case.confirmed_at
+        db.add(case)
+        db.commit()
+        return {
+            "success": True,
+            "case_id": case.id,
+            "failure_mode_id": case.confirmed_failure_mode_id,
+            "status": case.status,
+            "confirmed_at": case.confirmed_at,
+        }
+
+    @app.post("/diagnoses")
+    def efl_diagnosis_persist(
+        payload: EflDiagnosisPersistIn,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        _assert_garage_write_access(auth)
+        rate_limiter.hit(auth.party_id, "/diagnoses")
+
+        case = db.get(EflCase, payload.case_id)
+        if not case:
+            raise HTTPException(status_code=404, detail="Case niet gevonden")
+        if case.garage_party_id != auth.party_id:
+            raise HTTPException(status_code=403, detail="Case behoort niet tot deze garage")
+
+        existing = db.execute(
+            select(EflDiagnosis).where(
+                EflDiagnosis.diagnosis_id == payload.diagnosis_id,
+                EflDiagnosis.garage_party_id == auth.party_id,
+            )
+        ).scalar_one_or_none()
+        if not existing and payload.idempotency_key:
+            existing = db.execute(
+                select(EflDiagnosis).where(EflDiagnosis.idempotency_key == payload.idempotency_key)
+            ).scalar_one_or_none()
+        if existing:
+            return {
+                "diagnosis_id": existing.diagnosis_id,
+                "case_id": existing.case_id,
+                "status": "duplicate",
+                "created_at": existing.created_at,
+            }
+
+        response_payload = payload.response
+        diagnosis = EflDiagnosis(
+            diagnosis_id=payload.diagnosis_id,
+            case_id=case.id,
+            garage_party_id=auth.party_id,
+            owner_subject=auth.sub,
+            symptom_text=payload.symptom_text,
+            engine_version=str(response_payload.get("audit_trail", {}).get("engine_version", "unknown")),
+            response_payload=response_payload,
+            idempotency_key=payload.idempotency_key,
+        )
+        case.updated_at = datetime.now(timezone.utc)
+        db.add(diagnosis)
+        db.add(case)
+        db.commit()
+        db.refresh(diagnosis)
+        return {
+            "diagnosis_id": diagnosis.diagnosis_id,
+            "case_id": diagnosis.case_id,
+            "status": "persisted",
+            "created_at": diagnosis.created_at,
         }
 
     @app.post("/auth/dev-token", response_model=DevTokenOut)
@@ -1199,6 +1316,8 @@ def create_app() -> FastAPI:
         )
 
         batch_result = run_trigger1_batch(db)
+        # Keep the API response compatible with clients that consume the batch records directly.
+        batch_result["records"] = batch_result.get("sample", [])
 
         decision = create_decision(
             db,
@@ -1320,4 +1439,3 @@ def create_app() -> FastAPI:
         return result
 
     return app
-

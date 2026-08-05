@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { addCaseConfirmation, getCaseRecord } from "../../../_store";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
+import { proxyToLucidBackend } from "../../../_backend_proxy";
 
 export const runtime = "nodejs";
 
@@ -18,6 +19,15 @@ export async function POST(
 
     if (!failureModeId) {
       return NextResponse.json({ detail: "failure_mode_id is verplicht" }, { status: 400 });
+    }
+
+    const proxyRes = await proxyToLucidBackend({
+      path: `/cases/${caseId}/confirm`,
+      method: "POST",
+      body: { failure_mode_id: failureModeId },
+    });
+    if (proxyRes.handled) {
+      return NextResponse.json(proxyRes.data, { status: proxyRes.status ?? 200 });
     }
 
     const existing = getCaseRecord(caseId);

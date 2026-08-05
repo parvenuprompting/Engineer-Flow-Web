@@ -43,6 +43,22 @@ class DiagnosisEventIn(BaseModel):
     repair_action: str | None = None
 
 
+class EflCaseCreateIn(BaseModel):
+    vehicle_id: str = Field(min_length=1, max_length=255)
+
+
+class EflDiagnosisPersistIn(BaseModel):
+    diagnosis_id: str = Field(min_length=1, max_length=255)
+    case_id: str = Field(min_length=1, max_length=36)
+    symptom_text: str = Field(min_length=3, max_length=2000)
+    response: dict
+    idempotency_key: str | None = Field(default=None, max_length=255)
+
+
+class EflCaseConfirmIn(BaseModel):
+    failure_mode_id: str = Field(min_length=1, max_length=255)
+
+
 class WerkbonCreateIn(BaseModel):
     voertuig_id: str
     root_cause: str = Field(min_length=3)
@@ -128,4 +144,3 @@ class FeedbackEventOut(BaseModel):
     success: bool
     created_at: datetime
     processed: bool
-

@@ -205,5 +205,43 @@ def test_manifest_audit_returns_real_entries() -> None:
         assert len(body["events"]) >= 1
 
 
+def test_efl_case_and_diagnosis_persist_once() -> None:
+    with TestClient(app) as client:
+        token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="garage-001",
+            scopes=["diagnosis:read_local"],
+        )
+        headers = _headers(token)
+
+        case_resp = client.post("/cases", headers=headers, json={"vehicle_id": "VTG-001"})
+        assert case_resp.status_code == 200, case_resp.text
+        case_id = case_resp.json()["case_id"]
+
+        diagnosis_payload = {
+            "diagnosis_id": "diag-persist-test",
+            "case_id": case_id,
+            "symptom_text": "De trommel draait langzaam onder belasting.",
+            "response": {"diagnosis_status": "ranked", "audit_trail": {"engine_version": "test"}},
+            "idempotency_key": "persist-test-key",
+        }
+        first = client.post("/diagnoses", headers=headers, json=diagnosis_payload)
+        assert first.status_code == 200, first.text
+        assert first.json()["status"] == "persisted"
+
+        second = client.post("/diagnoses", headers=headers, json=diagnosis_payload)
+        assert second.status_code == 200, second.text
+        assert second.json()["status"] == "duplicate"
+
+        confirmed = client.post(
+            f"/cases/{case_id}/confirm",
+            headers=headers,
+            json={"failure_mode_id": "FM-HYDRAULIC-PUMP"},
+        )
+        assert confirmed.status_code == 200, confirmed.text
+        assert confirmed.json()["status"] == "confirmed"
+
+
 if TEST_DB.exists():
     TEST_DB.unlink()

@@ -99,6 +99,47 @@ class DiagnosisEvent(Base):
     vehicle = relationship("Vehicle")
 
 
+class EflCase(Base):
+    __tablename__ = "efl_cases"
+    __table_args__ = (
+        Index("ix_efl_cases_garage_status", "garage_party_id", "status"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    garage_party_id: Mapped[str] = mapped_column(ForeignKey("parties.id"), index=True)
+    owner_subject: Mapped[str] = mapped_column(String(255), index=True)
+    vehicle_ref: Mapped[str] = mapped_column(String(255), index=True)
+    status: Mapped[str] = mapped_column(String(24), default="open", nullable=False)
+    confirmed_failure_mode_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+    garage = relationship("Party")
+
+
+class EflDiagnosis(Base):
+    __tablename__ = "efl_diagnoses"
+    __table_args__ = (
+        UniqueConstraint("diagnosis_id", name="uq_efl_diagnoses_diagnosis_id"),
+        Index("ix_efl_diagnoses_case_created", "case_id", "created_at"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    diagnosis_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    case_id: Mapped[str] = mapped_column(ForeignKey("efl_cases.id"), index=True)
+    garage_party_id: Mapped[str] = mapped_column(ForeignKey("parties.id"), index=True)
+    owner_subject: Mapped[str] = mapped_column(String(255), index=True)
+    symptom_text: Mapped[str] = mapped_column(Text, nullable=False)
+    engine_version: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    response_payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+    idempotency_key: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+    case = relationship("EflCase")
+    garage = relationship("Party")
+
+
 class FeedbackEvent(Base):
     __tablename__ = "feedback_events"
 

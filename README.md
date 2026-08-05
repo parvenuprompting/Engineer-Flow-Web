@@ -239,6 +239,30 @@ FIREBASE_SERVICE_ACCOUNT_JSON='{"projectId":"...","clientEmail":"...","privateKe
 
 Een optionele Firebase custom claim `garage_id` wordt gebruikt voor garage-isolatie. Zonder deze claim wordt de Firebase `uid` als tijdelijke eigenaarsscope gebruikt. Voor een multi-user garageomgeving moet `garage_id` verplicht worden gemaakt en aan een server-side membershipmodel worden gekoppeld.
 
+## Duurzame EFL-opslag
+
+Wanneer `LUCID_BACKEND_URL` is ingesteld, worden nieuwe cases en diagnose-uitkomsten via de beveiligde FastAPI-backend in PostgreSQL opgeslagen. Configureer daarnaast een geldig backend-JWT in `LUCID_SERVICE_TOKEN` en voer de migraties uit:
+
+```bash
+python -m alembic upgrade head
+```
+
+Als `LUCID_BACKEND_URL` niet is ingesteld, blijft de lokale opslag uitsluitend beschikbaar voor development. Zodra de backend in een omgeving is geconfigureerd maar niet bereikbaar is, faalt de diagnoseflow expliciet en wordt niet teruggevallen op lokale opslag.
+
+## Alles lokaal starten
+
+Gebruik voor de volledige lokale stack:
+
+```bash
+cp env.local.example .env.local
+# Vul FIREBASE_SERVICE_ACCOUNT_JSON in .env.local in.
+./run_local.sh
+```
+
+`run_local.sh` start Docker/PostgreSQL, voert de migraties uit, seedt de database, genereert een development-service-token, start FastAPI op poort `8010` en start daarna Next.js op poort `9002`.
+
+Een Firebase Admin service-account maak je aan in Firebase Console via **Project settings → Service accounts → Generate new private key**. Gebruik de JSON-waarden in `.env.local`; commit dit bestand nooit.
+
 ## Handmatige Setup
 
 Gebruik dit als je ook de oudere/aanvullende FastAPI-backend lokaal wilt draaien.
