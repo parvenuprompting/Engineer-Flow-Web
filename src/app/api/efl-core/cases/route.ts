@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createCaseRecord } from "../_store";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
-import { getLucidBackendUrl, proxyToLucidBackend } from "../_backend_proxy";
+import { getLucidBackendUrl, isLocalStoreEnabled, proxyToLucidBackend } from "../_backend_proxy";
 
 export const runtime = "nodejs";
 
@@ -28,6 +28,13 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { code: "PERSISTENCE_UNAVAILABLE", detail: "De duurzame case-opslag is niet bereikbaar." },
         { status: 503 }
+      );
+    }
+
+    if (!isLocalStoreEnabled()) {
+      return NextResponse.json(
+        { code: "PERSISTENCE_UNAVAILABLE", detail: "Duurzame case-opslag vereist een geconfigureerde backend." },
+        { status: 503 },
       );
     }
 

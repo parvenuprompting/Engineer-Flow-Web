@@ -5,6 +5,7 @@ import {
   getWerkbonRecord,
 } from "../../../_store";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
+import { isLocalStoreEnabled } from "../../../_backend_proxy";
 
 export const runtime = "nodejs";
 
@@ -23,6 +24,12 @@ export async function POST(
   const authResult = await requireEflAuth(req);
   if (authResult instanceof Response) return authResult;
   const auth = authResult;
+  if (!isLocalStoreEnabled()) {
+    return NextResponse.json(
+      { code: "PERSISTENCE_UNAVAILABLE", detail: "Werkbonregels vereisen een geconfigureerde backend." },
+      { status: 503 },
+    );
+  }
   try {
     const { werkbonId } = await context.params;
     const payload = (await req.json()) as WerkbonRegelPayload;

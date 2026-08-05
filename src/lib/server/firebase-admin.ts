@@ -63,11 +63,20 @@ export async function requireEflAuth(request: Request): Promise<EflAuthContext |
   try {
     const decoded = await adminAuth.verifyIdToken(token);
     const garageClaim = decoded.garage_id;
+    if (typeof garageClaim !== "string" || garageClaim.length === 0) {
+      return new Response(
+        JSON.stringify({ code: "GARAGE_MEMBERSHIP_REQUIRED", detail: "Een actieve garage membership is vereist." }),
+        {
+          status: 403,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
 
     return {
       uid: decoded.uid,
       email: decoded.email ?? null,
-      garageId: typeof garageClaim === "string" && garageClaim.length > 0 ? garageClaim : decoded.uid,
+      garageId: garageClaim,
     };
   } catch {
     return new Response(JSON.stringify({ code: "UNAUTHENTICATED", detail: "Ongeldig of verlopen authenticatietoken." }), {

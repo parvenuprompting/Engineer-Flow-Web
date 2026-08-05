@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { addCaseConfirmation, getCaseRecord } from "../../../_store";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
+import { isLocalStoreEnabled } from "../../../_backend_proxy";
 import { proxyToLucidBackend } from "../../../_backend_proxy";
 
 export const runtime = "nodejs";
@@ -12,6 +13,12 @@ export async function POST(
   const authResult = await requireEflAuth(req);
   if (authResult instanceof Response) return authResult;
   const auth = authResult;
+  if (!isLocalStoreEnabled()) {
+    return NextResponse.json(
+      { code: "PERSISTENCE_UNAVAILABLE", detail: "Casebevestiging vereist een geconfigureerde backend." },
+      { status: 503 },
+    );
+  }
   try {
     const { caseId } = await context.params;
     const payload = (await req.json()) as { failure_mode_id?: string };

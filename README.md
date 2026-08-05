@@ -238,6 +238,8 @@ Handige flags:
 De actieve Next.js EFL-routes vereisen een Firebase ID-token. De browser voegt dit token automatisch toe voor ingelogde gebruikers.
 Voor server-side tokenvalidatie gebruikt de app Application Default Credentials of `FIREBASE_SERVICE_ACCOUNT_JSON`.
 
+In staging en productie moet `FIREBASE_SERVICE_ACCOUNT_JSON` via de secret manager van de deployment worden ingesteld. Gebruik per omgeving een afzonderlijk Firebase-service-account; zet geen credentials in `.env`-bestanden of repositorybestanden. Voor de legacy FastAPI-JWT-laag moet `LUCID_JWT_PUBLIC_KEYS_JSON` verplicht worden ingesteld. De private sleutelvariabele `LUCID_JWT_PRIVATE_KEYS_JSON` is uitsluitend toegestaan wanneer `LUCID_ENABLE_DEV_AUTH=true`; zonder die dev-flag worden de ingebouwde demo-sleutels niet geladen.
+
 Voor lokale ontwikkeling met een service-accountbestand:
 
 ```bash
@@ -250,7 +252,16 @@ Of configureer een JSON-string in de serveromgeving:
 FIREBASE_SERVICE_ACCOUNT_JSON='{"projectId":"...","clientEmail":"...","privateKey":"..."}'
 ```
 
-Een optionele Firebase custom claim `garage_id` wordt gebruikt voor garage-isolatie. Zonder deze claim wordt de Firebase `uid` als tijdelijke eigenaarsscope gebruikt. Voor een multi-user garageomgeving moet `garage_id` verplicht worden gemaakt en aan een server-side membershipmodel worden gekoppeld.
+Deploymentminimum voor staging/productie:
+
+```bash
+LUCID_ENABLE_DEV_AUTH=false
+LUCID_JWT_PUBLIC_KEYS_JSON='{"production-key-1":"-----BEGIN PUBLIC KEY-----\\n...\\n-----END PUBLIC KEY-----"}'
+```
+
+`LUCID_JWT_PRIVATE_KEYS_JSON` hoort niet in staging/productie. Ontbrekende production keys veroorzaken bewust `401` in plaats van een demo-authenticatiepad.
+
+Garage-isolatie wordt server-side bepaald via `users.firebase_uid` en een actieve `garage_memberships`-record. Een Firebase `uid`, `garage_id` of `party_id` uit de requestbody of een ontbrekende membership wordt nooit als tijdelijke garage-scope gebruikt. De backend weigert toegang met `403` wanneer geen actieve membership bestaat.
 
 ## Duurzame EFL-opslag
 
@@ -261,6 +272,14 @@ python -m alembic upgrade head
 ```
 
 Als `LUCID_BACKEND_URL` niet is ingesteld, blijft de lokale opslag uitsluitend beschikbaar voor development. Zodra de backend in een omgeving is geconfigureerd maar niet bereikbaar is, faalt de diagnoseflow expliciet en wordt niet teruggevallen op lokale opslag.
+
+Productie start niet automatisch een schema en seedt geen demo-data. Draai migraties vooraf met Alembic. `LUCID_AUTO_CREATE_SCHEMA=true` is uitsluitend bedoeld voor lokale development. De Next.js `Map`/JSONL-opslag is alleen beschikbaar buiten productie; zet `EFL_LOCAL_STORE_ENABLED=false` om ook lokale development expliciet fail-closed te laten werken.
+
+De PostgreSQL 16-migratiegate draait met:
+
+```bash
+PHASE2_POSTGRES_URL='postgresql+psycopg://user:password@host:5432/db' .venv/bin/python -m pytest -q tests/test_phase2_postgres.py
+```
 
 ## Alles lokaal starten
 

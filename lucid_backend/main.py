@@ -21,7 +21,9 @@ from .models import (
     Claim,
     EflCase,
     EflDiagnosis,
+    Factuur,
     FactuurStatus,
+    Werkbon,
     WerkbonStatus,
 )
 from .policy import (
@@ -49,6 +51,8 @@ from .schemas import (
     FactuurCreateIn,
     FeedbackEventIn,
     FeedbackEventOut,
+    MembershipInviteIn,
+    MembershipStatusIn,
     ManifestRequestIn,
     ManufacturerUpdateIn,
     PolicyEnvelope,
@@ -56,6 +60,14 @@ from .schemas import (
     WerkbonRegelIn,
 )
 from .security import AuthContext, get_auth_context, issue_dev_token
+from .membership import (
+    invite_membership,
+    require_active_membership,
+    require_garage_mutation_access,
+    require_membership_manager,
+    update_membership_status,
+)
+from .models import GarageMembership, Party, User
 from .services import (
     add_diagnosis_event,
     add_werkbon_regel,
@@ -144,6 +156,8 @@ def create_app() -> FastAPI:
 
     @app.on_event("startup")
     def startup() -> None:
+        if not settings.auto_create_schema:
+            return
         Base.metadata.create_all(bind=engine)
         with Session(engine) as db:
             seed_demo_data(db)
@@ -183,14 +197,32 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> dict:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/cases")
-        get_or_create_party(db, party_id=auth.party_id, party_type=auth.party_type)
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/cases")
+
+        if payload.idempotency_key:
+            existing_case = db.execute(
+                select(EflCase).where(
+                    EflCase.garage_party_id == garage_id,
+                    EflCase.idempotency_key == payload.idempotency_key,
+                )
+            ).scalar_one_or_none()
+            if existing_case:
+                return {
+                    "case_id": existing_case.id,
+                    "status": existing_case.status,
+                    "vehicle_id": existing_case.vehicle_ref,
+                    "garage_id": existing_case.garage_party_id,
+                    "created_at": existing_case.created_at,
+                    "idempotent_replay": True,
+                }
 
         case = EflCase(
-            garage_party_id=auth.party_id,
+            garage_party_id=garage_id,
             owner_subject=auth.sub,
             vehicle_ref=payload.vehicle_id,
             status="open",
+            idempotency_key=payload.idempotency_key,
         )
         db.add(case)
         db.commit()
@@ -203,6 +235,29 @@ def create_app() -> FastAPI:
             "created_at": case.created_at,
         }
 
+    @app.get("/cases/{case_id}")
+    def efl_case_detail(
+        case_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        _assert_garage_write_access(auth)
+        garage_id = require_active_membership(db, auth).garage_party_id
+        case = db.execute(
+            select(EflCase).where(EflCase.id == case_id, EflCase.garage_party_id == garage_id)
+        ).scalar_one_or_none()
+        if case is None:
+            raise HTTPException(status_code=404, detail="Case niet gevonden")
+        return {
+            "case_id": case.id,
+            "status": case.status,
+            "vehicle_id": case.vehicle_ref,
+            "garage_id": case.garage_party_id,
+            "confirmed_failure_mode_id": case.confirmed_failure_mode_id,
+            "created_at": case.created_at,
+            "updated_at": case.updated_at,
+        }
+
     @app.post("/cases/{case_id}/confirm")
     def efl_case_confirm(
         case_id: str,
@@ -211,11 +266,12 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> dict:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/cases/{case_id}/confirm")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/cases/{case_id}/confirm")
         case = db.get(EflCase, case_id)
         if not case:
             raise HTTPException(status_code=404, detail="Case niet gevonden")
-        if case.garage_party_id != auth.party_id:
+        if case.garage_party_id != garage_id:
             raise HTTPException(status_code=403, detail="Case behoort niet tot deze garage")
 
         case.confirmed_failure_mode_id = payload.failure_mode_id
@@ -239,18 +295,19 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> dict:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/diagnoses")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/diagnoses")
 
         case = db.get(EflCase, payload.case_id)
         if not case:
             raise HTTPException(status_code=404, detail="Case niet gevonden")
-        if case.garage_party_id != auth.party_id:
+        if case.garage_party_id != garage_id:
             raise HTTPException(status_code=403, detail="Case behoort niet tot deze garage")
 
         existing = db.execute(
             select(EflDiagnosis).where(
                 EflDiagnosis.diagnosis_id == payload.diagnosis_id,
-                EflDiagnosis.garage_party_id == auth.party_id,
+                EflDiagnosis.garage_party_id == garage_id,
             )
         ).scalar_one_or_none()
         if not existing and payload.idempotency_key:
@@ -269,7 +326,7 @@ def create_app() -> FastAPI:
         diagnosis = EflDiagnosis(
             diagnosis_id=payload.diagnosis_id,
             case_id=case.id,
-            garage_party_id=auth.party_id,
+            garage_party_id=garage_id,
             owner_subject=auth.sub,
             symptom_text=payload.symptom_text,
             engine_version=str(response_payload.get("audit_trail", {}).get("engine_version", "unknown")),
@@ -277,16 +334,42 @@ def create_app() -> FastAPI:
             idempotency_key=payload.idempotency_key,
         )
         case.updated_at = datetime.now(timezone.utc)
-        db.add(diagnosis)
-        db.add(case)
-        db.commit()
-        db.refresh(diagnosis)
-        return {
+        response = {
             "diagnosis_id": diagnosis.diagnosis_id,
             "case_id": diagnosis.case_id,
             "status": "persisted",
-            "created_at": diagnosis.created_at,
         }
+        manifest = create_manifest(
+            db,
+            payload={
+                "action": "diagnosis_persist",
+                "diagnosis_id": payload.diagnosis_id,
+                "case_id": payload.case_id,
+                "idempotency_key": payload.idempotency_key,
+            },
+            party_id=garage_id,
+            party_type=auth.party_type,
+        )
+        decision = create_decision(
+            db,
+            manifest_id=manifest.id,
+            outcome=PolicyOutcome.ALLOW,
+            reason_code="ALLOW_DIAGNOSIS_PERSISTED",
+            trigger_id=None,
+        )
+        db.add(diagnosis)
+        db.add(case)
+        create_audit_event(
+            db,
+            manifest_id=manifest.id,
+            decision_id=decision.id,
+            endpoint="/diagnoses",
+            request_payload=payload.model_dump(mode="json"),
+            response_payload=response,
+        )
+        db.commit()
+        db.refresh(diagnosis)
+        return {**response, "created_at": diagnosis.created_at, "manifest_id": manifest.id, "decision_id": decision.id}
 
     def _serialize_efl_diagnosis(diagnosis: EflDiagnosis) -> dict:
         return {
@@ -305,10 +388,11 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> dict:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/diagnoses")
+        garage_id = require_active_membership(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/diagnoses")
         stmt = (
             select(EflDiagnosis)
-            .where(EflDiagnosis.garage_party_id == auth.party_id)
+            .where(EflDiagnosis.garage_party_id == garage_id)
             .order_by(EflDiagnosis.created_at.desc())
             .limit(100)
         )
@@ -322,11 +406,12 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> dict:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/diagnoses/{diagnosis_id}")
+        garage_id = require_active_membership(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/diagnoses/{diagnosis_id}")
         diagnosis = db.execute(
             select(EflDiagnosis).where(
                 EflDiagnosis.diagnosis_id == diagnosis_id,
-                EflDiagnosis.garage_party_id == auth.party_id,
+                EflDiagnosis.garage_party_id == garage_id,
             )
         ).scalar_one_or_none()
         if not diagnosis:
@@ -341,11 +426,12 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> dict:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/diagnoses/{diagnosis_id}")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/diagnoses/{diagnosis_id}")
         diagnosis = db.execute(
             select(EflDiagnosis).where(
                 EflDiagnosis.diagnosis_id == diagnosis_id,
-                EflDiagnosis.garage_party_id == auth.party_id,
+                EflDiagnosis.garage_party_id == garage_id,
             )
         ).scalar_one_or_none()
         if not diagnosis:
@@ -365,11 +451,12 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> dict:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/diagnoses/{diagnosis_id}")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/diagnoses/{diagnosis_id}")
         diagnosis = db.execute(
             select(EflDiagnosis).where(
                 EflDiagnosis.diagnosis_id == diagnosis_id,
-                EflDiagnosis.garage_party_id == auth.party_id,
+                EflDiagnosis.garage_party_id == garage_id,
             )
         ).scalar_one_or_none()
         if not diagnosis:
@@ -388,6 +475,72 @@ def create_app() -> FastAPI:
             expires_in_minutes=payload.expires_in_minutes,
         )
         return DevTokenOut(token=token, expires_in_minutes=payload.expires_in_minutes)
+
+    @app.get("/garages/{garage_id}/memberships")
+    def list_garage_memberships(
+        garage_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> list[dict]:
+        require_active_membership(db, auth, garage_id)
+        memberships = db.execute(
+            select(GarageMembership, User)
+            .join(User, GarageMembership.user_id == User.id)
+            .where(GarageMembership.garage_party_id == garage_id)
+            .order_by(GarageMembership.invited_at)
+        ).all()
+        return [
+            {
+                "membership_id": membership.id,
+                "firebase_uid": user.firebase_uid,
+                "email": user.email,
+                "display_name": user.display_name,
+                "role": membership.role,
+                "status": membership.status,
+                "invited_at": membership.invited_at,
+                "activated_at": membership.activated_at,
+                "revoked_at": membership.revoked_at,
+            }
+            for membership, user in memberships
+        ]
+
+    @app.post("/garages/{garage_id}/memberships")
+    def create_garage_membership(
+        garage_id: str,
+        payload: MembershipInviteIn,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        require_membership_manager(db, auth, garage_id)
+        garage = db.get(Party, garage_id)
+        if garage is None:
+            raise HTTPException(status_code=404, detail="Garage niet gevonden")
+        membership = invite_membership(
+            db,
+            garage=garage,
+            firebase_uid=payload.firebase_uid,
+            role=payload.role,
+            email=payload.email,
+            display_name=payload.display_name,
+        )
+        db.commit()
+        return {"membership_id": membership.id, "garage_id": garage_id, "status": membership.status, "role": membership.role}
+
+    @app.patch("/garages/{garage_id}/memberships/{membership_id}")
+    def change_garage_membership_status(
+        garage_id: str,
+        membership_id: str,
+        payload: MembershipStatusIn,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        require_membership_manager(db, auth, garage_id)
+        membership = db.get(GarageMembership, membership_id)
+        if membership is None or membership.garage_party_id != garage_id:
+            raise HTTPException(status_code=404, detail="Membership niet gevonden")
+        update_membership_status(db, membership, payload.status)
+        db.commit()
+        return {"membership_id": membership.id, "garage_id": garage_id, "status": membership.status}
 
     @app.post("/internal/efl-audit-events")
     def ingest_efl_audit_events(
@@ -471,12 +624,12 @@ def create_app() -> FastAPI:
         if "diagnosis:read_local" not in auth.scopes:
             raise HTTPException(status_code=403, detail="Missing required scope: diagnosis:read_local")
 
-        rate_limiter.hit(auth.party_id, "/garage/diagnosis-events")
-        get_or_create_party(db, party_id=auth.party_id, party_type=auth.party_type)
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/garage/diagnosis-events")
 
         event = add_diagnosis_event(
             db,
-            garage_party_id=auth.party_id,
+            garage_party_id=garage_id,
             vehicle_ref=payload.voertuig_id,
             dtc_code=payload.dtc_code,
             occurred_at=payload.occurred_at,
@@ -564,12 +717,13 @@ def create_app() -> FastAPI:
         if "consent:write" not in auth.scopes:
             raise HTTPException(status_code=403, detail="Missing required scope: consent:write")
 
-        rate_limiter.hit(auth.party_id, "/consents")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/consents")
 
         vehicle = get_vehicle_by_external_ref(db, payload.voertuig_id)
         if not vehicle:
             raise HTTPException(status_code=404, detail="Voertuig niet gevonden")
-        if vehicle.garage_party_id != auth.party_id:
+        if vehicle.garage_party_id != garage_id:
             raise HTTPException(status_code=403, detail="Voertuig behoort niet tot deze garage")
 
         consent = set_owner_consent(
@@ -596,8 +750,29 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> PolicyEnvelope:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/werkbonnen")
-        get_or_create_party(db, party_id=auth.party_id, party_type=auth.party_type)
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/werkbonnen")
+
+        if payload.idempotency_key:
+            existing_werkbon = db.execute(
+                select(Werkbon).where(
+                    Werkbon.garage_party_id == garage_id,
+                    Werkbon.idempotency_key == payload.idempotency_key,
+                )
+            ).scalar_one_or_none()
+            if existing_werkbon:
+                return PolicyEnvelope(
+                    manifest_id="idempotent-replay",
+                    decision_id="idempotent-replay",
+                    policy_version=settings.policy_version,
+                    data={
+                        "werkbon_id": existing_werkbon.id,
+                        "voertuig_id": existing_werkbon.voertuig_id,
+                        "root_cause": existing_werkbon.root_cause,
+                        "status": existing_werkbon.status,
+                        "idempotent_replay": True,
+                    },
+                )
 
         manifest_payload = {
             "action": "werkbon_aanmaken",
@@ -606,7 +781,7 @@ def create_app() -> FastAPI:
         manifest = create_manifest(
             db,
             payload=manifest_payload,
-            party_id=auth.party_id,
+            party_id=garage_id,
             party_type=auth.party_type,
         )
 
@@ -622,7 +797,7 @@ def create_app() -> FastAPI:
                 status_code=404,
                 trigger_id=None,
             )
-        if vehicle.garage_party_id != auth.party_id:
+        if vehicle.garage_party_id != garage_id:
             _record_deny_and_raise(
                 db,
                 manifest_id=manifest.id,
@@ -637,8 +812,9 @@ def create_app() -> FastAPI:
         werkbon = create_werkbon(
             db,
             voertuig_id=vehicle.id,
-            garage_party_id=auth.party_id,
+            garage_party_id=garage_id,
             root_cause=payload.root_cause,
+            idempotency_key=payload.idempotency_key,
         )
         decision = create_decision(
             db,
@@ -679,7 +855,8 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> PolicyEnvelope:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/werkbonnen/{id}/regels")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/werkbonnen/{id}/regels")
 
         manifest_payload = {
             "action": "werkbon_regel_toevoegen",
@@ -689,7 +866,7 @@ def create_app() -> FastAPI:
         manifest = create_manifest(
             db,
             payload=manifest_payload,
-            party_id=auth.party_id,
+            party_id=garage_id,
             party_type=auth.party_type,
         )
 
@@ -705,7 +882,7 @@ def create_app() -> FastAPI:
                 status_code=404,
                 trigger_id=None,
             )
-        if werkbon.garage_party_id != auth.party_id:
+        if werkbon.garage_party_id != garage_id:
             _record_deny_and_raise(
                 db,
                 manifest_id=manifest.id,
@@ -784,7 +961,8 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> PolicyEnvelope:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/werkbonnen/{id}/afronden")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/werkbonnen/{id}/afronden")
 
         manifest_payload = {
             "action": "werkbon_afronden",
@@ -793,7 +971,7 @@ def create_app() -> FastAPI:
         manifest = create_manifest(
             db,
             payload=manifest_payload,
-            party_id=auth.party_id,
+            party_id=garage_id,
             party_type=auth.party_type,
         )
 
@@ -809,7 +987,7 @@ def create_app() -> FastAPI:
                 status_code=404,
                 trigger_id=None,
             )
-        if werkbon.garage_party_id != auth.party_id:
+        if werkbon.garage_party_id != garage_id:
             _record_deny_and_raise(
                 db,
                 manifest_id=manifest.id,
@@ -859,7 +1037,29 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> PolicyEnvelope:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/facturen")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/facturen")
+
+        if payload.idempotency_key:
+            existing_factuur = db.execute(
+                select(Factuur).where(
+                    Factuur.garage_party_id == garage_id,
+                    Factuur.idempotency_key == payload.idempotency_key,
+                )
+            ).scalar_one_or_none()
+            if existing_factuur:
+                return PolicyEnvelope(
+                    manifest_id="idempotent-replay",
+                    decision_id="idempotent-replay",
+                    policy_version=settings.policy_version,
+                    data={
+                        "factuur_id": existing_factuur.id,
+                        "werkbon_id": existing_factuur.werkbon_id,
+                        "status": existing_factuur.status,
+                        "factuurnummer": existing_factuur.factuurnummer,
+                        "idempotent_replay": True,
+                    },
+                )
 
         manifest_payload = {
             "action": "factuur_aanmaken",
@@ -868,7 +1068,7 @@ def create_app() -> FastAPI:
         manifest = create_manifest(
             db,
             payload=manifest_payload,
-            party_id=auth.party_id,
+            party_id=garage_id,
             party_type=auth.party_type,
         )
 
@@ -884,7 +1084,7 @@ def create_app() -> FastAPI:
                 status_code=404,
                 trigger_id=None,
             )
-        if werkbon.garage_party_id != auth.party_id:
+        if werkbon.garage_party_id != garage_id:
             _record_deny_and_raise(
                 db,
                 manifest_id=manifest.id,
@@ -920,7 +1120,12 @@ def create_app() -> FastAPI:
                 trigger_id=None,
             )
 
-        factuur = create_concept_factuur(db, werkbon=werkbon, garage_party_id=auth.party_id)
+        factuur = create_concept_factuur(
+            db,
+            werkbon=werkbon,
+            garage_party_id=garage_id,
+            idempotency_key=payload.idempotency_key,
+        )
         decision = create_decision(
             db,
             manifest_id=manifest.id,
@@ -962,7 +1167,8 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> PolicyEnvelope:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/facturen/{id}/finaliseren")
+        garage_id = require_garage_mutation_access(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/facturen/{id}/finaliseren")
 
         manifest_payload = {
             "action": "factuur_finaliseren",
@@ -971,7 +1177,7 @@ def create_app() -> FastAPI:
         manifest = create_manifest(
             db,
             payload=manifest_payload,
-            party_id=auth.party_id,
+            party_id=garage_id,
             party_type=auth.party_type,
         )
 
@@ -987,7 +1193,7 @@ def create_app() -> FastAPI:
                 status_code=404,
                 trigger_id=None,
             )
-        if factuur.garage_party_id != auth.party_id:
+        if factuur.garage_party_id != garage_id:
             _record_deny_and_raise(
                 db,
                 manifest_id=manifest.id,
@@ -1073,7 +1279,8 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> PolicyEnvelope:
         _assert_garage_write_access(auth)
-        rate_limiter.hit(auth.party_id, "/facturen/{id}")
+        garage_id = require_active_membership(db, auth).garage_party_id
+        rate_limiter.hit(garage_id, "/facturen/{id}")
 
         manifest_payload = {
             "action": "factuur_ophalen",
@@ -1082,7 +1289,7 @@ def create_app() -> FastAPI:
         manifest = create_manifest(
             db,
             payload=manifest_payload,
-            party_id=auth.party_id,
+            party_id=garage_id,
             party_type=auth.party_type,
         )
 
@@ -1098,7 +1305,7 @@ def create_app() -> FastAPI:
                 status_code=404,
                 trigger_id=None,
             )
-        if factuur.garage_party_id != auth.party_id:
+        if factuur.garage_party_id != garage_id:
             _record_deny_and_raise(
                 db,
                 manifest_id=manifest.id,
@@ -1182,15 +1389,17 @@ def create_app() -> FastAPI:
         db: Session = Depends(get_db),
     ) -> PolicyEnvelope:
         _assert_party_scope(auth)
-        rate_limiter.hit(auth.party_id, "/data/opvragen")
-
-        get_or_create_party(db, party_id=auth.party_id, party_type=auth.party_type)
+        garage_id = None
+        if auth.party_type == PartyType.GARAGE.value:
+            garage_id = require_active_membership(db, auth).garage_party_id
+        request_party_id = garage_id or auth.party_id
+        rate_limiter.hit(request_party_id, "/data/opvragen")
         manifest_payload = manifest_in.model_dump(mode="json")
 
         manifest = create_manifest(
             db,
             payload=manifest_payload,
-            party_id=auth.party_id,
+            party_id=request_party_id,
             party_type=auth.party_type,
         )
 
@@ -1222,7 +1431,7 @@ def create_app() -> FastAPI:
 
         try:
             if auth.party_type == PartyType.GARAGE.value:
-                if vehicle.garage_party_id != auth.party_id:
+                if vehicle.garage_party_id != garage_id:
                     raise PolicyDenied(
                         reason_code="GARAGE_NOT_OWNER",
                         detail="Garage mag alleen lokale voertuigen opvragen.",

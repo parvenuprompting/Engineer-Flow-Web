@@ -75,6 +75,13 @@ class Settings(BaseModel):
     trigger1_batch_interval_minutes: int = Field(default_factory=lambda: int(os.getenv("LUCID_TRIGGER1_BATCH_INTERVAL_MINUTES", "60")))
 
     dev_auth_enabled: bool = Field(default_factory=lambda: os.getenv("LUCID_ENABLE_DEV_AUTH", "false").lower() == "true")
+    auto_create_schema: bool = Field(
+        default_factory=lambda: os.getenv(
+            "LUCID_AUTO_CREATE_SCHEMA",
+            "true" if os.getenv("LUCID_ENABLE_DEV_AUTH", "false").lower() == "true" else "false",
+        ).lower()
+        == "true"
+    )
 
     default_jwt_kid: str = Field(default_factory=lambda: os.getenv("LUCID_DEFAULT_JWT_KID", "dev-key-1"))
     efl_audit_ingest_enabled: bool = Field(
@@ -95,14 +102,18 @@ def get_settings() -> Settings:
     raw_public = os.getenv("LUCID_JWT_PUBLIC_KEYS_JSON")
     if raw_public:
         settings.jwt_public_keys = json.loads(raw_public)
-    else:
+    elif settings.dev_auth_enabled:
         settings.jwt_public_keys = {settings.default_jwt_kid: DEMO_PUBLIC_KEY}
+    else:
+        settings.jwt_public_keys = {}
 
     raw_private = os.getenv("LUCID_JWT_PRIVATE_KEYS_JSON")
     if raw_private:
         settings.jwt_private_keys = json.loads(raw_private)
-    else:
+    elif settings.dev_auth_enabled:
         settings.jwt_private_keys = {settings.default_jwt_kid: DEMO_PRIVATE_KEY}
+    else:
+        settings.jwt_private_keys = {}
 
     return settings
 

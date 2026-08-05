@@ -5,7 +5,7 @@ import {
   getFactuurByWerkbon,
   getWerkbonRecord,
 } from "../_store";
-import { proxyToLucidBackend } from "../_backend_proxy";
+import { isLocalStoreEnabled, proxyToLucidBackend } from "../_backend_proxy";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
 
 export const runtime = "nodejs";
@@ -35,6 +35,12 @@ export async function POST(req: Request) {
     });
     if (proxyRes.handled) {
       return NextResponse.json(proxyRes.data, { status: proxyRes.status ?? 200 });
+    }
+    if (!isLocalStoreEnabled()) {
+      return NextResponse.json(
+        { code: "PERSISTENCE_UNAVAILABLE", detail: "Duurzame factuurop-slag vereist een geconfigureerde backend." },
+        { status: 503 },
+      );
     }
 
     const werkbon = getWerkbonRecord(werkbonId);

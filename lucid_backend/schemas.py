@@ -45,6 +45,7 @@ class DiagnosisEventIn(BaseModel):
 
 class EflCaseCreateIn(BaseModel):
     vehicle_id: str = Field(min_length=1, max_length=255)
+    idempotency_key: str | None = Field(default=None, max_length=255)
 
 
 class EflDiagnosisPersistIn(BaseModel):
@@ -72,6 +73,7 @@ class EflDiagnosisMetadataIn(BaseModel):
 class WerkbonCreateIn(BaseModel):
     voertuig_id: str
     root_cause: str = Field(min_length=3)
+    idempotency_key: str | None = Field(default=None, max_length=255)
 
 
 class WerkbonRegelIn(BaseModel):
@@ -84,6 +86,7 @@ class WerkbonRegelIn(BaseModel):
 
 class FactuurCreateIn(BaseModel):
     werkbon_id: str
+    idempotency_key: str | None = Field(default=None, max_length=255)
 
 
 class BatchRunOut(BaseModel):
@@ -123,6 +126,17 @@ class DevTokenOut(BaseModel):
     token: str
     token_type: str = "bearer"
     expires_in_minutes: int
+
+
+class MembershipInviteIn(BaseModel):
+    firebase_uid: str = Field(min_length=1, max_length=255)
+    email: str | None = Field(default=None, max_length=320)
+    display_name: str | None = Field(default=None, max_length=255)
+    role: Literal["manager", "technician", "viewer"] = "technician"
+
+
+class MembershipStatusIn(BaseModel):
+    status: Literal["active", "revoked"]
 
 
 class EflAuditEventIn(BaseModel):

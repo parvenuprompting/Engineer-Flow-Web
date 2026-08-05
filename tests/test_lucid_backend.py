@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 import jwt
@@ -15,20 +16,29 @@ os.environ["DATABASE_URL"] = f"sqlite:///{TEST_DB}"
 os.environ["LUCID_ENABLE_DEV_AUTH"] = "true"
 
 from lucid_backend.config import get_settings
+from lucid_backend.database import SessionLocal
 from lucid_engineer_flow import app
+from lucid_backend.models import GarageMembership, MembershipRole, MembershipStatus, Party, PartyType, User
 
 
 settings = get_settings()
 
 
-def _mint_token(client: TestClient, *, party_type: str, party_id: str, scopes: list[str]) -> str:
+def _mint_token(
+    client: TestClient,
+    *,
+    party_type: str,
+    party_id: str,
+    scopes: list[str],
+    subject: str = "pytest",
+) -> str:
     resp = client.post(
         "/auth/dev-token",
         json={
             "party_type": party_type,
             "party_id": party_id,
             "scopes": scopes,
-            "subject": "pytest",
+            "subject": subject,
             "expires_in_minutes": 60,
         },
     )
@@ -215,9 +225,21 @@ def test_efl_case_and_diagnosis_persist_once() -> None:
         )
         headers = _headers(token)
 
-        case_resp = client.post("/cases", headers=headers, json={"vehicle_id": "VTG-001"})
+        case_resp = client.post(
+            "/cases",
+            headers=headers,
+            json={"vehicle_id": "VTG-001", "idempotency_key": "case-persist-test-key"},
+        )
         assert case_resp.status_code == 200, case_resp.text
         case_id = case_resp.json()["case_id"]
+        replay = client.post(
+            "/cases",
+            headers=headers,
+            json={"vehicle_id": "VTG-001", "idempotency_key": "case-persist-test-key"},
+        )
+        assert replay.status_code == 200
+        assert replay.json()["case_id"] == case_id
+        assert replay.json()["idempotent_replay"] is True
 
         diagnosis_payload = {
             "diagnosis_id": "diag-persist-test",
@@ -257,6 +279,181 @@ def test_efl_case_and_diagnosis_persist_once() -> None:
         )
         assert confirmed.status_code == 200, confirmed.text
         assert confirmed.json()["status"] == "confirmed"
+
+
+def test_membership_scope_blocks_cross_garage_diagnosis_reads() -> None:
+    with SessionLocal() as db:
+        second_garage = Party(id="garage-002", party_type=PartyType.GARAGE.value, name="Second Garage")
+        second_user = User(firebase_uid="second-garage-user", email="second@example.test")
+        db.add_all([second_garage, second_user])
+        db.flush()
+        db.add(
+            GarageMembership(
+                garage_party_id=second_garage.id,
+                user_id=second_user.id,
+                role=MembershipRole.OWNER.value,
+                status=MembershipStatus.ACTIVE.value,
+                invited_at=datetime.now(timezone.utc),
+            )
+        )
+        db.commit()
+
+    with TestClient(app) as client:
+        garage_one_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="ignored-party-id",
+            scopes=["diagnosis:read_local"],
+        )
+        case = client.post("/cases", headers=_headers(garage_one_token), json={"vehicle_id": "VTG-001"})
+        assert case.status_code == 200, case.text
+        case_id = case.json()["case_id"]
+        assert client.get(f"/cases/{case_id}", headers=_headers(garage_one_token)).status_code == 200
+        diagnosis = client.post(
+            "/diagnoses",
+            headers=_headers(garage_one_token),
+            json={
+                "diagnosis_id": "cross-garage-read-test",
+                "case_id": case_id,
+                "symptom_text": "Hydrauliek draait langzaam",
+                "response": {},
+            },
+        )
+        assert diagnosis.status_code == 200, diagnosis.text
+
+        second_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="garage-001",
+            scopes=["diagnosis:read_local"],
+            subject="second-garage-user",
+        )
+        assert client.get(f"/cases/{case_id}", headers=_headers(second_token)).status_code == 404
+        response = client.get("/diagnoses/cross-garage-read-test", headers=_headers(second_token))
+        assert response.status_code == 404
+
+        work_order = client.post(
+            "/werkbonnen",
+            headers=_headers(garage_one_token),
+            json={"voertuig_id": "VTG-001", "root_cause": "Test ownership"},
+        )
+        assert work_order.status_code == 200, work_order.text
+        work_order_id = work_order.json()["data"]["werkbon_id"]
+        cross_garage_mutation = client.post(
+            f"/werkbonnen/{work_order_id}/regels",
+            headers=_headers(second_token),
+            json={"omschrijving": "Unauthorized", "uren": 1, "uurtarief": 100},
+        )
+        assert cross_garage_mutation.status_code == 403
+
+
+def test_viewer_membership_cannot_mutate_cases() -> None:
+    with TestClient(app) as client:
+        owner_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="anything",
+            scopes=["diagnosis:read_local"],
+        )
+        invited = client.post(
+            "/garages/garage-001/memberships",
+            headers=_headers(owner_token),
+            json={"firebase_uid": "viewer-user", "role": "viewer"},
+        )
+        assert invited.status_code == 200, invited.text
+        membership_id = invited.json()["membership_id"]
+        activated = client.patch(
+            f"/garages/garage-001/memberships/{membership_id}",
+            headers=_headers(owner_token),
+            json={"status": "active"},
+        )
+        assert activated.status_code == 200, activated.text
+
+        viewer_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="garage-001",
+            scopes=["diagnosis:read_local"],
+            subject="viewer-user",
+        )
+        response = client.post("/cases", headers=_headers(viewer_token), json={"vehicle_id": "VTG-001"})
+        assert response.status_code == 403
+
+        revoked = client.patch(
+            f"/garages/garage-001/memberships/{membership_id}",
+            headers=_headers(owner_token),
+            json={"status": "revoked"},
+        )
+        assert revoked.status_code == 200
+        memberships = client.get("/garages/garage-001/memberships", headers=_headers(viewer_token))
+        assert memberships.status_code == 403
+
+
+def test_viewer_cannot_finalize_invoice() -> None:
+    with TestClient(app) as client:
+        owner_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="untrusted-party-id",
+            scopes=["diagnosis:read_local"],
+        )
+        viewer_invite = client.post(
+            "/garages/garage-001/memberships",
+            headers=_headers(owner_token),
+            json={"firebase_uid": "invoice-viewer", "role": "viewer"},
+        )
+        assert viewer_invite.status_code == 200, viewer_invite.text
+        membership_id = viewer_invite.json()["membership_id"]
+        assert client.patch(
+            f"/garages/garage-001/memberships/{membership_id}",
+            headers=_headers(owner_token),
+            json={"status": "active"},
+        ).status_code == 200
+
+        work_order = client.post(
+            "/werkbonnen",
+            headers=_headers(owner_token),
+            json={"voertuig_id": "VTG-001", "root_cause": "Invoice authorization test"},
+        )
+        assert work_order.status_code == 200, work_order.text
+        work_order_id = work_order.json()["data"]["werkbon_id"]
+        assert client.post(
+            f"/werkbonnen/{work_order_id}/regels",
+            headers=_headers(owner_token),
+            json={"omschrijving": "Arbeid", "uren": 1, "uurtarief": 100},
+        ).status_code == 200
+        assert client.post(
+            f"/werkbonnen/{work_order_id}/afronden",
+            headers=_headers(owner_token),
+        ).status_code == 200
+        invoice = client.post(
+            "/facturen",
+            headers=_headers(owner_token),
+            json={"werkbon_id": work_order_id, "idempotency_key": "invoice-idempotency-test"},
+        )
+        assert invoice.status_code == 200, invoice.text
+        invoice_id = invoice.json()["data"]["factuur_id"]
+        invoice_replay = client.post(
+            "/facturen",
+            headers=_headers(owner_token),
+            json={"werkbon_id": work_order_id, "idempotency_key": "invoice-idempotency-test"},
+        )
+        assert invoice_replay.status_code == 200
+        assert invoice_replay.json()["data"]["factuur_id"] == invoice_id
+        assert invoice_replay.json()["data"]["idempotent_replay"] is True
+
+        viewer_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="another-untrusted-party-id",
+            scopes=["diagnosis:read_local"],
+            subject="invoice-viewer",
+        )
+        response = client.post(
+            f"/facturen/{invoice_id}/finaliseren",
+            headers=_headers(viewer_token),
+        )
+        assert response.status_code == 403
 
 
 if TEST_DB.exists():

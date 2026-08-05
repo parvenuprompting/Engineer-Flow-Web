@@ -31,6 +31,19 @@ class PartyType(str, Enum):
     VERZEKERAAR = "verzekeraar"
 
 
+class MembershipRole(str, Enum):
+    OWNER = "owner"
+    MANAGER = "manager"
+    TECHNICIAN = "technician"
+    VIEWER = "viewer"
+
+
+class MembershipStatus(str, Enum):
+    INVITED = "invited"
+    ACTIVE = "active"
+    REVOKED = "revoked"
+
+
 class ClaimStatus(str, Enum):
     OPEN = "open"
     CLOSED = "closed"
@@ -65,6 +78,39 @@ class Party(Base):
     name: Mapped[str] = mapped_column(String(255))
     active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    firebase_uid: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    email: Mapped[str | None] = mapped_column(String(320), nullable=True, index=True)
+    display_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+
+
+class GarageMembership(Base):
+    __tablename__ = "garage_memberships"
+    __table_args__ = (
+        UniqueConstraint("garage_party_id", "user_id", name="uq_garage_membership_user"),
+        Index("ix_garage_memberships_user_status", "user_id", "status"),
+        Index("ix_garage_memberships_garage_status", "garage_party_id", "status"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    garage_party_id: Mapped[str] = mapped_column(ForeignKey("parties.id"), index=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    role: Mapped[str] = mapped_column(String(24), default=MembershipRole.TECHNICIAN.value, nullable=False)
+    status: Mapped[str] = mapped_column(String(24), default=MembershipStatus.INVITED.value, nullable=False)
+    invited_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    activated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    garage = relationship("Party")
+    user = relationship("User")
 
 
 class Vehicle(Base):
@@ -103,6 +149,7 @@ class EflCase(Base):
     __tablename__ = "efl_cases"
     __table_args__ = (
         Index("ix_efl_cases_garage_status", "garage_party_id", "status"),
+        UniqueConstraint("garage_party_id", "idempotency_key", name="uq_efl_case_idempotency"),
     )
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
@@ -114,6 +161,7 @@ class EflCase(Base):
     confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    idempotency_key: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     garage = relationship("Party")
 
@@ -286,6 +334,7 @@ class Werkbon(Base):
     root_cause: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[str] = mapped_column(String(24), default=WerkbonStatus.OPEN.value, nullable=False)
     aangemaakt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    idempotency_key: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
     afgerond_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
@@ -317,6 +366,7 @@ class Factuur(Base):
     totaal: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False, default=0)
     aangemaakt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
     gefinaliseerd_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    idempotency_key: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
 
 
 class GrootboekPost(Base):

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, ROUND_HALF_UP
 
-from sqlalchemy import func, select
+from sqlalchemy import func, select, text
 from sqlalchemy.orm import Session
 
 from .config import get_settings
@@ -17,12 +17,16 @@ from .models import (
     Factuur,
     FactuurStatus,
     FeedbackEvent,
+    GarageMembership,
     GarageSeenCode,
     GrootboekPost,
     ManufacturerBatchRecord,
     OwnerConsent,
     Party,
     PartyType,
+    MembershipRole,
+    MembershipStatus,
+    User,
     Vehicle,
     Werkbon,
     WerkbonRegel,
@@ -168,13 +172,16 @@ def close_claim(db: Session, claim: Claim) -> Claim:
     return claim
 
 
-def create_werkbon(db: Session, *, voertuig_id: str, garage_party_id: str, root_cause: str) -> Werkbon:
+def create_werkbon(
+    db: Session, *, voertuig_id: str, garage_party_id: str, root_cause: str, idempotency_key: str | None = None
+) -> Werkbon:
     werkbon = Werkbon(
         voertuig_id=voertuig_id,
         garage_party_id=garage_party_id,
         root_cause=root_cause,
         status=WerkbonStatus.OPEN.value,
         aangemaakt_at=utcnow(),
+        idempotency_key=idempotency_key,
     )
     db.add(werkbon)
     db.flush()
@@ -230,6 +237,10 @@ def afronden_werkbon(db: Session, werkbon: Werkbon) -> Werkbon:
 
 
 def _next_factuurnummer(db: Session, year: int) -> str:
+    if db.bind is not None and db.bind.dialect.name == "postgresql":
+        sequence_value = db.execute(text("SELECT nextval('factuur_number_seq')")).scalar_one()
+        return f"{year}-{int(sequence_value):04d}"
+
     prefix = f"{year}-"
     stmt = (
         select(Factuur.factuurnummer)
@@ -252,7 +263,9 @@ def get_factuur_by_werkbon(db: Session, werkbon_id: str) -> Factuur | None:
     return db.execute(stmt).scalar_one_or_none()
 
 
-def create_concept_factuur(db: Session, *, werkbon: Werkbon, garage_party_id: str) -> Factuur:
+def create_concept_factuur(
+    db: Session, *, werkbon: Werkbon, garage_party_id: str, idempotency_key: str | None = None
+) -> Factuur:
     subtotaal = bereken_werkbon_subtotaal(db, werkbon.id)
     btw = _money(subtotaal * BTW_RATE)
     totaal = _money(subtotaal + btw)
@@ -267,6 +280,7 @@ def create_concept_factuur(db: Session, *, werkbon: Werkbon, garage_party_id: st
         btw=float(btw),
         totaal=float(totaal),
         aangemaakt_at=utcnow(),
+        idempotency_key=idempotency_key,
     )
     db.add(factuur)
     db.flush()
@@ -521,6 +535,20 @@ def seed_demo_data(db: Session) -> None:
     manufacturer = Party(id="fabrikant-001", party_type=PartyType.FABRIKANT.value, name="Fabrikant Demo")
     db.add_all([garage, insurer, manufacturer])
     db.flush()
+
+    demo_user = User(firebase_uid="pytest", email="demo@example.test", display_name="Demo monteur")
+    db.add(demo_user)
+    db.flush()
+    db.add(
+        GarageMembership(
+            garage_party_id=garage.id,
+            user_id=demo_user.id,
+            role=MembershipRole.OWNER.value,
+            status=MembershipStatus.ACTIVE.value,
+            invited_at=utcnow(),
+            activated_at=utcnow(),
+        )
+    )
 
     vehicle_a = Vehicle(garage_party_id=garage.id, external_vehicle_ref="VTG-001", hash_salt_version=1)
     vehicle_b = Vehicle(garage_party_id=garage.id, external_vehicle_ref="VTG-002", hash_salt_version=1)

@@ -24,6 +24,10 @@ export function getLucidBackendUrl(): string | null {
   return url && url.length > 0 ? url.replace(/\/+$/, "") : null;
 }
 
+export function isLocalStoreEnabled(): boolean {
+  return process.env.NODE_ENV !== "production" && process.env.EFL_LOCAL_STORE_ENABLED !== "false";
+}
+
 export async function proxyToLucidBackend<T = unknown>(options: ProxyOptions): Promise<ProxyResult<T>> {
   const backendUrl = getLucidBackendUrl();
   if (!backendUrl) {

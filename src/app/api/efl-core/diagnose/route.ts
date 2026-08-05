@@ -3,7 +3,7 @@ import { runDeterministicDiagnosis } from "@/efl_core/engine";
 import { getEflHealthSnapshot } from "@/efl_core/health";
 import { createCaseRecord, getAuditStoreHealth, getCaseRecord, storeDiagnosisAuditRecord } from "../_store";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
-import { getLucidBackendUrl, proxyToLucidBackend } from "../_backend_proxy";
+import { getLucidBackendUrl, isLocalStoreEnabled, proxyToLucidBackend } from "../_backend_proxy";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -60,6 +60,13 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { detail: "symptom_text is verplicht (minimaal 3 tekens)" },
         { status: 400 }
+      );
+    }
+
+    if (!getLucidBackendUrl() && !isLocalStoreEnabled()) {
+      return NextResponse.json(
+        { code: "PERSISTENCE_UNAVAILABLE", detail: "Duurzame diagnoseopslag vereist een geconfigureerde backend." },
+        { status: 503 },
       );
     }
 

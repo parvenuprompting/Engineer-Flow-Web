@@ -6,6 +6,7 @@ import {
   isFactuurBalanced,
 } from "../../../_store";
 import { requireEflAuth } from "@/lib/server/firebase-admin";
+import { isLocalStoreEnabled } from "../../../_backend_proxy";
 
 export const runtime = "nodejs";
 
@@ -16,6 +17,12 @@ export async function POST(
   const authResult = await requireEflAuth(_req);
   if (authResult instanceof Response) return authResult;
   const auth = authResult;
+  if (!isLocalStoreEnabled()) {
+    return NextResponse.json(
+      { code: "PERSISTENCE_UNAVAILABLE", detail: "Factuurfinalisatie vereist een geconfigureerde backend." },
+      { status: 503 },
+    );
+  }
   const { factuurId } = await context.params;
   const factuur = getFactuurRecord(factuurId);
   if (!factuur) {

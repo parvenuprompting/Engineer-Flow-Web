@@ -480,28 +480,28 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [x] Firebase Admin configuratie documenteren.
 - [ ] Firebase Admin credentials configureren in staging.
 - [ ] Firebase Admin credentials configureren in productie.
-- [ ] Dev-auth deploymentmatig uitschakelen buiten development.
-- [ ] Private demo JWT keys uit productiepad verwijderen.
+- [x] Dev-auth deploymentmatig uitschakelen buiten development.
+- [x] Private demo JWT keys uit productiepad verwijderen.
 
 ### Garage en memberships
 
-- [ ] `users`-tabel/model toevoegen.
-- [ ] `garage_memberships`-tabel/model toevoegen.
-- [ ] Rollenmodellering toevoegen.
-- [ ] Firebase UID aan membership koppelen.
-- [ ] `garage_id` niet langer stil laten terugvallen naar `uid`.
-- [ ] Vehicle ownership aan garage membership koppelen.
-- [ ] Membership lifecycle bouwen: uitnodigen, activeren, intrekken.
-- [ ] Role checks per mutatie vastleggen.
+- [x] `users`-tabel/model toevoegen.
+- [x] `garage_memberships`-tabel/model toevoegen.
+- [x] Rollenmodellering toevoegen.
+- [x] Firebase UID aan membership koppelen.
+- [x] `garage_id` niet langer stil laten terugvallen naar `uid`.
+- [x] Vehicle ownership aan garage membership koppelen.
+- [x] Membership lifecycle bouwen: uitnodigen, activeren, intrekken.
+- [x] Role checks per mutatie vastleggen.
 
 ### Authorization tests
 
 - [x] Unauthenticated route tests.
 - [x] Garage ownership in bestaande FastAPI-domainflows.
-- [ ] Cross-garage case read test.
-- [ ] Cross-garage diagnosis read test.
-- [ ] Cross-garage work order mutation test.
-- [ ] Cross-role invoice mutation test.
+- [x] Cross-garage case read test.
+- [x] Cross-garage diagnosis read test.
+- [x] Cross-garage work order mutation test.
+- [x] Cross-role invoice mutation test.
 - [ ] Firebase Emulator rules test.
 
 ### Gate
@@ -524,25 +524,25 @@ Een bevestigde reparatie mag niet automatisch de kennisbank muteren. Eerst komt 
 - [x] Alembic-migraties toevoegen.
 - [x] Idempotency voor diagnoseopslag toevoegen.
 - [ ] Test migraties tegen PostgreSQL 16.
-- [ ] `Base.metadata.create_all()` uit production startup verwijderen.
-- [ ] Alleen Alembic gebruiken voor schema-evolutie.
-- [ ] Foreign keys en cascadebeleid expliciet vastleggen.
+- [x] `Base.metadata.create_all()` uit production startup verwijderen.
+- [x] Alleen Alembic gebruiken voor schema-evolutie.
+- [x] Foreign keys en cascadebeleid expliciet vastleggen.
 - [ ] Database indexes met realistische data evalueren.
 
 ### Transactionele writes
 
-- [ ] Case aanmaken transactioneel maken.
-- [ ] Diagnose en auditrecord atomair opslaan.
-- [ ] Failure-mode confirmation transactioneel maken.
-- [ ] Werkbonregel toevoegen transactioneel maken.
-- [ ] Factuurfinalisatie transactioneel maken.
+- [x] Case aanmaken transactioneel maken.
+- [x] Diagnose en auditrecord atomair opslaan.
+- [x] Failure-mode confirmation transactioneel maken.
+- [x] Werkbonregel toevoegen transactioneel maken.
+- [x] Factuurfinalisatie transactioneel maken.
 - [ ] Idempotency keys toevoegen aan alle muterende endpoints.
 - [ ] Concurrencytests toevoegen.
 
 ### Fallbacks
 
-- [ ] Local `Map`-store expliciet achter developmentflag zetten.
-- [ ] Productie laten falen als PostgreSQL niet beschikbaar is.
+- [x] Local `Map`-store expliciet achter developmentflag zetten.
+- [x] Productie laten falen als PostgreSQL niet beschikbaar is.
 - [ ] Geen lokale JSONL als primaire diagnoseopslag.
 - [ ] Firestore alleen voor expliciete legacy-migratie gebruiken.
 - [ ] Data-import en reconciliatie voor bestaande Firestore-diagnoses ontwerpen.
