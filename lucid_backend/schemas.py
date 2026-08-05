@@ -59,6 +59,16 @@ class EflCaseConfirmIn(BaseModel):
     failure_mode_id: str = Field(min_length=1, max_length=255)
 
 
+class EflDiagnosisMetadataIn(BaseModel):
+    title: str | None = Field(default=None, max_length=255)
+    vehicle_id: str | None = Field(default=None, max_length=255)
+    summary: dict | None = None
+    flow_steps: list[str] | None = None
+    status: str | None = Field(default=None, max_length=64)
+    confirmed_fix_id: str | None = Field(default=None, max_length=255)
+    service_flow: dict | None = None
+
+
 class WerkbonCreateIn(BaseModel):
     voertuig_id: str
     root_cause: str = Field(min_length=3)

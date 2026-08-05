@@ -10,6 +10,8 @@ import type {
     CaseResponse,
     DiagnoseRequest,
     DiagnoseResponse,
+    EflDiagnosisMetadata,
+    EflDiagnosisRecord,
     FactuurDetailResponseData,
     FactuurFinalizeResponseData,
     FactuurResponseData,
@@ -197,6 +199,30 @@ export async function confirmFix(caseId: string, failureModeId: string): Promise
     return requestJson<{ success: boolean }>(`/cases/${caseId}/confirm`, {
         method: 'POST',
         bodyObj: { failure_mode_id: failureModeId },
+    });
+}
+
+export async function listDiagnoses(): Promise<ApiResponse<{ diagnoses: EflDiagnosisRecord[] }>> {
+    return requestJson<{ diagnoses: EflDiagnosisRecord[] }>('/diagnoses', { method: 'GET' });
+}
+
+export async function getDiagnosis(diagnosisId: string): Promise<ApiResponse<EflDiagnosisRecord>> {
+    return requestJson<EflDiagnosisRecord>(`/diagnoses/${encodeURIComponent(diagnosisId)}`, { method: 'GET' });
+}
+
+export async function updateDiagnosis(
+    diagnosisId: string,
+    metadata: EflDiagnosisMetadata
+): Promise<ApiResponse<EflDiagnosisRecord>> {
+    return requestJson<EflDiagnosisRecord>(`/diagnoses/${encodeURIComponent(diagnosisId)}`, {
+        method: 'PATCH',
+        bodyObj: metadata,
+    });
+}
+
+export async function deleteDiagnosis(diagnosisId: string): Promise<ApiResponse<{ deleted: boolean }>> {
+    return requestJson<{ deleted: boolean }>(`/diagnoses/${encodeURIComponent(diagnosisId)}`, {
+        method: 'DELETE',
     });
 }
 

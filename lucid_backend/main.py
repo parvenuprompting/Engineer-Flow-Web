@@ -43,6 +43,7 @@ from .schemas import (
     DiagnosisEventIn,
     EflCaseConfirmIn,
     EflCaseCreateIn,
+    EflDiagnosisMetadataIn,
     EflDiagnosisPersistIn,
     EflAuditSyncIn,
     FactuurCreateIn,
@@ -286,6 +287,96 @@ def create_app() -> FastAPI:
             "status": "persisted",
             "created_at": diagnosis.created_at,
         }
+
+    def _serialize_efl_diagnosis(diagnosis: EflDiagnosis) -> dict:
+        return {
+            "diagnosis_id": diagnosis.diagnosis_id,
+            "case_id": diagnosis.case_id,
+            "symptom_text": diagnosis.symptom_text,
+            "created_at": diagnosis.created_at,
+            "engine_version": diagnosis.engine_version,
+            "response": diagnosis.response_payload,
+            "metadata": diagnosis.case_metadata,
+        }
+
+    @app.get("/diagnoses")
+    def efl_diagnosis_list(
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        _assert_garage_write_access(auth)
+        rate_limiter.hit(auth.party_id, "/diagnoses")
+        stmt = (
+            select(EflDiagnosis)
+            .where(EflDiagnosis.garage_party_id == auth.party_id)
+            .order_by(EflDiagnosis.created_at.desc())
+            .limit(100)
+        )
+        diagnoses = db.execute(stmt).scalars().all()
+        return {"diagnoses": [_serialize_efl_diagnosis(diagnosis) for diagnosis in diagnoses]}
+
+    @app.get("/diagnoses/{diagnosis_id}")
+    def efl_diagnosis_detail(
+        diagnosis_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        _assert_garage_write_access(auth)
+        rate_limiter.hit(auth.party_id, "/diagnoses/{diagnosis_id}")
+        diagnosis = db.execute(
+            select(EflDiagnosis).where(
+                EflDiagnosis.diagnosis_id == diagnosis_id,
+                EflDiagnosis.garage_party_id == auth.party_id,
+            )
+        ).scalar_one_or_none()
+        if not diagnosis:
+            raise HTTPException(status_code=404, detail="Diagnose niet gevonden")
+        return _serialize_efl_diagnosis(diagnosis)
+
+    @app.patch("/diagnoses/{diagnosis_id}")
+    def efl_diagnosis_update(
+        diagnosis_id: str,
+        payload: EflDiagnosisMetadataIn,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        _assert_garage_write_access(auth)
+        rate_limiter.hit(auth.party_id, "/diagnoses/{diagnosis_id}")
+        diagnosis = db.execute(
+            select(EflDiagnosis).where(
+                EflDiagnosis.diagnosis_id == diagnosis_id,
+                EflDiagnosis.garage_party_id == auth.party_id,
+            )
+        ).scalar_one_or_none()
+        if not diagnosis:
+            raise HTTPException(status_code=404, detail="Diagnose niet gevonden")
+
+        updates = payload.model_dump(exclude_none=True)
+        diagnosis.case_metadata = {**diagnosis.case_metadata, **updates}
+        db.add(diagnosis)
+        db.commit()
+        db.refresh(diagnosis)
+        return _serialize_efl_diagnosis(diagnosis)
+
+    @app.delete("/diagnoses/{diagnosis_id}")
+    def efl_diagnosis_delete(
+        diagnosis_id: str,
+        auth: Annotated[AuthContext, Depends(get_auth_context)],
+        db: Session = Depends(get_db),
+    ) -> dict:
+        _assert_garage_write_access(auth)
+        rate_limiter.hit(auth.party_id, "/diagnoses/{diagnosis_id}")
+        diagnosis = db.execute(
+            select(EflDiagnosis).where(
+                EflDiagnosis.diagnosis_id == diagnosis_id,
+                EflDiagnosis.garage_party_id == auth.party_id,
+            )
+        ).scalar_one_or_none()
+        if not diagnosis:
+            raise HTTPException(status_code=404, detail="Diagnose niet gevonden")
+        db.delete(diagnosis)
+        db.commit()
+        return {"deleted": True, "diagnosis_id": diagnosis_id}
 
     @app.post("/auth/dev-token", response_model=DevTokenOut)
     def auth_dev_token(payload: DevTokenIn) -> DevTokenOut:

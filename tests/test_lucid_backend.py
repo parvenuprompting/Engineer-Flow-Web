@@ -234,6 +234,22 @@ def test_efl_case_and_diagnosis_persist_once() -> None:
         assert second.status_code == 200, second.text
         assert second.json()["status"] == "duplicate"
 
+        listed = client.get("/diagnoses", headers=headers)
+        assert listed.status_code == 200, listed.text
+        assert any(item["diagnosis_id"] == "diag-persist-test" for item in listed.json()["diagnoses"])
+
+        updated = client.patch(
+            "/diagnoses/diag-persist-test",
+            headers=headers,
+            json={"title": "Hydrauliek onder belasting", "status": "under_investigation"},
+        )
+        assert updated.status_code == 200, updated.text
+        assert updated.json()["metadata"]["title"] == "Hydrauliek onder belasting"
+
+        detail = client.get("/diagnoses/diag-persist-test", headers=headers)
+        assert detail.status_code == 200, detail.text
+        assert detail.json()["metadata"]["title"] == "Hydrauliek onder belasting"
+
         confirmed = client.post(
             f"/cases/{case_id}/confirm",
             headers=headers,

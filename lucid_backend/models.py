@@ -133,6 +133,7 @@ class EflDiagnosis(Base):
     symptom_text: Mapped[str] = mapped_column(Text, nullable=False)
     engine_version: Mapped[str | None] = mapped_column(String(128), nullable=True)
     response_payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+    case_metadata: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
     idempotency_key: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 

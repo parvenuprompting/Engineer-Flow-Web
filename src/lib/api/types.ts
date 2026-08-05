@@ -245,6 +245,26 @@ export interface DiagnoseResponse {
     };
 }
 
+export interface EflDiagnosisMetadata {
+    title?: string;
+    vehicle_id?: string;
+    summary?: Record<string, unknown>;
+    flow_steps?: string[];
+    status?: string;
+    confirmed_fix_id?: string;
+    service_flow?: Record<string, unknown>;
+}
+
+export interface EflDiagnosisRecord {
+    diagnosis_id: string;
+    case_id: string;
+    symptom_text: string;
+    created_at: string;
+    engine_version?: string | null;
+    response: DiagnoseResponse;
+    metadata: EflDiagnosisMetadata;
+}
+
 export interface ConstraintTraceEntry {
     id: string;
     stage:

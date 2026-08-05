@@ -71,10 +71,14 @@ import {
   afrondenWerkbon,
   createFactuur,
   createWerkbon,
+  deleteDiagnosis,
   finaliseerFactuur,
+  getDiagnosis,
   getFactuur,
+  updateDiagnosis,
 } from "@/lib/api/client";
 import type {
+  EflDiagnosisRecord,
   FactuurDetailResponseData,
   FactuurStatus,
   GrootboekPost,
@@ -170,7 +174,58 @@ export default function DiagnosisDetailPage() {
     error,
   } = useDoc<DiagnosisDocument>(diagnosisRef);
 
-  const diagnosis = diagnosisData as DiagnosisDocument | null;
+  const [apiDiagnosis, setApiDiagnosis] = useState<EflDiagnosisRecord | null>(null);
+  const [apiLoading, setApiLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user || !diagnosisId) return;
+    let active = true;
+    setApiLoading(true);
+    void getDiagnosis(diagnosisId).then((response) => {
+      if (!active) return;
+      if (response.data) setApiDiagnosis(response.data);
+      setApiLoading(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, [user, diagnosisId]);
+
+  const apiDiagnosisDocument = useMemo<DiagnosisDocument | null>(() => {
+    if (!apiDiagnosis) return null;
+    const response = apiDiagnosis.response;
+    const ranking = response.root_cause_ranking || response.candidates || [];
+    const failureModes = response.failure_modes || [];
+    const rootCauses = ranking.map((candidate) => {
+      const id = candidate.fo_id || candidate.id || "Onbekende oorzaak";
+      return failureModes.find((failureMode) => failureMode.id === id)?.description || id;
+    });
+    const metadata = apiDiagnosis.metadata;
+    return {
+      id: apiDiagnosis.diagnosis_id,
+      title: metadata.title || apiDiagnosis.symptom_text,
+      symptomText: apiDiagnosis.symptom_text,
+      summary: (metadata.summary as DiagnosisSummary | undefined) || {
+        symptom: apiDiagnosis.symptom_text,
+        probableCause: rootCauses[0] || "Onbekende oorzaak",
+        stepsTaken: [],
+        reliability: `${Math.round(response.confidence_score || 0)}%`,
+      },
+      rootCauses,
+      flowSteps: metadata.flow_steps || response.recommended_actions || [],
+      truckType: "Volvo FM/FH",
+      opbouwType: "Liebherr Mixer",
+      symptomCluster: response.symptom_cluster_name || response.symptom_cluster,
+      reliabilityScore: response.confidence_score || 0,
+      createdAt: apiDiagnosis.created_at,
+      diagnosisId: apiDiagnosis.diagnosis_id,
+      status: metadata.status || (metadata.confirmed_fix_id ? "resolved" : "under_investigation"),
+      vehicleId: metadata.vehicle_id,
+      serviceFlow: metadata.service_flow as DiagnosisFlowState | undefined,
+    };
+  }, [apiDiagnosis]);
+
+  const diagnosis = apiDiagnosisDocument || (diagnosisData as DiagnosisDocument | null);
   const flow = diagnosis?.serviceFlow ?? {};
 
   const [workflowBusy, setWorkflowBusy] = useState<string | null>(null);
@@ -222,6 +277,18 @@ export default function DiagnosisDetailPage() {
   };
 
   const saveFlowPatch = async (patch: Partial<DiagnosisFlowState>) => {
+    if (apiDiagnosis) {
+      const response = await updateDiagnosis(apiDiagnosis.diagnosis_id, {
+        vehicle_id: voertuigIdInput.trim(),
+        service_flow: {
+          ...(diagnosis?.serviceFlow ?? {}),
+          ...patch,
+        },
+      });
+      if (!response.data) throw new Error(response.error || "Kon workflowstatus niet opslaan.");
+      setApiDiagnosis(response.data);
+      return;
+    }
     if (!diagnosisRef) return;
     await updateDoc(diagnosisRef, {
       vehicleId: voertuigIdInput.trim(),
@@ -234,6 +301,16 @@ export default function DiagnosisDetailPage() {
   };
 
   const handleDelete = async () => {
+    if (apiDiagnosis) {
+      const response = await deleteDiagnosis(apiDiagnosis.diagnosis_id);
+      if (!response.data) {
+        setWorkflowError(response.error || "Kon diagnose niet verwijderen.");
+        return;
+      }
+      toast({ title: "Diagnose verwijderd", description: "De diagnose is uit het archief verwijderd." });
+      router.push("/my-diagnoses");
+      return;
+    }
     if (!diagnosisRef) return;
     deleteDocumentNonBlocking(diagnosisRef);
     toast({
@@ -244,14 +321,20 @@ export default function DiagnosisDetailPage() {
   };
 
   const handleMarkRepairConfirmed = async () => {
-    if (!diagnosisRef) return;
+    if (!diagnosisRef && !apiDiagnosis) return;
     try {
       setBusy("repair-confirm");
       setWorkflowError(null);
-      await updateDoc(diagnosisRef, {
-        status: "resolved",
-        resolvedAt: serverTimestamp(),
-      });
+      if (apiDiagnosis) {
+        const response = await updateDiagnosis(apiDiagnosis.diagnosis_id, { status: "resolved" });
+        if (!response.data) throw new Error(response.error || "Kon reparatiestatus niet opslaan.");
+        setApiDiagnosis(response.data);
+      } else {
+        await updateDoc(diagnosisRef!, {
+          status: "resolved",
+          resolvedAt: serverTimestamp(),
+        });
+      }
       await saveFlowPatch({ workflowState: "reparatie_bevestigd" });
       toast({
         title: "Reparatie bevestigd",
@@ -488,7 +571,7 @@ export default function DiagnosisDetailPage() {
     );
   };
 
-  if (isLoading || isUserLoading) {
+  if (isLoading || apiLoading || isUserLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />

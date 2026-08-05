@@ -55,7 +55,7 @@ import { getExpertChatResponse, getCaseTitle } from "@/app/actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { DiagnoseResponse, Message, FailureModeResponse } from "@/lib/api/types";
-import { confirmFix } from "@/lib/api/client";
+import { confirmFix, updateDiagnosis } from "@/lib/api/client";
 import { useUser, useFirestore } from "@/firebase";
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection, serverTimestamp } from "firebase/firestore";
@@ -405,7 +405,7 @@ export function DiagnosticResult({
     }
 
     setIsSaving(true);
-    const newDiagnosisId = diagnosisId || generateDiagnosisId();
+    const newDiagnosisId = diagnosisId || result.diagnosis_id || generateDiagnosisId();
     if (!diagnosisId) setDiagnosisId(newDiagnosisId);
 
     // Create the summary object
@@ -452,6 +452,28 @@ export function DiagnosticResult({
     };
 
     try {
+      const durableResponse = await updateDiagnosis(newDiagnosisId, {
+        title: diagnosisData.title,
+        summary,
+        flow_steps: diagnosisData.flowSteps,
+        status: diagnosisData.status,
+        confirmed_fix_id: diagnosisData.confirmedFixId || undefined,
+      });
+
+      if (durableResponse.data) {
+        toast({
+          title: "Succesvol opgeslagen",
+          description: "De diagnose is toegevoegd aan uw duurzame archief.",
+        });
+        setIsSaved(true);
+        setIsSaving(false);
+        return;
+      }
+
+      // Keep the Firestore path as a local compatibility fallback until backend setup is active.
+      if (!firestore) {
+        throw new Error(durableResponse.error || "Kon diagnose niet duurzaam opslaan.");
+      }
       const diagnosesCol = collection(firestore, `diagnoses`, user.uid, 'diagnoses');
       addDocumentNonBlocking(diagnosesCol, diagnosisData).then(() => {
         toast({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -17,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { listDiagnoses } from '@/lib/api/client';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
@@ -45,6 +46,8 @@ export default function MyDiagnosesPage() {
   const router = useRouter();
   const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
+  const [apiDiagnoses, setApiDiagnoses] = useState<any[] | null>(null);
+  const [apiLoading, setApiLoading] = useState(false);
 
   const diagnosesQuery = useMemoFirebase(() => {
     if (!user) return null;
@@ -59,12 +62,44 @@ export default function MyDiagnosesPage() {
   } = useCollection<any>(diagnosesQuery);
 
   useEffect(() => {
+    if (!user) {
+      setApiDiagnoses(null);
+      return;
+    }
+
+    let active = true;
+    setApiLoading(true);
+    void listDiagnoses().then((response) => {
+      if (!active) return;
+      if (response.data) {
+        setApiDiagnoses(response.data.diagnoses.map((item) => ({
+          id: item.diagnosis_id,
+          diagnosisId: item.diagnosis_id,
+          title: item.metadata.title || item.symptom_text,
+          symptomText: item.symptom_text,
+          createdAt: item.created_at,
+          reliabilityScore: item.response.confidence_score || 0,
+          status: item.metadata.status || (item.metadata.confirmed_fix_id ? 'resolved' : 'under_investigation'),
+          caseId: item.case_id,
+        })));
+      }
+      setApiLoading(false);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [user]);
+
+  useEffect(() => {
     if (!isUserLoading && !user) {
       router.push('/login');
     }
   }, [isUserLoading, user, router]);
 
-  if (isLoading || isUserLoading) {
+  const displayedDiagnoses = apiDiagnoses ?? diagnoses;
+
+  if (isLoading || isUserLoading || apiLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -104,7 +139,7 @@ export default function MyDiagnosesPage() {
             </Alert>
           )}
 
-          {diagnoses && diagnoses.length > 0 ? (
+          {displayedDiagnoses && displayedDiagnoses.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -116,10 +151,12 @@ export default function MyDiagnosesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {diagnoses.map((diag) => (
-                  <TableRow key={diag.id}>
+                {displayedDiagnoses.map((diag) => (
+                  <TableRow key={diag.id || diag.diagnosisId}>
                     <TableCell>
-                      {diag.createdAt?.toDate().toLocaleDateString('nl-NL')}
+                      {typeof diag.createdAt === 'string'
+                        ? new Date(diag.createdAt).toLocaleDateString('nl-NL')
+                        : diag.createdAt?.toDate().toLocaleDateString('nl-NL')}
                     </TableCell>
                     <TableCell className="font-medium max-w-sm truncate">
                       {diag.title || diag.symptomText}
@@ -154,7 +191,7 @@ export default function MyDiagnosesPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => router.push(`/my-diagnoses/${diag.id}`)}
+                        onClick={() => router.push(`/my-diagnoses/${diag.diagnosisId || diag.id}`)}
                       >
                         <Wrench className="mr-2 h-3 w-3" />
                         Werkbonnen
