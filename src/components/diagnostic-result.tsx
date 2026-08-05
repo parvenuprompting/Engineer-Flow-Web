@@ -133,6 +133,7 @@ export function DiagnosticResult({
     clarification_questions = [],
     knowledge_gap_reason,
     audit_sync_state = "synced",
+    persistence_state = "local_development",
   } = result || {};
 
   // Map technical subdomain IDs to human-readable Dutch names
@@ -184,6 +185,10 @@ export function DiagnosticResult({
       className: "bg-red-500/15 text-red-200 border-red-500/40",
     },
   };
+
+  const persistenceCopy = persistence_state === "durable"
+    ? { label: "Diagnose duurzaam opgeslagen", className: "bg-green-500/15 text-green-300 border-green-500/40" }
+    : { label: "Lokale development-opslag", className: "bg-yellow-500/15 text-yellow-200 border-yellow-500/40" };
 
   // Confidence quality mapping
   const getConfidenceQuality = (score: number) => {
@@ -661,6 +666,9 @@ export function DiagnosticResult({
             <Badge variant="outline" className={auditSyncCopy[audit_sync_state]?.className}>
               <ShieldCheck className="mr-1.5 h-3 w-3" />
               {auditSyncCopy[audit_sync_state]?.label ?? "Auditstatus onbekend"}
+            </Badge>
+            <Badge variant="outline" className={persistenceCopy.className}>
+              {persistenceCopy.label}
             </Badge>
             <AlertDialog>
               <AlertDialogTrigger asChild>

@@ -120,6 +120,7 @@ export async function POST(req: Request) {
       {
         ...result,
         audit_sync_state: "synced",
+        persistence_state: persistence.handled ? "durable" : "local_development",
         audit_record_hash: storedAuditRecord.record_hash,
         previous_record_hash: storedAuditRecord.previous_record_hash ?? null,
       },

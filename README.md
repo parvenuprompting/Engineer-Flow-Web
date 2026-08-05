@@ -1,5 +1,11 @@
 # Engineer Flow 2026
 
+[![Status](https://img.shields.io/badge/status-active%20development-orange.svg)](https://github.com/parvenuprompting/Engineer-Flow-2027)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)](https://www.postgresql.org/)
+[![Last commit](https://img.shields.io/github/last-commit/parvenuprompting/Engineer-Flow-2027)](https://github.com/parvenuprompting/Engineer-Flow-2027/commits/main)
+
 Engineer Flow is een diagnoseplatform voor zware voertuigen en mixer-opbouwen. De actieve app-flow gebruikt nu een **deterministische TypeScript-kern** voor symptoommapping, constraint-handhaving, failure-mode scoring, guided flows en audit trail.
 
 Belangrijk:
@@ -9,6 +15,8 @@ Belangrijk:
 - **Elke run levert DDS-output + audit trail**
 
 De repo bevat daarnaast nog de oudere LUCID/FastAPI-backend en enkele AI-hulppaden, maar de actieve diagnoseflow in de Next.js-app loopt via `src/efl_core`.
+
+> **Ontwikkelstatus:** de kernflow en server-authenticatie zijn actief in ontwikkeling. Cases en diagnoses ondersteunen duurzame PostgreSQL-opslag via de FastAPI-backend; zonder backendconfiguratie blijft alleen de development-opslag beschikbaar.
 
 ## Inhoud
 - [Wat Dit Project Doet](#wat-dit-project-doet)

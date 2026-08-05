@@ -97,6 +97,7 @@ export interface DiagnoseResponse {
         logic_rules: Array<ConstraintTraceEntry>;
     };
     audit_sync_state?: 'synced' | 'buffered_offline' | 'sync_failed';
+    persistence_state?: 'durable' | 'local_development';
     audit_record_hash?: string;
     previous_record_hash?: string | null;
     failure_modes?: FailureModeResponse[];
