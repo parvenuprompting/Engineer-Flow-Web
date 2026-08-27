@@ -10,9 +10,9 @@ export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
 const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
     ({ className, variant = 'default', blur = 'md', elevation = 2, children, ...props }, ref) => {
         const variantStyles = {
-            default: 'bg-card/80 border-border/50',
-            premium: 'bg-gradient-to-br from-card/90 to-card/70 border-primary/20',
-            subtle: 'bg-card/60 border-border/30',
+            default: 'bg-card border-border',
+            premium: 'bg-card border-primary/20',
+            subtle: 'bg-card/70 border-border/40',
         };
 
         const blurStyles = {
@@ -32,8 +32,8 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
             <div
                 ref={ref}
                 className={cn(
-                    'rounded-lg border transition-all duration-300',
-                    'hover:shadow-glass-lg hover:scale-[1.01]',
+                    'rounded-lg border transition-shadow duration-300',
+                    'hover:shadow-glass-lg',
                     variantStyles[variant],
                     blurStyles[blur],
                     elevationStyles[elevation],

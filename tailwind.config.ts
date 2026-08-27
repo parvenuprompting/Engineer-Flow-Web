@@ -61,6 +61,23 @@ export default {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
+        },
+        industrial: {
+          amber: 'hsl(var(--industrial-amber))',
+          steel: 'hsl(var(--industrial-steel))',
+          blue: 'hsl(var(--industrial-blue))',
+        },
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',
@@ -90,13 +107,13 @@ export default {
         'container': '1440px',
       },
       boxShadow: {
-        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
-        'glass-lg': '0 12px 48px 0 rgba(31, 38, 135, 0.2)',
+        'glass': '0 4px 16px 0 rgba(15, 30, 50, 0.10)',
+        'glass-lg': '0 8px 32px 0 rgba(15, 30, 50, 0.16)',
         'elevation-1': '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.06)',
         'elevation-2': '0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06)',
         'elevation-3': '0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05)',
         'elevation-4': '0 20px 25px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.04)',
-        'glow-primary': '0 0 20px rgba(99, 102, 241, 0.4)',
+        'glow-primary': '0 0 20px rgba(14, 165, 233, 0.4)',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -125,8 +142,8 @@ export default {
           '100%': { backgroundPosition: '200% 0' },
         },
         'pulse-glow': {
-          '0%, 100%': { boxShadow: '0 0 5px rgba(99, 102, 241, 0.5)' },
-          '50%': { boxShadow: '0 0 20px rgba(99, 102, 241, 0.8)' },
+          '0%, 100%': { boxShadow: '0 0 5px rgba(14, 165, 233, 0.5)' },
+          '50%': { boxShadow: '0 0 20px rgba(14, 165, 233, 0.8)' },
         },
         'slide-in-right': {
           '0%': { transform: 'translateX(100%)', opacity: '0' },

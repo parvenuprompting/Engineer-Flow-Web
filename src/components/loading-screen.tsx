@@ -18,11 +18,8 @@ export function LoadingScreen() {
   }, []);
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-cover bg-center"
-      style={{ backgroundImage: "url('/background.png')" }}
-    >
-      <div className="fixed inset-0 z-10 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm text-foreground">
+    <div className="fixed inset-0 z-50 bg-background">
+      <div className="fixed inset-0 z-10 flex flex-col items-center justify-center bg-background text-foreground">
         <div className="flex flex-col items-center gap-6 text-center">
           <div className="relative">
             <div className="absolute -top-4 -right-4">
@@ -33,7 +30,7 @@ export function LoadingScreen() {
             </div>
           </div>
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold">Engineer Flow</h1>
+            <h1 className="text-3xl font-bold font-headline">Engineer Flow</h1>
             <p className="text-muted-foreground">
               Intelligente Diagnostiek Platform
             </p>

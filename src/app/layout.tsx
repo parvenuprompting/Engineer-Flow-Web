@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import Image from 'next/image';
 import { FirebaseClientProvider } from '@/firebase';
 import { AnimatedBackground } from '@/components/ui/animated-background';
+import { ThemeProvider } from 'next-themes';
 
 export const metadata: Metadata = {
   title: 'Engineer Flow',
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="nl" className="dark" data-scroll-behavior="smooth">
+    <html lang="nl" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,16 +25,18 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased text-foreground flex flex-col min-h-screen">
-        <AnimatedBackground />
-        <FirebaseClientProvider>
-          <main className="flex-grow">
-            {children}
-          </main>
-          <footer className="py-4 text-center text-xs text-muted-foreground">
-            © Engineer Flow
-          </footer>
-          <Toaster />
-        </FirebaseClientProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+          <AnimatedBackground />
+          <FirebaseClientProvider>
+            <main className="flex-grow">
+              {children}
+            </main>
+            <footer className="py-4 text-center text-xs text-muted-foreground">
+              © Engineer Flow
+            </footer>
+            <Toaster />
+          </FirebaseClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,30 +1,20 @@
-"use client";
-
-import React from 'react';
-import Image from 'next/image';
+'use client';
 
 export function AnimatedBackground() {
-    return (
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-            {/* The Animated Image Container */}
-            <div className="absolute inset-[-10%] w-[120%] h-[120%] animate-ken-burns">
-                <Image
-                    src="/background.png"
-                    alt="Background"
-                    fill
-                    priority
-                    className="object-cover opacity-100"
-                />
-            </div>
+  return (
+    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+      {/* Machined blueprint grid */}
+      <div className="absolute inset-0 bg-blueprint-grid opacity-[0.35] dark:opacity-25" />
 
-            {/* Light Mode Overlay (10% more background visibility) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/70 to-white/65 dark:hidden" />
+      {/* Steel gradient wash for legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background" />
 
-            {/* Dark Mode Overlay (10% more background visibility) */}
-            <div className="absolute inset-0 hidden dark:block bg-gradient-to-b from-slate-950/80 via-slate-900/75 to-slate-950/80" />
+      {/* Subtle steel-cyan glow, top */}
+      <div className="absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute top-1/3 -right-24 h-80 w-80 rounded-full bg-accent/5 blur-3xl" />
 
-            {/* Additional Grain/Vignette for depth */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.1)_100%)] pointer-events-none" />
-        </div>
-    );
+      {/* Vignette for depth */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.08)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.25)_100%)]" />
+    </div>
+  );
 }

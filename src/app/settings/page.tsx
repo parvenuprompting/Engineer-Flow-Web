@@ -2,8 +2,9 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,8 @@ import {
   Star,
   Users,
   Layers,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -46,6 +49,10 @@ const navItems: NavItem[] = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account");
+  const { setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -187,7 +194,34 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {activeTab !== "account" && (
+          {activeTab === "appearance" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Uiterlijk</CardTitle>
+                <CardDescription>Kies het kleurenthema van Engineer Flow.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex gap-3">
+                  <Button
+                    variant={mounted && resolvedTheme === "light" ? "default" : "outline"}
+                    onClick={() => setTheme("light")}
+                  >
+                    <Sun className="mr-2 h-4 w-4" />
+                    Licht
+                  </Button>
+                  <Button
+                    variant={mounted && resolvedTheme === "dark" ? "default" : "outline"}
+                    onClick={() => setTheme("dark")}
+                  >
+                    <Moon className="mr-2 h-4 w-4" />
+                    Donker
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {activeTab !== "account" && activeTab !== "appearance" && (
             <Card>
                 <CardHeader>
                     <CardTitle className="capitalize">{activeTab}</CardTitle>

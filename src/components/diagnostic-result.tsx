@@ -195,9 +195,9 @@ export function DiagnosticResult({
 
   // Confidence quality mapping
   const getConfidenceQuality = (score: number) => {
-    if (score >= 0.7) return { label: 'Sterke Match', color: 'bg-green-500/90 text-white', borderColor: 'border-green-500' };
-    if (score >= 0.4) return { label: 'Gemiddelde Match', color: 'bg-yellow-500/90 text-white', borderColor: 'border-yellow-500' };
-    return { label: 'Lage Match', color: 'bg-orange-500/90 text-white', borderColor: 'border-orange-500' };
+    if (score >= 0.7) return { label: 'Sterke Match', color: 'bg-success text-success-foreground', borderColor: 'border-success' };
+    if (score >= 0.4) return { label: 'Gemiddelde Match', color: 'bg-warning text-warning-foreground', borderColor: 'border-warning' };
+    return { label: 'Lage Match', color: 'bg-destructive text-destructive-foreground', borderColor: 'border-destructive' };
   };
 
   const [isSaved, setIsSaved] = useState(false);

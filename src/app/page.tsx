@@ -37,6 +37,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useUser, useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -306,15 +307,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background/80 text-foreground animate-in fade-in duration-500">
-      <header className="p-4 border-b bg-card/80 backdrop-blur-sm sticky top-0 z-20">
-        <div className="container mx-auto flex items-center justify-between gap-3">
+      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-20">
+        <div className="h-1 hazard-stripe" />
+        <div className="p-4 container mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Link href="/" className="cursor-pointer" title="Naar home">
               <Image src="/icon.png" alt="Engineer Flow Logo" width={40} height={40} className="h-10 w-10" />
             </Link>
             <h1 className="text-2xl font-bold font-headline">ENGINEER FLOW</h1>
           </div>
-          <div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             {user ? (
               <Link href="/my-diagnoses" passHref>
                 <Button variant="outline">
@@ -503,7 +506,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-4">
             <Link href="/diagnose" passHref>
-              <Button size="lg" className="w-full h-24 text-lg bg-green-600 hover:bg-green-700">
+              <Button size="lg" className="w-full h-24 text-lg bg-primary hover:bg-primary/90 text-primary-foreground">
                 <BrainCircuit className="mr-4 h-8 w-8" />
                 Nieuwe Diagnose
               </Button>
