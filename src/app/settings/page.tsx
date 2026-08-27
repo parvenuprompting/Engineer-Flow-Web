@@ -97,27 +97,27 @@ export default function SettingsPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">Naam</Label>
-                      <Input id="name" defaultValue="Jan Janssen" />
+                      <Input id="name" placeholder="Uw naam" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">E-mail</Label>
-                      <Input id="email" type="email" defaultValue="jan.janssen@example.com" />
+                      <Input id="email" type="email" placeholder="naam@bedrijf.nl" />
                     </div>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor="company">Bedrijf</Label>
-                        <Input id="company" defaultValue="Automotive Solutions BV" />
+                        <Input id="company" placeholder="Bedrijfsnaam" />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="role">Rol</Label>
-                        <Input id="role" defaultValue="Lead Technician" />
+                        <Input id="role" placeholder="Functie" />
                     </div>
                   </div>
                   <Separator />
                     <div>
                         <h3 className="font-semibold mb-2">Wachtwoord wijzigen</h3>
-                        <Button variant="outline">
+                        <Button variant="outline" disabled>
                             <KeyRound className="mr-2"/>
                             Wachtwoord instellen
                         </Button>
@@ -175,14 +175,14 @@ export default function SettingsPage() {
 
                   <div className="flex flex-wrap justify-between items-center gap-4">
                     <p className="text-sm text-muted-foreground">Automatische verlenging op 31 december 2025</p>
-                    <Button variant="outline" size="sm">Uitbreiding Aanvragen</Button>
+                    <Button variant="outline" size="sm" disabled>Uitbreiding Aanvragen</Button>
                   </div>
                 </CardContent>
               </Card>
 
               <div className="flex justify-end gap-2">
-                <Button variant="ghost">Annuleren</Button>
-                <Button>Opslaan</Button>
+                <Button variant="ghost" disabled>Annuleren</Button>
+                <Button disabled>Opslaan</Button>
               </div>
             </div>
           )}

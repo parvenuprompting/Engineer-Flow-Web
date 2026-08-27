@@ -107,7 +107,9 @@ async function requestJson<T>(
 export async function diagnose(
     request: DiagnoseRequest
 ): Promise<ApiResponse<DiagnoseResponse>> {
-    console.log('Sending Diagnosis Request:', request);
+    if (process.env.NODE_ENV !== 'production') {
+        console.log('Sending Diagnosis Request:', { symptom_text: request.symptom_text });
+    }
     const requestPayload = {
         ...request,
         case_id: request.case_id,
@@ -171,8 +173,8 @@ export async function diagnose(
         }
     }
 
-    if (response.data) {
-        console.log('Received Diagnosis Response:', response.data);
+    if (process.env.NODE_ENV !== 'production' && response.data) {
+        console.log('Received Diagnosis Response:', { diagnosis_id: response.data.diagnosis_id });
     }
     return response;
 }
@@ -195,7 +197,9 @@ export async function healthCheck(): Promise<boolean> {
  * Creates a new diagnostic case for a vehicle
  */
 export async function createCase(vehicleId: string): Promise<ApiResponse<CaseResponse>> {
-    console.log('Creating Case for Vehicle:', vehicleId);
+    if (process.env.NODE_ENV !== 'production') {
+        console.log('Creating Case for Vehicle:', vehicleId);
+    }
     const idempotencyKey = createIdempotencyKey();
     return requestJson<CaseResponse>('/cases', {
         method: 'POST',
@@ -208,7 +212,9 @@ export async function createCase(vehicleId: string): Promise<ApiResponse<CaseRes
  * Confirms the actual fix for a diagnostic case
  */
 export async function confirmFix(caseId: string, failureModeId: string): Promise<ApiResponse<{ success: boolean }>> {
-    console.log(`Confirming Fix: Case ${caseId}, FailureMode ${failureModeId}`);
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(`Confirming Fix: Case ${caseId}, FailureMode ${failureModeId}`);
+    }
     return requestJson<{ success: boolean }>(`/cases/${caseId}/confirm`, {
         method: 'POST',
         retryable: true,

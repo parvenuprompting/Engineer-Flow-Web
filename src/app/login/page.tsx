@@ -25,8 +25,6 @@ import { Loader2, LogIn, UserPlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth, useUser } from '@/firebase';
 import { initiateEmailSignIn, initiateEmailSignUp, initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
-import { useToast } from '@/hooks/use-toast';
-import { onAuthStateChanged } from 'firebase/auth';
 import type { FirebaseError } from '@firebase/util';
 
 const formSchema = z.object({
@@ -41,7 +39,6 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const auth = useAuth();
   const router = useRouter();
-  const { toast } = useToast();
   const { user } = useUser();
 
   useEffect(() => {
@@ -50,24 +47,6 @@ export default function LoginPage() {
       router.push('/');
     }
   }, [user, router]);
-  
-  // Listen for auth state changes to handle post-login/signup redirection
-  useEffect(() => {
-    if (!auth) return;
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        toast({
-          title: 'Succesvol ingelogd',
-          description: `Welkom ${user.email || 'terug'}!`,
-        });
-        router.push('/');
-      }
-    }, (error) => {
-        setError(error.message);
-    });
-
-    return () => unsubscribe();
-  }, [auth, router, toast]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,7 +55,7 @@ export default function LoginPage() {
       password: '',
     },
   });
-  
+
   const handleAuthError = (e: FirebaseError) => {
     switch (e.code) {
         case 'auth/invalid-credential':
@@ -92,13 +71,12 @@ export default function LoginPage() {
           setError(e.message || 'Er is een onbekende fout opgetreden.');
           break;
       }
-  }
+  };
 
-
-  const handleAction = (action: 'signIn' | 'signUp' | 'anonymous') => {
+  const submitCredentials = (action: 'signIn' | 'signUp') => {
     if (!auth) {
-        setError("Authenticatie-service is niet beschikbaar.");
-        return;
+      setError("Authenticatie-service is niet beschikbaar.");
+      return;
     }
     startTransition(() => {
       setError(null);
@@ -108,9 +86,21 @@ export default function LoginPage() {
         initiateEmailSignIn(auth, email, password, handleAuthError);
       } else if (action === 'signUp') {
         initiateEmailSignUp(auth, email, password, handleAuthError);
-      } else if (action === 'anonymous') {
-        initiateAnonymousSignIn(auth, handleAuthError);
       }
+    });
+  };
+
+  const onValidSubmit = (action: 'signIn' | 'signUp') =>
+    form.handleSubmit(() => submitCredentials(action));
+
+  const handleAnonymous = () => {
+    if (!auth) {
+      setError("Authenticatie-service is niet beschikbaar.");
+      return;
+    }
+    startTransition(() => {
+      setError(null);
+      initiateAnonymousSignIn(auth, handleAuthError);
     });
   };
 
@@ -125,7 +115,7 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form className="space-y-4">
+            <form onSubmit={onValidSubmit('signIn')} className="space-y-4" noValidate>
               <FormField
                 control={form.control}
                 name="email"
@@ -136,6 +126,7 @@ export default function LoginPage() {
                       <Input
                         type="email"
                         placeholder="monteur@garage.nl"
+                        autoComplete="email"
                         {...field}
                       />
                     </FormControl>
@@ -150,38 +141,39 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Wachtwoord</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input type="password" placeholder="••••••••" autoComplete="current-password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {error && <p className="text-sm text-destructive">{error}</p>}
+
+              <div className="space-y-2 pt-2">
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  className="w-full"
+                >
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Inloggen
+                </Button>
+                <Button
+                  type="button"
+                  onClick={onValidSubmit('signUp')}
+                  disabled={isPending}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Registreren
+                </Button>
+              </div>
             </form>
           </Form>
-
-          {error && <p className="text-sm text-destructive mt-4">{error}</p>}
-
-          <div className="space-y-2 mt-6">
-            <Button
-              onClick={() => handleAction('signIn')}
-              disabled={isPending}
-              className="w-full"
-            >
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              <LogIn className="mr-2 h-4 w-4" />
-              Inloggen
-            </Button>
-            <Button
-              onClick={() => handleAction('signUp')}
-              disabled={isPending}
-              variant="secondary"
-              className="w-full"
-            >
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              <UserPlus className="mr-2 h-4 w-4" />
-              Registreren
-            </Button>
-          </div>
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
@@ -195,7 +187,7 @@ export default function LoginPage() {
           </div>
 
           <Button
-            onClick={() => handleAction('anonymous')}
+            onClick={handleAnonymous}
             disabled={isPending}
             variant="outline"
             className="w-full"

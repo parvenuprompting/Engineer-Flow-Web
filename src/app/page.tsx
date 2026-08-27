@@ -25,7 +25,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { LoadingScreen } from "@/components/loading-screen";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useUser, useCollection, useFirestore, useMemoFirebase } from "@/firebase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -245,22 +255,7 @@ export default function Home() {
     const [openCase, setOpenCase] = useState<any>(null);
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [newTitle, setNewTitle] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
     const { user } = useUser();
-
-    useEffect(() => {
-        const hasLoadedBefore = sessionStorage.getItem('appHasLoaded');
-        if (!hasLoadedBefore) {
-            const timer = setTimeout(() => {
-                setIsLoading(false);
-                sessionStorage.setItem('appHasLoaded', 'true');
-            }, 3750);
-            return () => clearTimeout(timer);
-        } else {
-            setIsLoading(false);
-        }
-    }, []);
-
 
     useEffect(() => {
         try {
@@ -309,18 +304,14 @@ export default function Home() {
       router.push(`/diagnose?symptom=${encodeURIComponent(symptom)}`);
     };
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
   return (
     <div className="min-h-screen bg-background/80 text-foreground animate-in fade-in duration-500">
       <header className="p-4 border-b bg-card/80 backdrop-blur-sm sticky top-0 z-20">
         <div className="container mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <button onClick={handleResetApp} className="cursor-pointer" title="Reset Applicatie">
+            <Link href="/" className="cursor-pointer" title="Naar home">
               <Image src="/icon.png" alt="Engineer Flow Logo" width={40} height={40} className="h-10 w-10" />
-            </button>
+            </Link>
             <h1 className="text-2xl font-bold font-headline">ENGINEER FLOW</h1>
           </div>
           <div>
@@ -608,6 +599,25 @@ export default function Home() {
                   Instellingen
                 </Button>
               </Link>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost">
+                    Reset applicatie
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Applicatie resetten?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Dit verwijdert de lokale open case en chatgeschiedenis en laadt de pagina opnieuw.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annuleren</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleResetApp}>Resetten</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
 
           </div>

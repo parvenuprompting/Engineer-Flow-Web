@@ -48,8 +48,21 @@ export default function MyDiagnosesPage() {
   const [clusterFilter, setClusterFilter] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [debouncedCluster, setDebouncedCluster] = useState(clusterFilter);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+
+  // Debounce vrije-tekstvelden om een API-call per toetsaanslag te voorkomen.
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedCluster(clusterFilter), 300);
+    return () => clearTimeout(timer);
+  }, [clusterFilter]);
 
   const loadDiagnoses = (nextOffset = offset) => {
     if (!user) {
@@ -60,7 +73,7 @@ export default function MyDiagnosesPage() {
     let active = true;
     setApiLoading(true);
     setApiError(null);
-    void listDiagnoses({ offset: nextOffset, limit: 25, query: search || undefined, status: statusFilter || undefined, cluster: clusterFilter || undefined, fromDate: fromDate ? `${fromDate}T00:00:00Z` : undefined, toDate: toDate ? `${toDate}T23:59:59Z` : undefined }).then((response) => {
+    void listDiagnoses({ offset: nextOffset, limit: 25, query: debouncedSearch || undefined, status: statusFilter || undefined, cluster: debouncedCluster || undefined, fromDate: fromDate ? `${fromDate}T00:00:00Z` : undefined, toDate: toDate ? `${toDate}T23:59:59Z` : undefined }).then((response) => {
       if (!active) return;
       if (response.data) {
         setApiDiagnoses(response.data.diagnoses.map((item) => ({
@@ -71,9 +84,10 @@ export default function MyDiagnosesPage() {
           createdAt: item.created_at,
           reliabilityScore: item.response.confidence_score || 0,
           status: item.metadata.status || (item.metadata.confirmed_fix_id ? 'resolved' : 'under_investigation'),
-           caseId: item.case_id,
-           caseStatus: item.case_status,
-         })));
+          caseId: item.case_id,
+          caseStatus: item.case_status,
+          serviceFlow: item.metadata.service_flow,
+       })));
          setOffset(response.data.pagination?.offset ?? nextOffset);
          setHasMore(response.data.pagination?.has_more ?? false);
        } else {
@@ -87,7 +101,7 @@ export default function MyDiagnosesPage() {
     };
   };
 
-  useEffect(() => loadDiagnoses(0), [user, search, statusFilter, clusterFilter, fromDate, toDate]);
+  useEffect(() => loadDiagnoses(0), [user, debouncedSearch, statusFilter, debouncedCluster, fromDate, toDate]);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -209,7 +223,7 @@ export default function MyDiagnosesPage() {
                         onClick={() => router.push(`/my-diagnoses/${diag.diagnosisId || diag.id}`)}
                       >
                         <Wrench className="mr-2 h-3 w-3" />
-                        Werkbonnen
+                        Openen
                       </Button>
                     </TableCell>
                   </TableRow>

@@ -618,7 +618,7 @@ export default function DiagnosisDetailPage() {
           Terug naar overzicht
         </Button>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" disabled title="Delen wordt binnenkort beschikbaar">
             <Share2 className="mr-2" />
             Delen
           </Button>
