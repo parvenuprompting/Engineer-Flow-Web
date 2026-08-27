@@ -249,7 +249,7 @@ Dit script doet automatisch:
 Handige flags:
 
 ```bash
-./scripts/run_postgres.sh --with-tests   # draait ook tests/test_lucid.py
+./scripts/run_postgres.sh --with-tests   # draait ook de werkbon + facturatie flow tests
 ./scripts/run_postgres.sh --no-api       # alleen setup/migratie/seed
 ```
 
@@ -514,23 +514,17 @@ Dit valideert:
 
 Let op: draai `typecheck` bij voorkeur na `build`, omdat `tsconfig.json` `.next/types/**/*.ts` meeneemt.
 
-### End-to-end script
-
-```bash
-python tests/test_lucid.py
-```
-
-Ondersteunt custom base URL:
-
-```bash
-LUCID_TEST_BASE_URL=http://127.0.0.1:8010 python tests/test_lucid.py
-```
-
 ### Pytest
 
 ```bash
 pytest
 ```
+
+Draait de volledige suite inclusief de werkbon + facturatie flow, autorisatie-trust-grens
+en privacy-redactie tests tegen een geïsoleerde SQLite database. De PostgreSQL
+migratie-gate (`tests/test_phase2_postgres.py`) wordt overgeslagen zonder
+`PHASE2_POSTGRES_URL`.
+
 
 Gedekte scenario's omvatten o.a.:
 - auth claim-validatie

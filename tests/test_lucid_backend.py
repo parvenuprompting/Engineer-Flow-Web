@@ -1,19 +1,9 @@
 from __future__ import annotations
 
-import os
 from datetime import datetime, timezone
-from pathlib import Path
 
 import jwt
 from fastapi.testclient import TestClient
-
-# Force SQLite for tests before importing app modules.
-TEST_DB = Path(".tmp_lucid_test.db")
-if TEST_DB.exists():
-    TEST_DB.unlink()
-
-os.environ["DATABASE_URL"] = f"sqlite:///{TEST_DB}"
-os.environ["LUCID_ENABLE_DEV_AUTH"] = "true"
 
 from lucid_backend.config import get_settings
 from lucid_backend.database import SessionLocal
@@ -90,6 +80,7 @@ def test_scope_violation_returns_403() -> None:
             json={"voertuig_id": "VTG-001", "purpose": "test"},
         )
         assert resp.status_code == 403
+        assert "Missing required scope: diagnosis:read_local" in resp.json()["detail"]
 
 
 def test_trigger2_allows_once_then_blocks() -> None:
@@ -133,6 +124,7 @@ def test_trigger2_allows_once_then_blocks() -> None:
             },
         )
         assert second.status_code == 403
+        assert second.json()["detail"]["reason_code"] == "CLAIM_ALREADY_CONSUMED"
 
 
 def test_trigger3_blocks_commercial_data() -> None:
@@ -155,6 +147,7 @@ def test_trigger3_blocks_commercial_data() -> None:
             },
         )
         assert blocked.status_code == 403
+        assert blocked.json()["detail"]["reason_code"] == "COMMERCIAL_DATA_BLOCKED"
 
         allowed = client.post(
             "/fabrikant/update",
@@ -184,10 +177,13 @@ def test_trigger1_batch_anonymizes() -> None:
         payload = result.json()
         records = payload["data"]["records"]
 
-        if records:
-            first = records[0]
-            assert first["anonymized_vehicle_ref"].startswith("veh_")
-            assert "VTG-001" not in first["anonymized_vehicle_ref"]
+        # The seeded database always contains a Trigger 1-eligible vehicle.
+        assert payload["data"]["records_sent"] >= 1
+        assert records, "Trigger 1 batch bevat geen records; seed-data ontbreekt of is gewijzigd"
+        for record in records:
+            assert record["anonymized_vehicle_ref"].startswith("veh_")
+            assert "VTG-001" not in record["anonymized_vehicle_ref"]
+            assert record["dtc_code"]
 
 
 def test_manifest_audit_returns_real_entries() -> None:
@@ -345,6 +341,7 @@ def test_membership_scope_blocks_cross_garage_diagnosis_reads() -> None:
         assert client.get(f"/cases/{case_id}", headers=_headers(second_token)).status_code == 404
         response = client.get("/diagnoses/cross-garage-read-test", headers=_headers(second_token))
         assert response.status_code == 404
+        assert response.json()["detail"] == "Diagnose niet gevonden"
 
         work_order = client.post(
             "/werkbonnen",
@@ -359,6 +356,7 @@ def test_membership_scope_blocks_cross_garage_diagnosis_reads() -> None:
             json={"omschrijving": "Unauthorized", "uren": 1, "uurtarief": 100},
         )
         assert cross_garage_mutation.status_code == 403
+        assert cross_garage_mutation.json()["detail"]["reason_code"] == "GARAGE_NOT_OWNER"
 
 
 def test_viewer_membership_cannot_mutate_cases() -> None:
@@ -472,6 +470,7 @@ def test_viewer_cannot_finalize_invoice() -> None:
             headers=_headers(viewer_token),
         )
         assert response.status_code == 403
+        assert "Deze rol mag geen garagegegevens wijzigen" in response.json()["detail"]
 
 
 def test_diagnosis_delete_records_audit_event() -> None:
@@ -503,6 +502,71 @@ def test_diagnosis_delete_records_audit_event() -> None:
         assert any(event["endpoint"] == "/diagnoses/{diagnosis_id}" for event in audit.json()["events"])
 
 
+def test_token_party_id_claim_does_not_override_subject_membership() -> None:
+    """Garage-authorisatie hangt af van het subject (firebase_uid), niet van party_id.
+
+    Een token kan liegen over zijn party_id claim; de daadwerkelijke garage-binding
+    wordt bepaald door de actieve membership van het subject. Dit test de trust-grens
+    die de rest van de autorisatie dragend maakt.
+    """
+    with SessionLocal() as db:
+        second_garage = Party(id="garage-002", party_type=PartyType.GARAGE.value, name="Tweede Garage")
+        second_user = User(firebase_uid="other-owner", email="other@example.test")
+        db.add_all([second_garage, second_user])
+        db.flush()
+        db.add(
+            GarageMembership(
+                garage_party_id=second_garage.id,
+                user_id=second_user.id,
+                role=MembershipRole.OWNER.value,
+                status=MembershipStatus.ACTIVE.value,
+                invited_at=datetime.now(timezone.utc),
+                activated_at=datetime.now(timezone.utc),
+            )
+        )
+        db.commit()
+
+    with TestClient(app) as client:
+        # Subject "pytest" is owner van garage-001, maar de token claimt party_id garage-002.
+        misleading_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="garage-002",
+            scopes=["diagnosis:read_local"],
+        )
+        case = client.post("/cases", headers=_headers(misleading_token), json={"vehicle_id": "VTG-001"})
+        assert case.status_code == 200, case.text
+        case_id = case.json()["case_id"]
+
+        # De case is voor garage-001 aangemaakt (subject-binding); eigenaar garage-001 kan hem lezen.
+        assert client.get(f"/cases/{case_id}", headers=_headers(misleading_token)).status_code == 200
+
+        # Subject "other-owner" is owner van garage-002, maar claimt party_id garage-001.
+        # Als party_id leidend was, zou dit een datalek zijn.
+        other_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="garage-001",
+            scopes=["diagnosis:read_local"],
+            subject="other-owner",
+        )
+        leaked = client.get(f"/cases/{case_id}", headers=_headers(other_token))
+        assert leaked.status_code == 404
+        assert leaked.json()["detail"] == "Case niet gevonden"
+
+        # Een geldig ondertekende token zonder actieve membership krijgt geen toegang.
+        stranger_token = _mint_token(
+            client,
+            party_type="garage",
+            party_id="garage-001",
+            scopes=["diagnosis:read_local"],
+            subject="no-membership-stranger",
+        )
+        blocked = client.post("/cases", headers=_headers(stranger_token), json={"vehicle_id": "VTG-001"})
+        assert blocked.status_code == 403
+        assert "Geen actieve garage membership" in blocked.json()["detail"]
+
+
 def test_security_headers_and_correlation_id_are_present() -> None:
     with TestClient(app) as client:
         response = client.get("/", headers={"X-Correlation-ID": "ci-correlation-id"})
@@ -526,7 +590,3 @@ def test_untrusted_host_is_rejected() -> None:
         response = client.get("/", headers={"Host": "attacker.example"})
 
     assert response.status_code == 400
-
-
-if TEST_DB.exists():
-    TEST_DB.unlink()

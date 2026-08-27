@@ -21,7 +21,7 @@ usage() {
 Usage: ./run_postgres.sh [--with-tests] [--no-api]
 
 Options:
-  --with-tests   Start API, run test_lucid.py + test_werkbon_factuur.py, then continue.
+  --with-tests   Run the werkbon + facturatie flow tests (pytest) after seeding.
   --no-api       Prepare DB/env only; do not start uvicorn.
   -h, --help     Show this help.
 EOF
@@ -176,39 +176,8 @@ with Session(engine) as db:
 PY
 
 if [ "$RUN_TESTS" -eq 1 ]; then
-  require_cmd curl
-  log "API tijdelijk starten voor test_lucid.py en test_werkbon_factuur.py"
-  python -m uvicorn lucid_engineer_flow:app --port "$APP_PORT" >/tmp/lucid_uvicorn.log 2>&1 &
-  api_pid=$!
-
-  cleanup_test_api() {
-    kill "$api_pid" 2>/dev/null || true
-    wait "$api_pid" 2>/dev/null || true
-  }
-  trap cleanup_test_api EXIT
-
-  ok=0
-  for _ in $(seq 1 40); do
-    if curl -sS "http://127.0.0.1:${APP_PORT}/health" >/dev/null 2>&1; then
-      ok=1
-      break
-    fi
-    sleep 1
-  done
-  if [ "$ok" -ne 1 ]; then
-    echo "FOUT: API health check faalde tijdens tests."
-    tail -n 80 /tmp/lucid_uvicorn.log || true
-    exit 1
-  fi
-
-  log "tests/test_lucid.py uitvoeren"
-  LUCID_TEST_BASE_URL="http://127.0.0.1:${APP_PORT}" python tests/test_lucid.py
-
-  log "tests/test_werkbon_factuur.py uitvoeren"
-  LUCID_TEST_BASE_URL="http://127.0.0.1:${APP_PORT}" python tests/test_werkbon_factuur.py
-
-  cleanup_test_api
-  trap - EXIT
+  log "Werkbon + facturatie flow tests uitvoeren"
+  python -m pytest -q tests/test_werkbon_factuur_flow.py
 fi
 
 if [ "$START_API" -eq 1 ]; then
