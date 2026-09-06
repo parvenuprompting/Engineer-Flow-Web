@@ -1,6 +1,6 @@
 # Engineer Flow 2026
 
-[![Status](https://img.shields.io/badge/status-active%20development-orange.svg)](https://github.com/parvenuprompting/Engineer-Flow-2027)
+[![Status](https://img.shields.io/badge/status-active%20development-orange.svg)](https://github.com/parvenuprompting/Engineer-Flow-Web)
 [![Phase](https://img.shields.io/badge/roadmap-phase%203%20archive%20workflow-2563eb.svg)](docs/ENGINEER_FLOW_VISION.md)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18-149eca?logo=react&logoColor=white)](https://react.dev/)

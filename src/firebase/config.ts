@@ -1,9 +1,9 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyAKD3oswnoCAQ6wSOHTdXc9daZok1GFHYY",
-  authDomain: "engineer-flow.firebaseapp.com",
-  projectId: "engineer-flow",
-  storageBucket: "engineer-flow.firebasestorage.app",
-  messagingSenderId: "770794246162",
-  appId: "1:770794246162:web:a3c7e86a666c105f1b08cb",
-  measurementId: "G-YW73EJWZF6"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
