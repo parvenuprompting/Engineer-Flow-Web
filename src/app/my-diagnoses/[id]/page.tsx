@@ -579,7 +579,7 @@ export default function DiagnosisDetailPage() {
 
   if (apiError) {
     return (
-      <div className="container mx-auto p-4 md:p-8">
+      <div className="page-shell">
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Fout</AlertTitle>
@@ -594,7 +594,7 @@ export default function DiagnosisDetailPage() {
 
   if (!diagnosis) {
     return (
-      <div className="container mx-auto p-4 md:p-8">
+      <div className="page-shell">
         <Alert>
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Diagnose niet gevonden</AlertTitle>
@@ -611,7 +611,7 @@ export default function DiagnosisDetailPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <div className="page-shell">
       <div className="mb-6 flex justify-between items-center">
         <Button onClick={() => router.push("/my-diagnoses")} variant="outline">
           <ArrowLeft className="mr-2" />
@@ -714,7 +714,7 @@ export default function DiagnosisDetailPage() {
                 <CardContent className="py-4 flex items-center justify-between">
                   <span className="text-sm">{STATUS_TEXT.diagnose}</span>
                   {workflowChecks.diagnoseDone ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-success" />
                   ) : (
                     <CircleDashed className="h-4 w-4 text-muted-foreground" />
                   )}
@@ -724,9 +724,9 @@ export default function DiagnosisDetailPage() {
                 <CardContent className="py-4 flex items-center justify-between">
                   <span className="text-sm">{STATUS_TEXT.repair}</span>
                   {workflowChecks.repairDone ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-success" />
                   ) : (
-                    <Clock3 className="h-4 w-4 text-orange-600" />
+                    <Clock3 className="h-4 w-4 text-warning-text" />
                   )}
                 </CardContent>
               </Card>
@@ -734,9 +734,9 @@ export default function DiagnosisDetailPage() {
                 <CardContent className="py-4 flex items-center justify-between">
                   <span className="text-sm">{STATUS_TEXT.workorder}</span>
                   {workflowChecks.workOrderDone ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-success" />
                   ) : (
-                    <Clock3 className="h-4 w-4 text-orange-600" />
+                    <Clock3 className="h-4 w-4 text-warning-text" />
                   )}
                 </CardContent>
               </Card>
@@ -744,9 +744,9 @@ export default function DiagnosisDetailPage() {
                 <CardContent className="py-4 flex items-center justify-between">
                   <span className="text-sm">{STATUS_TEXT.invoice}</span>
                   {workflowChecks.invoiceDone ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-success" />
                   ) : (
-                    <Clock3 className="h-4 w-4 text-orange-600" />
+                    <Clock3 className="h-4 w-4 text-warning-text" />
                   )}
                 </CardContent>
               </Card>

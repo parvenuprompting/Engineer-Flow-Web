@@ -177,21 +177,21 @@ export function DiagnosticResult({
   const auditSyncCopy: Record<string, { label: string; className: string }> = {
     synced: {
       label: "Audit gesynchroniseerd",
-      className: "bg-green-500/15 text-green-300 border-green-500/40",
+      className: "bg-success/10 text-success border-success/30",
     },
     buffered_offline: {
       label: "Audit lokaal gebufferd",
-      className: "bg-yellow-500/15 text-yellow-200 border-yellow-500/40",
+      className: "bg-warning/10 text-warning-text border-warning/30",
     },
     sync_failed: {
       label: "Audit sync mislukt",
-      className: "bg-red-500/15 text-red-200 border-red-500/40",
+      className: "bg-destructive/10 text-destructive border-destructive/30",
     },
   };
 
   const persistenceCopy = persistence_state === "durable"
-    ? { label: "Diagnose duurzaam opgeslagen", className: "bg-green-500/15 text-green-300 border-green-500/40" }
-    : { label: "Lokale development-opslag", className: "bg-yellow-500/15 text-yellow-200 border-yellow-500/40" };
+    ? { label: "Diagnose duurzaam opgeslagen", className: "bg-success/10 text-success border-success/30" }
+    : { label: "Lokale development-opslag", className: "bg-warning/10 text-warning-text border-warning/30" };
 
   // Confidence quality mapping
   const getConfidenceQuality = (score: number) => {
@@ -594,7 +594,7 @@ export function DiagnosticResult({
       <Card className="shadow-lg animate-in fade-in-50 duration-500">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="text-yellow-500" />
+            <AlertTriangle className="text-warning-text" />
             <span>{title}</span>
           </CardTitle>
           <CardDescription>{description}</CardDescription>

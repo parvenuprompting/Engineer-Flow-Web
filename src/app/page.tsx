@@ -309,14 +309,14 @@ export default function Home() {
     <div className="min-h-screen bg-background/80 text-foreground animate-in fade-in duration-500">
       <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-20">
         <div className="h-1 hazard-stripe" />
-        <div className="p-4 container mx-auto flex items-center justify-between gap-3">
+        <div className="mx-auto flex w-full max-w-container items-center justify-between gap-3 px-4 py-3 md:px-6">
           <div className="flex items-center gap-3">
             <Link href="/" className="cursor-pointer" title="Naar home">
               <span className="brand-tile flex h-10 w-10 items-center justify-center rounded-md p-1">
                 <Image src="/brand-mark.png" alt="Engineer Flow" width={32} height={32} className="h-8 w-8" />
               </span>
             </Link>
-            <h1 className="text-2xl font-bold font-headline">ENGINEER FLOW</h1>
+            <h1 className="font-headline text-base font-bold tracking-widest">ENGINEER FLOW</h1>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
@@ -339,7 +339,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto p-4 md:p-8 flex-grow">
+      <main className="page-shell flex-grow">
         <div className="grid gap-8">
           <Card className="bg-card">
             <CardHeader>
@@ -508,27 +508,27 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-4">
             <Link href="/diagnose" passHref>
-              <Button size="lg" className="w-full h-24 text-lg bg-primary hover:bg-primary/90 text-primary-foreground">
-                <BrainCircuit className="mr-4 h-8 w-8" />
+              <Button className="h-20 w-full justify-start px-5 text-base font-semibold">
+                <BrainCircuit className="mr-3 h-6 w-6" />
                 Nieuwe Diagnose
               </Button>
             </Link>
             <Link href="/chat" passHref>
-               <Button size="lg" variant="outline" className="w-full h-24 text-lg border-accent text-accent-foreground bg-accent hover:bg-accent/90">
-                <MessageSquare className="mr-4 h-8 w-8" />
+              <Button variant="outline" className="h-20 w-full justify-start px-5 text-base font-semibold">
+                <MessageSquare className="mr-3 h-6 w-6 text-muted-foreground" />
                 Vraag Expert
-               </Button>
+              </Button>
             </Link>
              <Link href="/library" passHref>
-               <Button size="lg" variant="outline" className="w-full h-24 text-lg">
-                <Library className="mr-4 h-8 w-8" />
+              <Button variant="outline" className="h-20 w-full justify-start px-5 text-base font-semibold">
+                <Library className="mr-3 h-6 w-6 text-muted-foreground" />
                 Storingen Bibliotheek
-               </Button>
+              </Button>
             </Link>
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold mb-4">Eerdere Diagnoses (Open Loops)</h2>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Eerdere Diagnoses (Open Loops)</h2>
             <div className="grid gap-4 mb-6">
                 {openCase && openCase.result ? (
                     <Card className="hover:border-primary/50 transition-colors">
@@ -559,7 +559,7 @@ export default function Home() {
                             </Badge>
                         </CardTitle>
                         </CardHeader>
-                        <CardFooter className="p-6 pt-0 flex justify-between">
+                        <CardFooter className="flex justify-between p-4 pt-0">
                             <Button variant="link" className="p-0" onClick={handleOpenCase}>Open Case</Button>
                             <Button variant="ghost" size="sm" onClick={handleCloseCase}>
                                 <X className="mr-2 h-4 w-4" />
@@ -568,30 +568,30 @@ export default function Home() {
                         </CardFooter>
                     </Card>
                 ) : (
-                    <Card className="flex flex-col items-center justify-center p-8 border-dashed">
-                        <Archive className="h-10 w-10 text-muted-foreground mb-3"/>
+                    <Card className="flex flex-col items-center justify-center gap-2 border-dashed border-border/70 bg-muted/20 p-8">
+                        <Archive className="h-10 w-10 text-muted-foreground"/>
                         <h3 className="font-semibold">Geen Open Cases</h3>
                         <p className="text-sm text-muted-foreground text-center">Start een nieuwe diagnose om een case te openen.</p>
                     </Card>
                 )}
             </div>
             
-            <div className="text-center mt-6 flex flex-wrap justify-center items-center gap-4">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 border-t border-border/60 pt-4">
               <Link href="/can-analysis" passHref>
-                <Button variant="secondary">
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
                   <HardDrive className="mr-2"/>
                   Bekijk Log/CAN-data Upload
                 </Button>
               </Link>
                <Link href="/manual" passHref>
-                <Button variant="secondary">
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
                   <BookOpen className="mr-2"/>
                   Handleiding
                 </Button>
               </Link>
               <Dialog>
                 <DialogTrigger asChild>
-                    <Button variant="ghost">
+                    <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
                         <MessageCircleQuestion className="mr-2"/>
                         Feedback
                     </Button>
@@ -599,14 +599,14 @@ export default function Home() {
                 <FeedbackDialog />
               </Dialog>
               <Link href="/settings" passHref>
-                <Button variant="ghost">
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
                   <Settings className="mr-2"/>
                   Instellingen
                 </Button>
               </Link>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="ghost">
+                  <Button variant="ghost" className="text-muted-foreground hover:text-destructive">
                     Reset applicatie
                   </Button>
                 </AlertDialogTrigger>
@@ -628,11 +628,11 @@ export default function Home() {
           </div>
 
            <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">Veelvoorkomende Storingen</h2>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Veelvoorkomende Storingen</h2>
             <Accordion type="single" collapsible className="w-full">
               {commonFailures.map((item, index) => (
                 <AccordionItem value={`item-${index}`} key={index}>
-                  <AccordionTrigger className="font-semibold text-base">
+                  <AccordionTrigger className="text-sm font-semibold">
                     <div className="flex items-center gap-3">
                         <item.icon className="h-5 w-5 text-primary"/>
                         <span>{item.title}</span>

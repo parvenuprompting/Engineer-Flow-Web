@@ -120,7 +120,7 @@ export default function MyDiagnosesPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <div className="page-shell">
       <div className="mb-6 flex justify-between items-center">
         <Link href="/" passHref>
           <Button variant="outline">
@@ -128,7 +128,7 @@ export default function MyDiagnosesPage() {
             Terug naar Home
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
           <FolderArchive /> Mijn Diagnoses
         </h1>
       </div>
@@ -194,8 +194,8 @@ export default function MyDiagnosesPage() {
                           className={cn(
                             "whitespace-nowrap px-2 py-0.5 text-[10px]",
                             diag.status === 'resolved'
-                              ? "bg-green-500/10 text-green-600 border-green-500/20"
-                              : "bg-orange-500/10 text-orange-600 border-orange-500/20"
+                              ? "bg-success/10 text-success border-success/20"
+                              : "bg-warning/10 text-warning-text border-warning/20"
                           )}
                           variant="outline"
                         >
@@ -206,7 +206,7 @@ export default function MyDiagnosesPage() {
                           )}
                         </Badge>
                         {diag.serviceFlow?.factuurStatus === 'gefinaliseerd' && (
-                          <Badge variant="outline" className="text-[10px] border-blue-500/20 text-blue-600">
+                          <Badge variant="outline" className="text-[10px] border-info/20 text-info">
                             <Receipt className="mr-1 h-3 w-3" />
                             Gefactureerd
                           </Badge>

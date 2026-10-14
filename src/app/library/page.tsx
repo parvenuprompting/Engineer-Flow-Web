@@ -155,7 +155,7 @@ export default function LibraryPage() {
 
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <div className="page-shell">
       <div className="mb-6 flex items-center justify-between">
         <Link href="/" passHref>
           <Button variant="outline">
@@ -163,7 +163,7 @@ export default function LibraryPage() {
             Terug naar Home
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
             <Library /> Storingen Bibliotheek
         </h1>
       </div>

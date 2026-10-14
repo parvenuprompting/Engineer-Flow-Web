@@ -236,7 +236,7 @@ function DiagnosePageContent() {
   }, [router]);
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <div className="page-shell">
       <div className="mb-6">
         <Link href="/" passHref>
           <Button variant="outline">

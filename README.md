@@ -29,11 +29,27 @@ De repo bevat daarnaast nog de oudere LUCID/FastAPI-backend en enkele AI-hulppad
 
 ![Veelvoorkomende Storingen](docs/images/veelvoorkomende_storingen.png)
 
+## Vormgeving
+
+De interface is opgebouwd uit één set thematokens in `src/app/globals.css` (`:root` = licht,
+`.dark` = diep staal) met een stilstaand blueprint-raster als achtergrond. Ontwerpprincipes:
+
+- **Eén accent:** staal-cyaan is de actiekleur; veiligheidsamber alleen voor waarschuwing en aandacht.
+- **Rust door maatvoering:** elke pagina gebruikt `.page-shell` (vaste marge en breedte); kaarten,
+  knoppen en tabellen hebben één vaste, compacte maat.
+- **Licht is de maatstaf:** beide thema's halen WCAG AA (4,5:1) voor tekst. De waarden zijn per
+  tokenduo doorgemeten, niet geschat; de tabel staat in de commit van de opmaakronde.
+- **Het thema volgt het systeem.** Rechtsboven wisselt de schakelaar systeem → licht → donker;
+  in Instellingen → Uiterlijk staat dezelfde keuze als segmented bediening.
+
+Beweging is overal optioneel: de achtergrond staat stil en animaties mogen wegvallen.
+
 ## Inhoud
 - [Engineer Flow Vision & Roadmap](#engineer-flow-vision--roadmap)
 - [Wat Dit Project Doet](#wat-dit-project-doet)
 - [Huidige Status](#huidige-status)
 - [Architectuur](#architectuur)
+- [Vormgeving](#vormgeving)
 - [Deterministische Diagnosekern](#deterministische-diagnosekern)
 - [Projectstructuur](#projectstructuur)
 - [Quickstart (Aanbevolen)](#quickstart-aanbevolen)

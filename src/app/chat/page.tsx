@@ -569,7 +569,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="container mx-auto flex h-[calc(100vh-4rem)] flex-col p-4 md:p-8">
+    <div className="page-shell flex h-[calc(100vh-4rem)] flex-col">
       <div className="mb-4 flex items-center justify-between gap-2">
         <Link href="/" passHref>
           <Button variant="outline">

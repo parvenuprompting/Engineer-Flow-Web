@@ -61,7 +61,7 @@ const SectionCard = ({
 
 export default function ManualPage() {
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <div className="page-shell">
       <div className="mb-6">
         <Link href="/" passHref>
           <Button variant="outline">
@@ -72,7 +72,7 @@ export default function ManualPage() {
       </div>
 
       <header className="mb-8">
-        <h1 className="text-3xl font-bold flex items-center gap-3">
+        <h1 className="flex items-center gap-3 text-xl font-semibold tracking-tight">
           <BookOpen className="h-8 w-8" />
           Handleiding Engineer Flow
         </h1>
@@ -133,7 +133,7 @@ export default function ManualPage() {
                         <p className="flex items-center gap-2"><ThumbsDown className="h-4 w-4 text-destructive"/>“AI is onvoorspelbaar en verzint dingen.”</p>
                         <p className="flex items-center gap-2"><ThumbsDown className="h-4 w-4 text-destructive"/>“Hier kun je geen truck mee repareren, het kent de praktijk niet.”</p>
                         <div className="flex-muted-foreground text-sm pl-6">Dat is een logische gedachte, want consumenten-AI zoals ChatGPT geeft soms foute antwoorden en generieke AI kent geen specifieke trucksystemen.</div>
-                        <p className="font-semibold text-foreground flex items-center gap-2"><Shield className="h-4 w-4 text-green-500"/>Dit systeem is 100% ontworpen voor de praktijk van monteurs.</p>
+                        <p className="font-semibold text-foreground flex items-center gap-2"><Shield className="h-4 w-4 text-success"/>Dit systeem is 100% ontworpen voor de praktijk van monteurs.</p>
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
