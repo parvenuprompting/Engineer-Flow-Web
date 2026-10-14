@@ -22,7 +22,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Loader2, LogIn, UserPlus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useAuth, useUser } from '@/firebase';
 import { initiateEmailSignIn, initiateEmailSignUp, initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
 import type { FirebaseError } from '@firebase/util';
@@ -108,6 +109,15 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
+          <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-b from-primary to-industrial-steel shadow-glass">
+            <Image
+              src="/brand-mark.png"
+              alt="Engineer Flow"
+              width={34}
+              height={34}
+              priority
+            />
+          </div>
           <CardTitle>Inloggen</CardTitle>
           <CardDescription>
             Log in op uw Engineer Flow-account om diagnoses op te slaan.
