@@ -558,10 +558,10 @@ export function DiagnosticResult({
   };
 
   const difficultyMap = (level: number | undefined) => {
-    if (level === undefined) return { text: "Onbekend", color: "bg-gray-400" };
-    if (level <= 0.3) return { text: "Basis", color: "bg-green-500" };
-    if (level <= 0.6) return { text: "Gemiddeld", color: "bg-yellow-500" };
-    return { text: "Gevorderd", color: "bg-red-500" };
+    if (level === undefined) return { text: "Onbekend", color: "bg-muted-foreground/40" };
+    if (level <= 0.3) return { text: "Basis", color: "bg-success" };
+    if (level <= 0.6) return { text: "Gemiddeld", color: "bg-warning" };
+    return { text: "Gevorderd", color: "bg-destructive" };
   };
 
   const handleStartNewDiagnosis = (symptom: string) => {
@@ -570,9 +570,9 @@ export function DiagnosticResult({
 
   const statusColors: Record<StepStatus, string> = {
     pending: 'bg-secondary/50',
-    found: 'bg-green-500/10 border-green-500/30',
-    'not-found': 'bg-red-500/10 border-red-500/30',
-    uncertain: 'bg-yellow-500/10 border-yellow-500/30',
+    found: 'bg-success/10 border-success/30',
+    'not-found': 'bg-destructive/10 border-destructive/30',
+    uncertain: 'bg-warning/10 border-warning/30',
   };
 
   // Early return if we have no valid diagnosis data
@@ -764,11 +764,11 @@ export function DiagnosticResult({
       </CardHeader>
       <CardContent className="space-y-6">
         {applied_constraints.length > 0 && (
-          <Alert className="bg-blue-500/10 border-blue-500/20 text-blue-700 dark:text-blue-300">
-            <ShieldCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <Alert className="bg-info/10 border-info/20 text-info">
+            <ShieldCheck className="h-4 w-4 text-info" />
             <AlertTitle className="text-sm font-bold flex items-center gap-2">
               Beveiligde Analyse Actief
-              <Badge variant="outline" className="text-[10px] bg-blue-500/20 border-blue-500/40 text-blue-700 dark:text-blue-300">
+              <Badge variant="outline" className="text-[10px] bg-info/15 border-info/40 text-info">
                 CONTEXT-AWARE
               </Badge>
             </AlertTitle>
@@ -816,7 +816,7 @@ export function DiagnosticResult({
             <div className="mt-4 pt-4 border-t border-primary/10 flex justify-between items-center bg-primary/5 -mx-4 px-4 rounded-b-md">
               <span className="text-xs text-muted-foreground font-medium">Was dit de oplossing?</span>
               {confirmedFixId === (topRootCause?.fo_id) ? (
-                <Badge className="bg-green-600 hover:bg-green-600 text-white flex items-center gap-1.5 py-1 px-3">
+                <Badge className="bg-success text-success-foreground hover:bg-success/90 flex items-center gap-1.5 py-1 px-3">
                   <CheckCircle2 className="h-4 w-4" />
                   Bevestigde Oplossing
                 </Badge>
@@ -916,7 +916,7 @@ export function DiagnosticResult({
             <>
               <div className="space-y-3">
                 {steps.map((step) => (
-                  <div key={step.id} className={cn("p-4 rounded-lg border-2 transition-all duration-200", statusColors[step.status], step.status === 'found' && "border-green-500 shadow-sm")}>
+                  <div key={step.id} className={cn("p-3 rounded-lg border-2 transition-colors duration-200", statusColors[step.status], step.status === 'found' && "border-success shadow-sm")}>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3">
@@ -924,10 +924,10 @@ export function DiagnosticResult({
                             onClick={() => handleStepStatusChange(step.id, 'found')}
                             className={cn(
                               "w-6 h-6 rounded-md border-2 flex items-center justify-center cursor-pointer transition-colors",
-                              step.status === 'found' ? "bg-green-500 border-green-500" : "border-muted-foreground/30 hover:border-primary"
+                              step.status === 'found' ? "bg-success border-success" : "border-muted-foreground/30 hover:border-primary"
                             )}
                           >
-                            {step.status === 'found' && <Check className="h-4 w-4 text-white" />}
+                            {step.status === 'found' && <Check className="h-4 w-4 text-success-foreground" />}
                           </div>
                           <p className={cn("font-semibold text-base", step.status === 'found' && "line-through text-muted-foreground")}>
                             {step.text}
@@ -946,7 +946,7 @@ export function DiagnosticResult({
                         <Button
                           size="icon"
                           variant="ghost"
-                          className={cn("h-8 w-8 hover:bg-red-500/20 hover:text-red-500", step.status === 'not-found' && "bg-red-500 text-white hover:bg-red-600")}
+                          className={cn("h-8 w-8 hover:bg-destructive/20 hover:text-destructive", step.status === 'not-found' && "bg-destructive text-destructive-foreground hover:bg-destructive/90")}
                           onClick={() => handleStepStatusChange(step.id, 'not-found')}
                           title="Niet gevonden"
                         >
@@ -961,14 +961,17 @@ export function DiagnosticResult({
                         {step.duration && <span className="flex items-center gap-1.5"><Clock className="h-3 w-3" /> Duur: ~{step.duration} min</span>}
                         {step.difficulty !== undefined &&
                           <span className="flex items-center gap-1.5"><BarChart3 className="h-3 w-3" /> Niveau:
-                            <Badge variant="secondary" className={`h-4 px-1.5 ${difficultyMap(step.difficulty).color} text-white`}>{difficultyMap(step.difficulty).text}</Badge>
+                            <Badge variant="secondary" className="h-4 gap-1.5 px-1.5">
+                              <span className={cn("h-2 w-2 rounded-full", difficultyMap(step.difficulty).color)} />
+                              {difficultyMap(step.difficulty).text}
+                            </Badge>
                           </span>
                         }
                       </div>
                     )}
                     {step.safety && (
-                      <div className="ml-9 mt-3 rounded-md border border-red-500/30 bg-red-500/5 p-3 text-xs">
-                        <div className="flex flex-wrap gap-2 font-semibold text-red-700 dark:text-red-300">
+                      <div className="ml-9 mt-3 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-xs">
+                        <div className="flex flex-wrap gap-2 font-semibold text-destructive">
                           <span>Veiligheidsniveau: {step.safety.level}</span>
                           {step.safety.pressure_hazard && <span>Drukgevaar</span>}
                           {step.safety.moving_parts && <span>Bewegende delen</span>}
@@ -995,8 +998,8 @@ export function DiagnosticResult({
                 <Button
                   onClick={handleSaveDiagnosis}
                   className={cn(
-                    "w-full h-12 text-lg font-bold transition-all shadow-md",
-                    allStepsCompleted ? "bg-green-600 hover:bg-green-700" : "bg-primary/20 text-muted-foreground border-2 border-dashed border-primary/30"
+                    "w-full h-11 text-base font-semibold transition-colors shadow-sm",
+                    allStepsCompleted ? "bg-success hover:bg-success/90" : "bg-primary/20 text-muted-foreground border-2 border-dashed border-primary/30"
                   )}
                   disabled={!allStepsCompleted || isSaved}
                 >

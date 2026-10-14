@@ -312,7 +312,9 @@ export default function Home() {
         <div className="p-4 container mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Link href="/" className="cursor-pointer" title="Naar home">
-              <Image src="/icon.png" alt="Engineer Flow Logo" width={40} height={40} className="h-10 w-10" />
+              <span className="brand-tile flex h-10 w-10 items-center justify-center rounded-md p-1">
+                <Image src="/brand-mark.png" alt="Engineer Flow" width={32} height={32} className="h-8 w-8" />
+              </span>
             </Link>
             <h1 className="text-2xl font-bold font-headline">ENGINEER FLOW</h1>
           </div>
@@ -346,7 +348,7 @@ export default function Home() {
                         <CardTitle>Diagnose Dashboard</CardTitle>
                         <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-muted-foreground mt-1">
                             <div>Actief op: <span className="font-semibold text-foreground">Volvo FMX 420 + Liebherr Mixer</span></div>
-                            <Badge variant="outline" className="border-green-500 text-green-500">LM: +12 new cases</Badge>
+                            <Badge variant="outline" className="border-success/50 bg-success/10 text-success">LM: +12 new cases</Badge>
                         </div>
                     </div>
                      <Dialog>
@@ -361,7 +363,7 @@ export default function Home() {
                             <DialogTitle>Selecteer Voertuig & Module</DialogTitle>
                             <DialogDescription>
                                 Selecteer het actieve voertuig en de opbouwmodule voor diagnose. 
-                                <span className="font-semibold text-amber-500"> (DEMO functionaliteit)</span>
+                                <span className="font-semibold text-warning-text"> (DEMO functionaliteit)</span>
                             </DialogDescription>
                             </DialogHeader>
                              <Tabs defaultValue="trucks">
@@ -498,7 +500,7 @@ export default function Home() {
             <CardContent className="space-y-2">
               <p className="text-lg font-semibold text-primary">Slimme Diagnose → Direct naar de Oorzaak.</p>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle className="h-4 w-4 text-green-500" />
+                <CheckCircle className="h-4 w-4 text-success" />
                 <span><span className="font-semibold text-foreground">Logica:</span> Deterministisch (100% reproduceerbaar)</span>
               </div>
             </CardContent>

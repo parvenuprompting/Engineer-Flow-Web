@@ -29,6 +29,7 @@ import {
   Layers,
   Sun,
   Moon,
+  Monitor,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +50,7 @@ const navItems: NavItem[] = [
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account");
-  const { setTheme, resolvedTheme } = useTheme();
+  const { setTheme, theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -201,22 +202,43 @@ export default function SettingsPage() {
                 <CardDescription>Kies het kleurenthema van Engineer Flow.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-3">
-                  <Button
-                    variant={mounted && resolvedTheme === "light" ? "default" : "outline"}
-                    onClick={() => setTheme("light")}
-                  >
-                    <Sun className="mr-2 h-4 w-4" />
-                    Licht
-                  </Button>
-                  <Button
-                    variant={mounted && resolvedTheme === "dark" ? "default" : "outline"}
-                    onClick={() => setTheme("dark")}
-                  >
-                    <Moon className="mr-2 h-4 w-4" />
-                    Donker
-                  </Button>
+                <div
+                  role="radiogroup"
+                  aria-label="Kleurthema"
+                  className="inline-flex rounded-md border border-border bg-secondary/40 p-0.5"
+                >
+                  {(
+                    [
+                      { waarde: "system", label: "Systeem", Icon: Monitor },
+                      { waarde: "light", label: "Licht", Icon: Sun },
+                      { waarde: "dark", label: "Donker", Icon: Moon },
+                    ] as const
+                  ).map(({ waarde, label, Icon }) => {
+                    const actief = mounted && (theme ?? "system") === waarde;
+                    return (
+                      <button
+                        key={waarde}
+                        type="button"
+                        role="radio"
+                        aria-checked={actief}
+                        onClick={() => setTheme(waarde)}
+                        className={cn(
+                          "inline-flex items-center gap-2 rounded px-3 py-1.5 text-sm font-medium transition-colors",
+                          actief
+                            ? "bg-card text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {label}
+                      </button>
+                    );
+                  })}
                 </div>
+                <p className="text-sm text-muted-foreground">
+                  «Systeem» volgt de weergave van je Mac. De schakelaar rechtsboven zet hem in één
+                  klik door.
+                </p>
               </CardContent>
             </Card>
           )}

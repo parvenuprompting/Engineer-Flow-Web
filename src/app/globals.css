@@ -13,30 +13,32 @@
     --popover-foreground: 220 20% 12%;
 
     /* Steel cyan as primary */
-    --primary: 199 90% 38%;
+    --primary: 199 92% 34%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 16% 92%;
     --secondary-foreground: 220 20% 16%;
     --muted: 220 16% 93%;
-    --muted-foreground: 220 10% 42%;
+    --muted-foreground: 220 12% 36%;
 
     /* Safety amber as accent */
     --accent: 38 92% 42%;
-    --accent-foreground: 0 0% 100%;
+    --accent-foreground: 38 92% 10%;
 
-    --destructive: 0 74% 50%;
+    --destructive: 0 74% 45%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 14% 85%;
-    --input: 220 14% 85%;
-    --ring: 199 90% 38%;
+    --border: 220 14% 78%;
+    --input: 220 14% 78%;
+    --ring: 199 92% 34%;
 
     /* Semantic Colors */
-    --success: 152 70% 34%;
+    --success: 152 72% 28%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 42%;
-    --warning-foreground: 0 0% 100%;
-    --info: 199 90% 40%;
+    --warning-foreground: 38 92% 10%;
+    /* Donkere amber voor waarschuwingstekst op een lichte kaart */
+    --warning-text: 28 88% 30%;
+    --info: 199 90% 30%;
     --info-foreground: 0 0% 100%;
 
     /* Industrial Accents */
@@ -55,9 +57,11 @@
     --radius: 0.5rem;
 
     /* Surface Tokens (solid, machined panels) */
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --glass-bg: rgba(255, 255, 255, 0.90);
+    --glass-border: rgba(15, 23, 42, 0.10);
+    --glass-shadow: 0 1px 3px rgba(15, 23, 42, 0.10), 0 1px 2px rgba(15, 23, 42, 0.06);
+    /* Doek/overlay achter dialogen en panelen (thema-onafhankelijk donker) */
+    --scrim: 220 20% 8%;
   }
 
   .dark {
@@ -82,18 +86,20 @@
     --accent: 45 93% 52%;
     --accent-foreground: 220 30% 8%;
 
-    --destructive: 0 72% 48%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 14% 22%;
-    --input: 220 14% 22%;
+    --destructive: 0 72% 62%;
+    --destructive-foreground: 220 20% 8%;
+    --border: 220 14% 28%;
+    --input: 220 14% 28%;
     --ring: 199 90% 52%;
 
     /* Semantic Colors (adjusted for dark) */
-    --success: 152 60% 42%;
-    --success-foreground: 0 0% 100%;
+    --success: 152 60% 52%;
+    --success-foreground: 220 20% 8%;
     --warning: 45 93% 52%;
     --warning-foreground: 220 30% 8%;
-    --info: 199 90% 55%;
+    /* Lichte amber voor waarschuwingstekst op een donkere kaart */
+    --warning-text: 45 93% 66%;
+    --info: 199 90% 58%;
     --info-foreground: 220 30% 8%;
 
     /* Industrial Accents (brighter in dark) */
@@ -109,9 +115,10 @@
     --chart-5: 0 72% 56%;
 
     /* Surface Tokens (dark mode) */
-    --glass-bg: rgba(28, 33, 42, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(28, 33, 42, 0.90);
+    --glass-border: rgba(255, 255, 255, 0.10);
     --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --scrim: 220 20% 4%;
   }
 }
 
@@ -133,6 +140,17 @@
 }
 
 @layer utilities {
+  /* Eén vaste paginamarge voor alle pagina's */
+  .page-shell {
+    @apply mx-auto w-full max-w-container px-4 py-6 md:px-6 md:py-8;
+  }
+
+  /* Donkere tegel achter het merkteken: de merkinkt is licht van kleur en zou
+     op een lichte achtergrond wegvallen. Bewust in beide thema's even donker. */
+  .brand-tile {
+    background-color: hsl(220 20% 8%);
+  }
+
   /* Subtle machined blueprint grid */
   .bg-blueprint-grid {
     background-image:
