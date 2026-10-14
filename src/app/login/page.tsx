@@ -68,6 +68,20 @@ export default function LoginPage() {
         case 'auth/weak-password':
             setError('Het wachtwoord is te zwak. Gebruik minimaal 6 karakters.');
             break;
+        case 'auth/admin-restricted-operation':
+          setError(
+            'Dit Firebase-project staat geen nieuwe accounts toe: registreren en anoniem doorgaan zijn uitgeschakeld. Log in met een bestaand account, of zet dit aan in de Firebase-console bij Authentication (aanmeldmethoden en «nieuwe gebruikers toestaan»).'
+          );
+          break;
+        case 'auth/operation-not-allowed':
+          setError('Deze aanmeldmethode is uitgeschakeld in het Firebase-project.');
+          break;
+        case 'auth/too-many-requests':
+          setError('Te veel aanmeldpogingen. Probeer het over een minuut opnieuw.');
+          break;
+        case 'auth/network-request-failed':
+          setError('Geen verbinding met Firebase. Controleer je internetverbinding en probeer opnieuw.');
+          break;
         default:
           setError(e.message || 'Er is een onbekende fout opgetreden.');
           break;
