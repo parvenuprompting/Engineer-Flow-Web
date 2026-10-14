@@ -257,15 +257,18 @@ export function DiagnosticForm({
               </div>
             )}
 
-            <Button
-              type="submit"
-              disabled={isPending}
-              size="lg"
-              className="w-full text-base font-bold tracking-wide shadow-glow-primary animate-pulse-glow"
-            >
-              {isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Zap className="mr-2 h-5 w-5" />}
-              Start Analyse
-            </Button>
+            {/* Blijft onderaan in beeld staan, zodat de actie nooit onder de vouw valt */}
+            <div className="sticky bottom-0 border-t border-border/60 bg-card/95 pt-3 backdrop-blur-sm">
+              <Button
+                type="submit"
+                disabled={isPending}
+                size="lg"
+                className="w-full text-base font-semibold tracking-wide"
+              >
+                {isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Zap className="mr-2 h-5 w-5" />}
+                Start Analyse
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
