@@ -1,0 +1,5 @@
+{
+  "version": "efl-scr-slice-1",
+  "scope": "Local SCR slice IDs; merge explicitly into the master symptom catalog before deployment.",
+  "symptomIds": ["EFL_SCR_NOX_EXCEEDANCE", "EFL_AFTERTREATMENT_WARNING"]
+}

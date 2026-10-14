@@ -505,12 +505,14 @@ Belangrijkste tabellen:
 ```bash
 npm run build
 npm run typecheck
+npm run test:efl_core
 ```
 
 Dit valideert:
 - de actieve Next.js app
 - de deterministische diagnose-engine in `src/efl_core`
 - de DDS/audit response-shapes
+- de procedurekern (geschiedenis/degradatie, CAN-evidence, boundary checks, SCR/NOx-gate) via `npm run test:efl_core`
 
 Let op: draai `typecheck` bij voorkeur na `build`, omdat `tsconfig.json` `.next/types/**/*.ts` meeneemt.
 

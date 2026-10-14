@@ -8,5 +8,6 @@ fi
 python3 -m pytest -q
 npm run build
 npm run typecheck
+npm run test:efl_core
 python3 -m alembic heads
 git diff --check

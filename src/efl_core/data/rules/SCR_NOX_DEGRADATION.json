@@ -1,0 +1,48 @@
+{
+  "id": "SCR_NOX_DEGRADATION",
+  "version": "1.0.0",
+  "purpose": "Mandatory evidence gate for recurrent SCR/NOx complaints; never a sensor or catalyst replacement diagnosis.",
+  "componentSlotId": "SCR_OUTLET_NOX_SENSOR",
+  "symptomIds": ["EFL_SCR_NOX_EXCEEDANCE", "EFL_AFTERTREATMENT_WARNING"],
+  "triggers": { "obdCodes": ["P20EE"], "j1939Spns": [3226], "fmiRequired": true },
+  "diagnosticSemantics": "P20EE is an SCR efficiency code. SPN 3226 identifies an outlet NOx parameter and requires FMI and ECU/vehicle context. Neither proves sensor degradation.",
+  "replacementPolicy": {
+    "blockRepeatReplacement": true,
+    "recentWindow": null,
+    "reason": "No automatic expiry: after a recorded replacement, repeat replacement stays blocked pending independently validated causal evidence."
+  },
+  "profilePolicy": {
+    "requireApprovedOemProfile": true,
+    "requireExactConfiguration": true,
+    "requireSourceMapping": true,
+    "defaultPhysicalLimits": null
+  },
+  "measurement": {
+    "procedureId": "SCR_DEF_PRESSURE_THERMAL_WINDOW",
+    "instruction": "Registreer gelijktijdig AdBlue-doseerdruk, AdBlue-temperatuur, SCR-inlaat- en uitlaattemperatuur en motorbelasting via CAN. Gebruik het goedgekeurde OEM-belastingsprotocol en een gesloten meetvenster. Vervang de NOx-sensor niet.",
+    "signals": [
+      { "id": "DEF_DOSING_PRESSURE", "unit": "kPa", "role": "diagnostic" },
+      { "id": "DEF_TEMPERATURE", "unit": "degC", "role": "operating_condition" },
+      { "id": "SCR_INLET_TEMPERATURE", "unit": "degC", "role": "operating_condition" },
+      { "id": "SCR_OUTLET_TEMPERATURE", "unit": "degC", "role": "operating_condition" },
+      { "id": "ENGINE_LOAD", "unit": "%", "role": "operating_condition" }
+    ],
+    "quality": { "maxDroppedFrames": 0, "rejectUnknownQuality": true, "interpolation": false },
+    "onUnknown": "repeat_measurement",
+    "onOperatingConditionFailure": "repeat_measurement_under_oem_conditions",
+    "onPressureOutsideProfile": "SCR_DEF_DELIVERY_ISOLATION",
+    "onAllWithinProfile": "SCR_NOX_FUNCTION_ISOLATION"
+  },
+  "actions": {
+    "fmi": { "questionId": "SCR_CONFIRM_FMI", "instruction": "Lees de volledige J1939-code uit: SPN, FMI en bron-ECU. Een SPN zonder FMI bepaalt geen storingsprocedure." },
+    "code": { "questionId": "SCR_CONFIRM_DTC", "instruction": "Lees de actuele foutcodes uit en bevestig P20EE of de volledige SPN 3226-code met FMI en bron-ECU." },
+    "profile": { "questionId": "SCR_SELECT_OEM_PROFILE", "instruction": "Koppel het goedgekeurde OEM-meetprofiel aan deze voertuigconfiguratie en foutcode. Zonder dit profiel zijn druk-, temperatuur- en belastingsgrenzen onbekend." },
+    "history": { "instruction": "Verifieer de installatie- en vervangingshistorie van de SCR-uitlaat-NOx-sensor. Leg de huidige componentinstantie en het vervangingsmoment vast." },
+    "delivery": { "procedureId": "SCR_DEF_DELIVERY_ISOLATION", "signalIds": ["DEF_DOSING_PRESSURE", "DEF_DELIVERY_QUANTITY"], "instruction": "De gemeten doseerdruk ligt buiten het goedgekeurde profiel. Voer eerst de OEM-test voor AdBlue-aanvoer en dosering uit; wijs nog geen component als oorzaak aan." },
+    "nox": { "procedureId": "SCR_NOX_FUNCTION_ISOLATION", "signalIds": ["SCR_INLET_NOX", "SCR_OUTLET_NOX"], "instruction": "Het druk- en temperatuurvenster is geldig. Voer nu de afzonderlijke OEM-NOx-functie- en SCR-isolatietest uit, inclusief de voorgeschreven controles op voeding, dosering, vloeistofkwaliteit en uitlaatlekkage. Een sensorwissel is nog niet vrijgegeven." }
+  },
+  "sources": [
+    { "url": "https://static.nhtsa.gov/odi/tsbs/2022/MC-10215272-0001.pdf", "scope": "P20EE and vehicle-specific NOx/SCR assessment; not a universal calibration." },
+    { "url": "https://static.nhtsa.gov/odi/tsbs/2017/MC-10133567-9999.pdf", "scope": "Detroit EPA10/GHG14 SPN 3226 FMI 2: inspect exhaust and DEF dosing before sensor replacement. Other FMIs/platforms require their own procedure." }
+  ]
+}

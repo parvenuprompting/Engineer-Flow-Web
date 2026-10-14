@@ -18,6 +18,25 @@ import type {
 } from "./types";
 import { CONFIG_VERSION, ENGINE_VERSION, VERSION_MANIFEST, createStableHash } from "./version";
 
+// ---------------------------------------------------------------------------
+// Deterministische procedurekern (evidence-gated procedures)
+// ---------------------------------------------------------------------------
+// De SCR/NOx-proceduregate en de geschiedenis-degradatieslice zijn onderdeel
+// van dezelfde deterministische EFL-kern als deze engine. Ze worden hier
+// ontsloten zodat engine.ts het canonieke import-oppervlak van de kern blijft.
+// Het gedrag van runDeterministicDiagnosis zelf is niet gewijzigd.
+export { SCR_RULE, parseScrProfile, requestSensorReplacement, runScrWorkflow } from "./scr_workflow";
+export type { ScrDecision, ScrProfile, ScrWorkflowResult } from "./scr_workflow";
+export { evaluateHistoryDegradation } from "./history_degradation";
+export type { DegradationSliceInput, DegradationSliceResult, ScopedTestResult } from "./history_degradation";
+export { validateIntake } from "./boundary_validator";
+export type { BoundaryResult, ValidatedIntake } from "./boundary_validator";
+export { matchHistory, assessDegradation } from "./history_matcher";
+export type { HistoryMatch, HistoryPolicy } from "./history_matcher";
+export { validateEvidenceWindow, assessMeasuredProgression } from "./can_evidence_validator";
+export type { MeasurementCondition, WindowInput, WindowValidation } from "./can_evidence_validator";
+export { createExecutionManifest } from "./execution_manifest";
+
 const DEFAULT_CONTEXT: DiagnosisContext = {
   motor_on: true,
   pto_on: false,

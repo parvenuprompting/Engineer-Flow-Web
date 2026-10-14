@@ -14,7 +14,8 @@
     "validate:safety": "python3 scripts/validate_guided_step_safety.py",
     "validate:production": "python3 scripts/validate_production_env.py",
     "test:backend": "python3 -m pytest -q",
-    "test:all": "python3 -m pytest -q && npm run typecheck && npm run build"
+    "test:efl_core": "node --import tsx tests/history_degradation_slice.test.ts && node --import tsx --test tests/scr_workflow.integration.test.tsx tests/efl_core_engine_bridge.test.ts",
+    "test:all": "python3 -m pytest -q && npm run typecheck && npm run build && npm run test:efl_core"
   },
   "dependencies": {
     "@genkit-ai/google-genai": "^1.20.0",
@@ -69,6 +70,7 @@
     "genkit-cli": "^0.0.2",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsx": "4.23.1",
     "typescript": "^5"
   }
 }
